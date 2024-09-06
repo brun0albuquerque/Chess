@@ -16,17 +16,11 @@ public abstract class King extends ChessPiece {
         return "K";
     }
 
-    // Check if there is a piece on the position and if it has, checks the color of the piece
-    private boolean checkPossibleMoves(Position position) {
-        ChessPiece piece = (ChessPiece) getBoard().piece(position);
-        return piece != null && piece.getColor() != getColor();
-    }
-
     @Override
     public boolean[][] possibleMoves() {
-        boolean[][] movePossibilities = new boolean[getBoard().getColumns()][getBoard().getRows()];
+        boolean[][] possibilities = new boolean[getBoard().getColumns()][getBoard().getRows()];
 
-        Position piece = new Position(0,0);
+        Position king = new Position(0,0);
 
         int[][] directions = {
                 {0, -1}, // Up
@@ -41,11 +35,11 @@ public abstract class King extends ChessPiece {
 
         // Check and return a boolean value the positions for each element in the matrix "directions"
         for (int[] direction : directions) {
-            piece.setPosition(getPosition().getColumn(), getPosition().getRow() - 1);
+            king.setPosition(getPosition().getColumn(), getPosition().getRow() - 1);
             if (getBoard().positionExists(getPosition()) && checkPossibleMoves(getPosition())) {
-                movePossibilities[piece.getColumn()][piece.getRow()] = true;
+                possibilities[king.getColumn()][king.getRow()] = true;
             }
         }
-        return movePossibilities;
+        return possibilities;
     }
 }

@@ -2,7 +2,7 @@ package boardgame;
 
 public abstract class Piece {
     private Position position;
-    private Board board;
+    private final Board board;
 
     public Piece(Board board) {
         this.position = null;
@@ -26,17 +26,13 @@ public abstract class Piece {
         return board;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
     public abstract boolean[][] possibleMoves();
 
     public boolean possibleMove(Position position) {
         return possibleMoves()[position.getRow()][position.getColumn()];
     }
 
-    // Check all the position in the board
+    // Check all the position that the piece can move in the board
     public boolean isThereAnyPossibleMove() {
         boolean[][] matrix = possibleMoves();
         for (boolean[] rows : matrix) {

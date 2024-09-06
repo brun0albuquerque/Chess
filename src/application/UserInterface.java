@@ -18,18 +18,25 @@ public class UserInterface extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Media source (board logo): https://www.flaticon.com/free-icon/chess-board_107617
-        ImageIcon imageIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/board.png")));
-        setIconImage(imageIcon.getImage());
+        ImageIcon logoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/board.png")));
+        setIconImage(logoIcon.getImage());
+
+        // Initialize the game pieces (before initialize BoardPanel)
+        PiecesImages piecesImages = new PiecesImages();
+
+        // Creates the board and add to the frame
+        BoardPanel boardPanel = new BoardPanel(piecesImages);
+        getContentPane().add(boardPanel);
 
         setVisible(true);
     }
 
-    public Dimension getResolution() {
+    private Dimension getResolution() {
         return resolution;
     }
 
     // Convert the resolution from type Integer to Dimension
-    public void setResolution(int width, int height) {
+    private void setResolution(int width, int height) {
         this.resolution = new Dimension(width, height);
     }
 }

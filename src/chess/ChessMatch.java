@@ -14,9 +14,10 @@ public class ChessMatch {
     private final Board board;
 
     public ChessMatch() {
-        board = new Board(8,8);
+        board = new Board(8, 8);
     }
 
+    // Get the position of all pieces on the board
     public ChessPiece[][] getPieces() {
         ChessPiece[][] matrix = new ChessPiece[board.getRows()][board.getColumns()];
         for (int a = 0; a < board.getRows(); a++) {
@@ -28,15 +29,17 @@ public class ChessMatch {
         return matrix;
     }
 
-    private void validateSourcePosition(Position position){
+    // Validate the position and if there is a movement for the piece
+    private void validateSourcePosition(Position position) {
         if (!board.thereIsAPiece(position)) {
             throw new ChessException("There is no piece on the on the position.");
         }
-            if (!board.piece(position).isThereAnyPossibleMove()) {
-                throw new ChessException("There is no possible moves for the piece.");
-            }
+        if (!board.piece(position).isThereAnyPossibleMove()) {
+            throw new ChessException("There is no possible moves for the piece.");
+        }
     }
 
+    // Make the action of move a piece from a position to another (change the positions in board)
     private Piece makeMove(Position source, Position target) {
         Piece sourcePiece = board.removePiece(source);
         Piece capturedPiece = board.removePiece(target);
@@ -50,6 +53,7 @@ public class ChessMatch {
         return board.piece(position).possibleMoves();
     }
 
+    // Change the position of a piece and make the capture of an opponent piece
     public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
         Position source = sourcePosition.toPosition();
         Position target = targetPosition.toPosition();
@@ -58,6 +62,7 @@ public class ChessMatch {
         return (ChessPiece) capturedPiece;
     }
 
+    // Place a piece on the board
     private void placeNewPiece(char column, int row, ChessPiece piece) {
         board.placePiece(piece, new ChessPosition(column, row).toPosition());
     }
