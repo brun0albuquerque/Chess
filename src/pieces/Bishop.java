@@ -6,15 +6,8 @@ import chess.Color;
 
 public abstract class Bishop extends ChessPiece {
 
-    private final String bishop = "B";
-
     public Bishop(Board board, Color color) {
         super(board, color);
-    }
-
-    @Override
-    public String toString() {
-        return bishop;
     }
 
     @Override

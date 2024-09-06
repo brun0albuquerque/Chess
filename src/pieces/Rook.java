@@ -12,11 +12,6 @@ public abstract class Rook extends ChessPiece {
     }
 
     @Override
-    public String toString() {
-        return "R";
-    }
-
-    @Override
     public boolean[][] possibleMoves() {
         boolean[][] possibilities = new boolean[getBoard().getColumns()][getBoard().getRows()];
 

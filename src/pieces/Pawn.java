@@ -13,11 +13,6 @@ public abstract class Pawn extends ChessPiece {
     }
 
     @Override
-    public String toString() {
-        return "P";
-    }
-
-    @Override
     public boolean[][] possibleMoves() {
         boolean[][] possibilities = new boolean[getBoard().getColumns()][getBoard().getRows()];
 

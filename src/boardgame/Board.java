@@ -12,7 +12,7 @@ public class Board {
         }
         this.rows = rows;
         this.columns = columns;
-        boardPieces = new Piece[rows][columns]; // This matrix represents the board itself, it's content is all pieces positions
+        this.boardPieces = new Piece[rows][columns]; // This matrix represents the board itself, it's content is all pieces positions
     }
 
     public Integer getRows() {

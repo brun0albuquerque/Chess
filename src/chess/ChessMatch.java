@@ -15,6 +15,16 @@ public class ChessMatch {
 
     public ChessMatch() {
         board = new Board(8, 8);
+        turn = 1;
+        currentPlayer = Color.WHITE;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public Color getCurrentPlayer() {
+        return currentPlayer;
     }
 
     // Get the position of all pieces on the board
@@ -32,11 +42,20 @@ public class ChessMatch {
     // Validate the position and if there is a movement for the piece
     private void validateSourcePosition(Position position) {
         if (!board.thereIsAPiece(position)) {
-            throw new ChessException("There is no piece on the on the position.");
+            throw new ChessException("No piece on the position.");
+        }
+        if (currentPlayer != ((ChessPiece) board.piece(position)).getColor()) {
+            throw new ChessException("Cannot move this piece.");
         }
         if (!board.piece(position).isThereAnyPossibleMove()) {
-            throw new ChessException("There is no possible moves for the piece.");
+            throw new ChessException("No possible moves for the piece.");
         }
+
+    }
+
+    private void nextTurn() {
+        turn++;
+        currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
     }
 
     // Make the action of move a piece from a position to another (change the positions in board)
@@ -47,23 +66,21 @@ public class ChessMatch {
         return capturedPiece;
     }
 
-    public boolean[][] possibleMoves(ChessPosition sourcePosition) {
-        Position position = sourcePosition.toPosition();
-        validateSourcePosition(position);
-        return board.piece(position).possibleMoves();
+    public boolean[][] possibleMoves(Position sourcePosition) {
+        validateSourcePosition(sourcePosition);
+        return board.piece(sourcePosition).possibleMoves();
     }
 
     // Change the position of a piece and make the capture of an opponent piece
-    public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition) {
-        Position source = sourcePosition.toPosition();
-        Position target = targetPosition.toPosition();
-        validateSourcePosition(source);
-        Piece capturedPiece = makeMove(source, target);
+    public ChessPiece performChessMove(Position sourcePosition, Position targetPosition) {
+        validateSourcePosition(sourcePosition);
+        Piece capturedPiece = makeMove(sourcePosition, targetPosition);
+        nextTurn();
         return (ChessPiece) capturedPiece;
     }
 
     // Place a piece on the board
-    private void placeNewPiece(char column, int row, ChessPiece piece) {
-        board.placePiece(piece, new ChessPosition(column, row).toPosition());
+    private void placeNewPiece(ChessPiece piece, int column, int row) {
+        board.placePiece(piece, new Position(column, row));
     }
 }

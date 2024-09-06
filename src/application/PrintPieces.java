@@ -3,17 +3,17 @@ package application;
 import javax.swing.*;
 import java.util.Objects;
 
-public class PiecesImages extends JFrame {
+public class PrintPieces extends JFrame {
 
-    private final ImageIcon[][] pieces = new ImageIcon[8][8];
+    private final ImageIcon[][] piecesImages = new ImageIcon[8][8];
 
-    public PiecesImages() {
-        loadInitialPieces();
+    public PrintPieces() {
+        loadInitialPiecesIcons();
     }
 
-    private void loadInitialPieces() {
+    public void loadInitialPiecesIcons() {
 
-        // Load the pieces image files
+        // Load the piecesImages image files
         ImageIcon whitePawn = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/chess_pieces/white_pawn.png")));
         ImageIcon whiteRook = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/chess_pieces/white_rook.png")));
         ImageIcon whiteBishop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/chess_pieces/white_bishop.png")));
@@ -28,38 +28,37 @@ public class PiecesImages extends JFrame {
         ImageIcon blackQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/chess_pieces/black_queen.png")));
         ImageIcon blackKnight = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/chess_pieces/black_knight.png")));
 
-        // Place white pieces
+        // Place white piecesImages
         for (int a = 0; a < 8; a++) {
-            pieces[6][a] = whitePawn;
+            piecesImages[6][a] = whitePawn;
         }
-        pieces[7][0] = whiteRook;
-        pieces[7][1] = whiteKnight;
-        pieces[7][2] = whiteBishop;
-        pieces[7][3] = whiteQueen;
-        pieces[7][4] = whiteKing;
-        pieces[7][5] = whiteBishop;
-        pieces[7][6] = whiteKnight;
-        pieces[7][7] = whiteRook;
+        piecesImages[7][0] = whiteRook;
+        piecesImages[7][1] = whiteKnight;
+        piecesImages[7][2] = whiteBishop;
+        piecesImages[7][3] = whiteQueen;
+        piecesImages[7][4] = whiteKing;
+        piecesImages[7][5] = whiteBishop;
+        piecesImages[7][6] = whiteKnight;
+        piecesImages[7][7] = whiteRook;
 
-        // Place black pieces
+        // Place black piecesImages
         for (int a = 0; a < 8; a++) {
-            pieces[1][a] = blackPawn;
+            piecesImages[1][a] = blackPawn;
         }
-        pieces[0][0] = blackRook;
-        pieces[0][1] = blackKnight;
-        pieces[0][2] = blackBishop;
-        pieces[0][3] = blackQueen;
-        pieces[0][4] = blackKing;
-        pieces[0][5] = blackBishop;
-        pieces[0][6] = blackKnight;
-        pieces[0][7] = blackRook;
+        piecesImages[0][0] = blackRook;
+        piecesImages[0][1] = blackKnight;
+        piecesImages[0][2] = blackBishop;
+        piecesImages[0][3] = blackQueen;
+        piecesImages[0][4] = blackKing;
+        piecesImages[0][5] = blackBishop;
+        piecesImages[0][6] = blackKnight;
+        piecesImages[0][7] = blackRook;
     }
 
-
-    public ImageIcon[][] getPieces() {
-        if (pieces[0][0] == null) {
-            throw new InterfaceException("No pieces.");
+    public ImageIcon[][] getPiecesImages() {
+        if (piecesImages[0][0] == null) {
+            throw new InterfaceException("No piecesImages.");
         }
-        return pieces;
+        return piecesImages;
     }
 }

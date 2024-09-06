@@ -5,15 +5,19 @@ import boardgame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
+import javax.swing.*;
+
 public abstract class King extends ChessPiece {
 
-    public King(Board board, Color color) {
+    private final ImageIcon image;
+
+    public King(Board board, Color color, ImageIcon image) {
         super(board, color);
+        this.image = image;
     }
 
-    @Override
-    public String toString() {
-        return "K";
+    public boolean isWhite(Color color) {
+        return color == Color.WHITE;
     }
 
     @Override
