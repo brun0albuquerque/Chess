@@ -1,23 +1,20 @@
 package application;
 
-public enum Sizes {
-    ;
-    public static final int BOARD_SIZE = 8;
-    public static final int TILE_SIZE = 76;
-    public static final int PIECE_SIZE = 120;
+import java.awt.*;
 
-    Sizes() {
-    }
+public interface Sizes {
+    int BOARD_SIZE = 8;
+    int PIECE_SIZE = 64;
 
-    public static int getBoardSize() {
-        return BOARD_SIZE;
-    }
+    int TILE_SIZE = 80;
+    int ROW_SIZE = (int)(1.05 * TILE_SIZE);
+    int MID_TILE_SIZE = 96;
+    int BIG_TILE_SIZE = 135;
 
-    public static int getTileSize() {
-        return TILE_SIZE;
-    }
+    int INIT_DIMENSION = 670;
+    int MID_DIMENSION = 768;
+    int BIG_DIMENSION = 1080;
 
-    public static int getPieceSize() {
-        return PIECE_SIZE;
-    }
+    Color BROWN = new Color(139, 69, 19, 220);
+    Color BEIGE = new Color(215, 195, 155);
 }

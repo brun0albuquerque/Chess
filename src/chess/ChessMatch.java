@@ -50,7 +50,6 @@ public class ChessMatch {
         if (!board.piece(position).isThereAnyPossibleMove()) {
             throw new ChessException("No possible moves for the piece.");
         }
-
     }
 
     private void nextTurn() {
@@ -66,9 +65,9 @@ public class ChessMatch {
         return capturedPiece;
     }
 
-    public boolean[][] possibleMoves(Position sourcePosition) {
-        validateSourcePosition(sourcePosition);
-        return board.piece(sourcePosition).possibleMoves();
+    public boolean[][] possibleMoves(Position position) {
+        validateSourcePosition(position);
+        return board.piece(position).possibleMoves();
     }
 
     // Change the position of a piece and make the capture of an opponent piece
@@ -82,5 +81,13 @@ public class ChessMatch {
     // Place a piece on the board
     private void placeNewPiece(ChessPiece piece, int column, int row) {
         board.placePiece(piece, new Position(column, row));
+    }
+
+    @Override
+    public String toString() {
+        return "ChessMatch{" +
+                "turn=" + turn +
+                ", currentPlayer=" + currentPlayer +
+                '}';
     }
 }
