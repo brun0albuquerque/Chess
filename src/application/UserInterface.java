@@ -1,6 +1,7 @@
 package application;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Objects;
 
 public class UserInterface extends JFrame {
@@ -8,8 +9,7 @@ public class UserInterface extends JFrame {
     public UserInterface(Sizes sizes) {
         super();
         setTitle("Chess");
-//        setSize(sizes.getDIMENSION(), sizes.getDIMENSION());
-        setResizable(true);
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

@@ -8,7 +8,7 @@ public class PieceLoader extends JFrame {
 
     private final ImageIcon[][] piecesImages;
 
-    public PieceLoader(ImageIcon[][] piecesImages) throws HeadlessException, NullPointerException {
+    public PieceLoader(ImageIcon[][] piecesImages) throws HeadlessException {
         super();
         this.piecesImages = piecesImages;
         loadInitialPiecesIcons();

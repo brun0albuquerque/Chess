@@ -14,7 +14,7 @@ public class BoardInterface extends JPanel {
         super();
         this.pieces = pieces;
         this.sizes = sizes;
-        this.setPreferredSize(new Dimension(sizes.getTILE_SIZE(), sizes.getTILE_SIZE()));
+        setPreferredSize(new Dimension(sizes.getDIMENSION(), sizes.getDIMENSION()));
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -22,6 +22,7 @@ public class BoardInterface extends JPanel {
                 super.mouseClicked(e);
                 int x = e.getX() / sizes.getTILE_SIZE();
                 int y = e.getY() / sizes.getTILE_SIZE();
+                System.out.println("Clicked at: " + x + ", " + y);
             }
         });
     }

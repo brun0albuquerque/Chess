@@ -3,8 +3,6 @@ package application;
 import javax.swing.*;
 import java.awt.*;
 
-import static application.Sizes.*;
-
 public class PieceDrawer extends Component {
 
     private final ImageIcon[][] piecesImages;

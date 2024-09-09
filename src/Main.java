@@ -8,6 +8,8 @@ public class Main {
         try {
             ChessMatch chessMatch = new ChessMatch();
             Sizes sizes = new Sizes();
+            sizes.setSmallSizes();
+            System.out.println(sizes.getTILE_SIZE() + " " + sizes.getPIECE_SIZE() + " " + sizes.getDIMENSION());
             UserInterface userInterface = new UserInterface(sizes);
 
         } catch (NullPointerException e) {
