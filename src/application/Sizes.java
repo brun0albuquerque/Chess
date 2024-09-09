@@ -1,20 +1,46 @@
 package application;
 
-import java.awt.*;
+public class Sizes {
+    private final Integer BOARD_SIZE = 8;
+    private Integer TILE_SIZE = null;
+    private Integer PIECE_SIZE = null;
+    private Integer DIMENSION = null;
 
-public interface Sizes {
-    int BOARD_SIZE = 8;
-    int PIECE_SIZE = 64;
+    public Sizes() {
+        setSmallSizes();
+    }
 
-    int TILE_SIZE = 80;
-    int ROW_SIZE = (int)(1.05 * TILE_SIZE);
-    int MID_TILE_SIZE = 96;
-    int BIG_TILE_SIZE = 135;
+    public void setSmallSizes() {
+        this.TILE_SIZE = 60;
+        this.PIECE_SIZE = 60;
+        this.DIMENSION = BOARD_SIZE * TILE_SIZE;
+    }
 
-    int INIT_DIMENSION = 670;
-    int MID_DIMENSION = 768;
-    int BIG_DIMENSION = 1080;
+    public void setMidSizes() {
+        this.TILE_SIZE = 80;
+        this.PIECE_SIZE = 80;
+        this.DIMENSION = BOARD_SIZE * TILE_SIZE;
+    }
 
-    Color BROWN = new Color(139, 69, 19, 220);
-    Color BEIGE = new Color(215, 195, 155);
+    public void setBigSizes() {
+        this.TILE_SIZE = 96;
+        this.PIECE_SIZE = 96;
+        this.DIMENSION = BOARD_SIZE * TILE_SIZE;
+    }
+
+    public Integer getBOARD_SIZE() {
+        return BOARD_SIZE;
+    }
+
+    public Integer getTILE_SIZE() {
+        return TILE_SIZE;
+    }
+
+    public Integer getPIECE_SIZE() {
+        return PIECE_SIZE;
+    }
+
+    public Integer getDIMENSION() {
+        return DIMENSION;
+    }
 }

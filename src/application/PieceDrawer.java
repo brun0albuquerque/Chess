@@ -8,9 +8,11 @@ import static application.Sizes.*;
 public class PieceDrawer extends Component {
 
     private final ImageIcon[][] piecesImages;
+    private final Sizes sizes;
 
-    public PieceDrawer(ImageIcon[][] piecesImages) {
+    public PieceDrawer(ImageIcon[][] piecesImages, Sizes sizes) {
         this.piecesImages = piecesImages;
+        this.sizes = sizes;
     }
 
     public ImageIcon[][] getPiecesImages() {
@@ -22,13 +24,13 @@ public class PieceDrawer extends Component {
             throw new InterfaceException("No piecesImages loaded.");
         }
 
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
+        for (int row = 0; row < sizes.getBOARD_SIZE(); row++) {
+            for (int col = 0; col < sizes.getBOARD_SIZE(); col++) {
                 if (piecesImages[row][col] != null) {
                     Image image = piecesImages[row][col].getImage();
-                    Image resizedImage = image.getScaledInstance(PIECE_SIZE, PIECE_SIZE, Image.SCALE_SMOOTH);
+                    Image resizedImage = image.getScaledInstance(sizes.getPIECE_SIZE(), sizes.getPIECE_SIZE(), Image.SCALE_SMOOTH);
                     ImageIcon newImage = new ImageIcon(resizedImage);
-                    newImage.paintIcon(this, g, col * TILE_SIZE, row * TILE_SIZE);
+                    newImage.paintIcon(this, g, col * sizes.getTILE_SIZE(), row * sizes.getTILE_SIZE());
                 }
             }
         }

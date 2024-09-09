@@ -5,23 +5,23 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static application.Sizes.*;
-
 public class BoardInterface extends JPanel {
 
     private final PieceDrawer pieces;
+    private final Sizes sizes;
 
-    public BoardInterface(PieceDrawer pieces) {
+    public BoardInterface(PieceDrawer pieces, Sizes sizes) {
         super();
         this.pieces = pieces;
-        setPreferredSize(new Dimension(720, 720));
+        this.sizes = sizes;
+        this.setPreferredSize(new Dimension(sizes.getTILE_SIZE(), sizes.getTILE_SIZE()));
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                int x = e.getX() / TILE_SIZE;
-                int y = e.getY() / TILE_SIZE;
+                int x = e.getX() / sizes.getTILE_SIZE();
+                int y = e.getY() / sizes.getTILE_SIZE();
             }
         });
     }
@@ -34,10 +34,13 @@ public class BoardInterface extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int col = 0; col < BOARD_SIZE; col++) {
+        final Color BROWN = new Color(139, 69, 19, 220);
+        final Color BEIGE = new Color(215, 195, 155);
+
+        for (int row = 0; row < sizes.getBOARD_SIZE(); row++) {
+            for (int col = 0; col < sizes.getBOARD_SIZE(); col++) {
                 g.setColor(isWhite(row, col) ? BEIGE : BROWN);
-                g.fillRect(row * ROW_SIZE, col * TILE_SIZE, ROW_SIZE, TILE_SIZE);
+                g.fillRect(row * sizes.getTILE_SIZE(), col * sizes.getTILE_SIZE(), sizes.getTILE_SIZE(), sizes.getTILE_SIZE());
             }
         }
         pieces.placePiecesOnBoard(g);

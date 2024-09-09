@@ -1,13 +1,15 @@
 import application.InterfaceException;
+import application.Sizes;
 import application.UserInterface;
 import chess.ChessMatch;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            System.out.println("Resource path: " + Main.class.getResource("/resources/board.png"));
             ChessMatch chessMatch = new ChessMatch();
-            UserInterface userInterface = new UserInterface();
+            Sizes sizes = new Sizes();
+            UserInterface userInterface = new UserInterface(sizes);
+
         } catch (NullPointerException e) {
             throw new NullPointerException(e.getMessage());
         } catch (InterfaceException e) {

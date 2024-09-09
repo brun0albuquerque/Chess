@@ -3,34 +3,32 @@ package application;
 import javax.swing.*;
 import java.util.Objects;
 
-import static application.Sizes.BOARD_SIZE;
-import static application.Sizes.INIT_DIMENSION;
-
 public class UserInterface extends JFrame {
 
-    public UserInterface() {
+    public UserInterface(Sizes sizes) {
         super();
         setTitle("Chess");
-        setSize(INIT_DIMENSION, INIT_DIMENSION);
+//        setSize(sizes.getDIMENSION(), sizes.getDIMENSION());
         setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Media source (board logo): https://www.flaticon.com/free-icon/chess-board_107617
         ImageIcon logoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/board.png")));
-        System.out.println("Logo icon: " + logoIcon);
         setIconImage(logoIcon.getImage());
 
         // Load the pieces images files
-        PieceLoader pieceLoader = new PieceLoader(new ImageIcon[BOARD_SIZE][BOARD_SIZE]);
+        PieceLoader pieceLoader = new PieceLoader(new ImageIcon[sizes.getBOARD_SIZE()][sizes.getBOARD_SIZE()]);
 
-        /* Hold the method that draw the pieces on the board when PaintComponent is called
-        and create the matrix for the pieces images */
-        PieceDrawer pieceDrawer = new PieceDrawer(pieceLoader.getPiecesImages());
+        // Pass the pieces images to the drawer
+        PieceDrawer pieceDrawer = new PieceDrawer(pieceLoader.getPiecesImages(), sizes);
 
         // Do the connection between the user and the board
-        BoardInterface boardInterface = new BoardInterface(pieceDrawer);
+        BoardInterface boardInterface = new BoardInterface(pieceDrawer, sizes);
         getContentPane().add(boardInterface);
+
+        // Size the window based on its content
+        pack();
 
         // Make the container visible
         setVisible(true);
