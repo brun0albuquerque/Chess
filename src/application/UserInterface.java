@@ -1,12 +1,13 @@
 package application;
 
+import chess.ChessMatch;
+
 import javax.swing.*;
-import java.awt.*;
 import java.util.Objects;
 
 public class UserInterface extends JFrame {
 
-    public UserInterface(Sizes sizes) {
+    public UserInterface(ChessMatch match, Sizes sizes) {
         super();
         setTitle("Chess");
         setResizable(false);
@@ -24,7 +25,7 @@ public class UserInterface extends JFrame {
         PieceDrawer pieceDrawer = new PieceDrawer(pieceLoader.getPiecesImages(), sizes);
 
         // Do the connection between the user and the board
-        BoardInterface boardInterface = new BoardInterface(pieceDrawer, sizes);
+        BoardInterface boardInterface = new BoardInterface(pieceDrawer, match, sizes);
         getContentPane().add(boardInterface);
 
         // Size the window based on its content

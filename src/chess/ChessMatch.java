@@ -1,22 +1,30 @@
 package chess;
 
+import application.Sizes;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChessMatch {
     private int turn;
-    private Color currentPlayer;
     private boolean check;
     private boolean isCheckMate;
+    private Color currentPlayer;
     private ChessPiece enPassantVulnerable;
     private ChessPiece promoted;
     private final Board board;
+    private List<Piece> piecesOnTheBoard;
+    private List<Piece> capturedPieces;
 
-    public ChessMatch() {
-        board = new Board(8, 8);
-        turn = 1;
-        currentPlayer = Color.WHITE;
+    public ChessMatch(Sizes sizes) {
+        this.piecesOnTheBoard = new ArrayList<>();
+        this.capturedPieces = new ArrayList<>();
+        this.board = new Board(sizes.getBOARD_SIZE(), sizes.getBOARD_SIZE());
+        this.currentPlayer = Color.WHITE;
+        this.turn = 1;
     }
 
     public int getTurn() {
@@ -39,6 +47,16 @@ public class ChessMatch {
         return matrix;
     }
 
+    // Change the player turn
+    private void nextTurn() {
+        turn++;
+        currentPlayer = currentPlayer == Color.WHITE ? Color.BLACK : Color.WHITE;
+    }
+
+    private Color invertColor(Color color) {
+        return (color == Color.WHITE) ? Color.BLACK : Color.WHITE;
+    }
+
     // Validate the position and if there is a movement for the piece
     private void validateSourcePosition(Position position) {
         if (!board.thereIsAPiece(position)) {
@@ -52,15 +70,15 @@ public class ChessMatch {
         }
     }
 
-    private void nextTurn() {
-        turn++;
-        currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
-    }
-
     // Make the action of move a piece from a position to another (change the positions in board)
     private Piece makeMove(Position source, Position target) {
         Piece sourcePiece = board.removePiece(source);
         Piece capturedPiece = board.removePiece(target);
+        if (capturedPiece != null) {
+            piecesOnTheBoard.remove(capturedPiece);
+            capturedPieces.add(capturedPiece);
+        }
+
         board.placePiece(sourcePiece, target);
         return capturedPiece;
     }
@@ -73,21 +91,17 @@ public class ChessMatch {
     // Change the position of a piece and make the capture of an opponent piece
     public ChessPiece performChessMove(Position sourcePosition, Position targetPosition) {
         validateSourcePosition(sourcePosition);
-        Piece capturedPiece = makeMove(sourcePosition, targetPosition);
+        Piece selectedPiece = makeMove(sourcePosition, targetPosition);
         nextTurn();
-        return (ChessPiece) capturedPiece;
+        ChessPiece piece = (ChessPiece) selectedPiece;
+        piece.increaseMoveCount();
+        System.out.println(piece.getMoveCount());
+        return piece;
     }
 
     // Place a piece on the board
-    private void placeNewPiece(ChessPiece piece, int column, int row) {
-        board.placePiece(piece, new Position(column, row));
-    }
-
-    @Override
-    public String toString() {
-        return "ChessMatch{" +
-                "turn=" + turn +
-                ", currentPlayer=" + currentPlayer +
-                '}';
+    private void placeNewPiece(int row, int col, ChessPiece piece) {
+        board.placePiece(piece, new Position(row, col));
+        piecesOnTheBoard.add(piece);
     }
 }

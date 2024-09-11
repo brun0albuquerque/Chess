@@ -2,35 +2,80 @@ package pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.Color;
 
 public abstract class Pawn extends ChessPiece {
 
-    public Pawn(Board board, Color color) {
+    private final ChessMatch match;
+
+    public Pawn(Board board, Color color, ChessMatch match) {
         super(board, color);
-        setMoveCount(0);
+        this.match = match;
     }
 
     @Override
     public boolean[][] possibleMoves() {
-        boolean[][] possibilities = new boolean[getBoard().getColumns()][getBoard().getRows()];
+        boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
 
-        Position piece = new Position(0,0);
+        Position oneStepPositionWhite = new Position(getPosition().getRow() - 1, getPosition().getColumn());
+        Position twoStepsPositionWhite = new Position(getPosition().getRow() - 2, getPosition().getColumn());
+        Position oneStepPositionBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn());
+        Position twoStepsPositionBlack = new Position(getPosition().getRow() + 2, getPosition().getColumn());
 
-        if (getMoveCount() == 0) {
-            piece.setPosition(getPosition().getColumn(), getPosition().getRow() + 2);
-            if (getBoard().positionExists(getPosition()) && checkPossibleMoves(getPosition())) {
-                possibilities[piece.getColumn()][piece.getRow()] = true;
+        Position leftDiagonalPositionWhite = new Position(getPosition().getRow() - 1, getPosition().getColumn() - 1);
+        Position rightDiagonalPositionWhite = new Position(getPosition().getRow() - 1, getPosition().getColumn() + 1);
+        Position leftDiagonalPositionBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn() - 1);
+        Position rightDiagonalPositionBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn() + 1);
+
+        if (getColor() == Color.WHITE) {
+
+            // One house move
+            if (!getBoard().thereIsAPiece(oneStepPositionWhite)) {
+                possibilities[oneStepPositionWhite.getRow()][oneStepPositionWhite.getColumn()] = true;
             }
 
+            // Two houses move
+            if (!getBoard().thereIsAPiece(oneStepPositionWhite) && !getBoard().thereIsAPiece(twoStepsPositionWhite)
+                    && getMoveCount() == 0) {
+                possibilities[twoStepsPositionWhite.getRow()][twoStepsPositionWhite.getColumn()] = true;
+            }
+
+            // Capturing a piece on the left diagonal
+            if (getBoard().thereIsAPiece(leftDiagonalPositionWhite) && checkPossibleCapture(leftDiagonalPositionWhite)) {
+                possibilities[leftDiagonalPositionWhite.getRow()][leftDiagonalPositionWhite.getColumn()] = true;
+            }
+
+            // Capturing a piece on the right diagonal
+            if (getBoard().thereIsAPiece(rightDiagonalPositionWhite) && checkPossibleCapture(rightDiagonalPositionWhite)) {
+                possibilities[rightDiagonalPositionWhite.getRow()][rightDiagonalPositionWhite.getColumn()] = true;
+            }
         }
 
-        piece.setPosition(getPosition().getColumn(), getPosition().getRow() + 1);
-        if (getBoard().positionExists(getPosition()) && checkPossibleMoves(getPosition())) {
-            possibilities[piece.getColumn()][piece.getRow()] = true;
-        }
+        if (getColor() == Color.BLACK) {
 
+            // One house move
+            if (!getBoard().thereIsAPiece(oneStepPositionBlack)) {
+                possibilities[oneStepPositionBlack.getRow()][oneStepPositionBlack.getColumn()] = true;
+            }
+
+            // Two houses move
+            if (!getBoard().thereIsAPiece(oneStepPositionBlack) && !getBoard().thereIsAPiece(twoStepsPositionBlack)
+                    && getMoveCount() == 0) {
+                possibilities[twoStepsPositionBlack.getRow()][twoStepsPositionBlack.getColumn()] = true;
+            }
+
+            // Capturing a piece on the left diagonal
+            if (getBoard().thereIsAPiece(leftDiagonalPositionBlack) && checkPossibleCapture(leftDiagonalPositionBlack)) {
+                possibilities[leftDiagonalPositionBlack.getRow()][leftDiagonalPositionBlack.getColumn()] = true;
+            }
+
+            // Capturing a piece on the right diagonal
+            if (getBoard().thereIsAPiece(rightDiagonalPositionBlack) && checkPossibleCapture(rightDiagonalPositionBlack)) {
+                possibilities[rightDiagonalPositionBlack.getRow()][rightDiagonalPositionBlack.getColumn()] = true;
+            }
+        }
         return possibilities;
     }
 }

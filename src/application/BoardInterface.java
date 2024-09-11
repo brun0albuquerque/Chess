@@ -1,5 +1,8 @@
 package application;
 
+import boardgame.Position;
+import chess.ChessMatch;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,11 +12,14 @@ public class BoardInterface extends JPanel {
 
     private final PieceDrawer pieces;
     private final Sizes sizes;
+    private Position firstSelection;
 
-    public BoardInterface(PieceDrawer pieces, Sizes sizes) {
+    public BoardInterface(PieceDrawer pieces, ChessMatch match, Sizes sizes) {
         super();
         this.pieces = pieces;
         this.sizes = sizes;
+        this.firstSelection = null;
+
         setPreferredSize(new Dimension(sizes.getDIMENSION(), sizes.getDIMENSION()));
 
         addMouseListener(new MouseAdapter() {
@@ -23,6 +29,12 @@ public class BoardInterface extends JPanel {
                 int x = e.getX() / sizes.getTILE_SIZE();
                 int y = e.getY() / sizes.getTILE_SIZE();
                 System.out.println("Clicked at: " + x + ", " + y);
+
+                if (firstSelection == null) {
+                    firstSelection = new Position(x, y);
+                } else {
+                    match.performChessMove(firstSelection, new Position(x, y));
+                }
             }
         });
     }

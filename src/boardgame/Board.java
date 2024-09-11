@@ -1,14 +1,16 @@
 package boardgame;
 
+import java.util.Arrays;
+
 public class Board {
     private final Integer rows;
     private final Integer columns;
     private final Piece[][] boardPieces;
 
     public Board(Integer rows, Integer columns) {
-        // Checks if rows and columns are positive
-        if (rows < 1 || columns < 1) {
-            throw new BoardException("Error creating board: there must be at least a row and a column.");
+        // Checks if rows and columns are correct
+        if (rows != 8 || columns != 8) {
+            throw new BoardException("Error creating board.");
         }
         this.rows = rows;
         this.columns = columns;
@@ -40,7 +42,8 @@ public class Board {
         piece.setPosition(position);
     }
 
-    // Check if the position is valid and if there is a piece on the board position, if it has a piece, then remove the piece from the board position
+    /* Check if the position is valid and if there is a piece on the board position, if it has a piece,
+    then remove the piece from the board position */
     public Piece removePiece(Position position) {
         if (!positionExists(position)) {
             throw new BoardException("Position not on the board.");
@@ -57,7 +60,7 @@ public class Board {
     // Check if there is a piece on the board position
     public boolean thereIsAPiece(Position position) {
         if (!positionExists(position)) {
-            throw new BoardException("Position is not on the board.");
+            return false;
         }
         return piece(position) != null;
     }

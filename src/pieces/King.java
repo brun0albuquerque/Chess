@@ -5,26 +5,17 @@ import boardgame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
-import javax.swing.*;
-
 public abstract class King extends ChessPiece {
 
-    private final ImageIcon image;
-
-    public King(Board board, Color color, ImageIcon image) {
+    public King(Board board, Color color) {
         super(board, color);
-        this.image = image;
-    }
-
-    public boolean isWhite(Color color) {
-        return color == Color.WHITE;
     }
 
     @Override
     public boolean[][] possibleMoves() {
-        boolean[][] possibilities = new boolean[getBoard().getColumns()][getBoard().getRows()];
+        boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
 
-        Position king = new Position(0,0);
+        Position currentKingPosition = getPosition();
 
         int[][] directions = {
                 {0, -1}, // Up
@@ -39,9 +30,9 @@ public abstract class King extends ChessPiece {
 
         // Check and return a boolean value the positions for each element in the matrix "directions"
         for (int[] direction : directions) {
-            king.setPosition(getPosition().getColumn(), getPosition().getRow() - 1);
-            if (getBoard().positionExists(getPosition()) && checkPossibleMoves(getPosition())) {
-                possibilities[king.getColumn()][king.getRow()] = true;
+            Position kingPosition = new Position(currentKingPosition.getRow() + direction[0], currentKingPosition.getColumn() + direction[1]);
+            if (!getBoard().thereIsAPiece(kingPosition) && checkPossibleCapture(kingPosition)) {
+                possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
             }
         }
         return possibilities;
