@@ -36,6 +36,4 @@ public abstract class Knight extends ChessPiece {
         }
         return possibilities;
     }
-
-
 }

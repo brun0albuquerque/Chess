@@ -3,7 +3,7 @@ import application.Sizes;
 import application.UserInterface;
 import chess.ChessMatch;
 
-public class Main {
+public class    Main {
     public static void main(String[] args) {
         try {
             Sizes sizes = new Sizes();

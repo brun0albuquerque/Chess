@@ -12,13 +12,13 @@ public class BoardInterface extends JPanel {
 
     private final PieceDrawer pieces;
     private final Sizes sizes;
-    private Position firstSelection;
+    private Position sourceClick = null;
+    private Position targetClick = null;
 
     public BoardInterface(PieceDrawer pieces, ChessMatch match, Sizes sizes) {
         super();
         this.pieces = pieces;
         this.sizes = sizes;
-        this.firstSelection = null;
 
         setPreferredSize(new Dimension(sizes.getDIMENSION(), sizes.getDIMENSION()));
 
@@ -29,12 +29,6 @@ public class BoardInterface extends JPanel {
                 int x = e.getX() / sizes.getTILE_SIZE();
                 int y = e.getY() / sizes.getTILE_SIZE();
                 System.out.println("Clicked at: " + x + ", " + y);
-
-                if (firstSelection == null) {
-                    firstSelection = new Position(x, y);
-                } else {
-                    match.performChessMove(firstSelection, new Position(x, y));
-                }
             }
         });
     }
@@ -47,12 +41,9 @@ public class BoardInterface extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        final Color BROWN = new Color(139, 69, 19, 220);
-        final Color BEIGE = new Color(215, 195, 155);
-
         for (int row = 0; row < sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < sizes.getBOARD_SIZE(); col++) {
-                g.setColor(isWhite(row, col) ? BEIGE : BROWN);
+                g.setColor(isWhite(row, col) ? InterfaceColor.LIGHT_BLUE : InterfaceColor.BLUE);
                 g.fillRect(row * sizes.getTILE_SIZE(), col * sizes.getTILE_SIZE(), sizes.getTILE_SIZE(), sizes.getTILE_SIZE());
             }
         }
