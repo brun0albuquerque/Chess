@@ -1,14 +1,12 @@
 package boardgame;
 
-import java.util.Arrays;
-
 public class Board {
     private final Integer rows;
     private final Integer columns;
     private final Piece[][] boardPieces;
 
     public Board(Integer rows, Integer columns) {
-        // Checks if rows and columns are correct
+        // Checks if rows and columns are positive
         if (rows != 8 || columns != 8) {
             throw new BoardException("Error creating board.");
         }
@@ -26,7 +24,7 @@ public class Board {
     }
 
     // Change the piece position if the position is valid
-    public Piece piece(Position position) {
+    public Piece getPieceOnBoard(Position position) {
         if (!positionExists(position)) {
             throw new BoardException("Position is not on the board.");
         }
@@ -34,9 +32,9 @@ public class Board {
     }
 
     // Check if there is a piece on the board position and if not, place a piece in the matrix position
-    public void placePiece(Piece piece, Position position) {
+    public void placePiece(Position position, Piece piece) {
         if (thereIsAPiece(position)) {
-            throw new BoardException("There is already a piece on position " + position);
+            throw new BoardException("There is already a piece on position.");
         }
         boardPieces[position.getRow()][position.getColumn()] = piece;
         piece.setPosition(position);
@@ -48,10 +46,10 @@ public class Board {
         if (!positionExists(position)) {
             throw new BoardException("Position not on the board.");
         }
-        if (piece(position) == null) {
+        if (getPieceOnBoard(position) == null) {
             return null;
         }
-        Piece removedPiece = piece(position);
+        Piece removedPiece = getPieceOnBoard(position);
         removedPiece.setPosition(null);
         boardPieces[position.getRow()][position.getColumn()] = null;
         return removedPiece;
@@ -61,8 +59,9 @@ public class Board {
     public boolean thereIsAPiece(Position position) {
         if (!positionExists(position)) {
             return false;
+//            throw new BoardException("Position is not on the board.");
         }
-        return piece(position) != null;
+        return getPieceOnBoard(position) != null;
     }
 
     // Check if the position is positive and less than 8 (number of rows and columns on the board)

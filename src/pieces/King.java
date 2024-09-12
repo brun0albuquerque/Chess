@@ -2,13 +2,17 @@ package pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
-import chess.Color;
+import chess.ChessColor;
 
-public abstract class King extends ChessPiece {
+public class King extends ChessPiece {
 
-    public King(Board board, Color color) {
-        super(board, color);
+    private final ChessMatch match;
+
+    public King(Board board, ChessColor chessColor, ChessMatch match) {
+        super(board, chessColor);
+        this.match = match;
     }
 
     @Override

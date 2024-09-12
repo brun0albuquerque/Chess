@@ -4,14 +4,14 @@ import boardgame.Board;
 import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
-import chess.Color;
+import chess.ChessColor;
 
-public abstract class Pawn extends ChessPiece {
+public class Pawn extends ChessPiece {
 
     private final ChessMatch match;
 
-    public Pawn(Board board, Color color, ChessMatch match) {
-        super(board, color);
+    public Pawn(Board board, ChessColor chessColor, ChessMatch match) {
+        super(board, chessColor);
         this.match = match;
     }
 
@@ -29,7 +29,7 @@ public abstract class Pawn extends ChessPiece {
         Position leftDiagonalPositionBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn() - 1);
         Position rightDiagonalPositionBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn() + 1);
 
-        if (getColor() == Color.WHITE) {
+        if (getColor() == ChessColor.WHITE) {
 
             // One house move
             if (!getBoard().thereIsAPiece(oneStepPositionWhite)) {
@@ -53,7 +53,7 @@ public abstract class Pawn extends ChessPiece {
             }
         }
 
-        if (getColor() == Color.BLACK) {
+        if (getColor() == ChessColor.BLACK) {
 
             // One house move
             if (!getBoard().thereIsAPiece(oneStepPositionBlack)) {

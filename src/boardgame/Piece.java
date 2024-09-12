@@ -28,11 +28,11 @@ public abstract class Piece {
 
     public abstract boolean[][] possibleMoves();
 
-    public boolean possibleMove(Position position) {
+    public boolean possiblePieceMoves(Position position) {
         return possibleMoves()[position.getRow()][position.getColumn()];
     }
 
-    // Check all the position that the piece can move in the board
+    // Check if there is any movement that the piece can move on the board
     public boolean isThereAnyPossibleMove() {
         boolean[][] matrix = possibleMoves();
         for (boolean[] rows : matrix) {
