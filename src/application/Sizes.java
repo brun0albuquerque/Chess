@@ -1,13 +1,29 @@
 package application;
 
 public class Sizes {
-    private final Integer BOARD_SIZE = 8;
-    private Integer TILE_SIZE = null;
-    private Integer PIECE_SIZE = null;
-    private Integer DIMENSION = null;
+    private final int BOARD_SIZE = 8;
+    private int TILE_SIZE;
+    private int PIECE_SIZE;
+    private int DIMENSION;
 
     public Sizes() {
         setSmallSizes();
+    }
+
+    public int getBOARD_SIZE() {
+        return BOARD_SIZE;
+    }
+
+    public int getTILE_SIZE() {
+        return TILE_SIZE;
+    }
+
+    public int getPIECE_SIZE() {
+        return PIECE_SIZE;
+    }
+
+    public int getDIMENSION() {
+        return DIMENSION;
     }
 
     public void setSmallSizes() {
@@ -28,19 +44,12 @@ public class Sizes {
         this.DIMENSION = BOARD_SIZE * TILE_SIZE;
     }
 
-    public Integer getBOARD_SIZE() {
-        return BOARD_SIZE;
-    }
-
-    public Integer getTILE_SIZE() {
-        return TILE_SIZE;
-    }
-
-    public Integer getPIECE_SIZE() {
-        return PIECE_SIZE;
-    }
-
-    public Integer getDIMENSION() {
-        return DIMENSION;
+    @Override
+    public String toString() {
+        return "Sizes{" +
+                ", TILE_SIZE=" + TILE_SIZE +
+                ", PIECE_SIZE=" + PIECE_SIZE +
+                ", DIMENSION=" + DIMENSION +
+                '}';
     }
 }

@@ -8,8 +8,7 @@ import java.util.Objects;
 public class UserInterface extends JFrame {
 
     public UserInterface(ChessMatch match, Sizes sizes) {
-        super();
-        setTitle("Chess");
+        super("Chess");
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,7 +21,7 @@ public class UserInterface extends JFrame {
         PieceLoader pieceLoader = new PieceLoader(new ImageIcon[sizes.getBOARD_SIZE()][sizes.getBOARD_SIZE()]);
 
         // Pass the pieces images to the drawer
-        PieceDrawer pieceDrawer = new PieceDrawer(pieceLoader.getPiecesImages(), sizes);
+        PieceDrawer pieceDrawer = new PieceDrawer(pieceLoader.getPiecesIcons(), sizes);
 
         // Do the connection between the user and the board
         BoardInterface boardInterface = new BoardInterface(pieceDrawer, match, sizes);

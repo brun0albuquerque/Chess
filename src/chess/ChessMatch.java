@@ -43,7 +43,7 @@ public class ChessMatch {
         for (int a = 0; a < board.getRows(); a++) {
             for (int b = 0; b < board.getColumns(); b++) {
                 Position position = new Position(a, b);
-                matrix[a][b] = (ChessPiece) board.getPieceOnBoard(position);
+                matrix[a][b] = (ChessPiece) board.pieceOnBoard(position);
             }
         }
         return matrix;
@@ -54,16 +54,16 @@ public class ChessMatch {
         if (!board.thereIsAPiece(position)) {
             throw new ChessException("No piece on the position.");
         }
-        if (currentPlayer != ((ChessPiece) board.getPieceOnBoard(position)).getColor()) {
+        if (currentPlayer != ((ChessPiece) board.pieceOnBoard(position)).getColor()) {
             throw new ChessException("Cannot move this piece.");
         }
-        if (!board.getPieceOnBoard(position).isThereAnyPossibleMove()) {
+        if (!board.pieceOnBoard(position).isThereAnyPossibleMove()) {
             throw new ChessException("No possible moves for the piece.");
         }
     }
 
     private void validateTargetPosition(Position source, Position target) {
-        if (!board.getPieceOnBoard(source).possiblePieceMoves(target)) {
+        if (!board.pieceOnBoard(source).possiblePieceMoves(target)) {
             throw new ChessException("Cannot move to this position.");
         }
     }
@@ -92,7 +92,7 @@ public class ChessMatch {
     // Get the possible moves of the selected piece on the board
     public boolean[][] possibleMoves(Position position) {
         validateSourcePosition(position);
-        return board.getPieceOnBoard(position).possibleMoves();
+        return board.pieceOnBoard(position).possibleMoves();
     }
 
     // Change the position of a piece and make the capture of an opponent piece

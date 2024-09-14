@@ -6,16 +6,17 @@ import java.util.Objects;
 
 public class PieceLoader extends JFrame {
 
-    private final ImageIcon[][] piecesImages;
+    private ImageIcon[][] piecesIcons;
 
-    public PieceLoader(ImageIcon[][] piecesImages) throws HeadlessException {
+    public PieceLoader(ImageIcon[][] piecesIcons) throws HeadlessException {
         super();
-        this.piecesImages = piecesImages;
+        this.piecesIcons = piecesIcons;
         loadInitialPiecesIcons();
+        invertingMatrix();
     }
 
-    public ImageIcon[][] getPiecesImages() {
-        return piecesImages;
+    public ImageIcon[][] getPiecesIcons() {
+        return piecesIcons;
     }
 
     public void loadInitialPiecesIcons() {
@@ -37,28 +38,38 @@ public class PieceLoader extends JFrame {
 
         // Place white piecesImages
         for (int a = 0; a < 8; a++) {
-            piecesImages[6][a] = whitePawn;
+            piecesIcons[6][a] = whitePawn;
         }
-        piecesImages[7][0] = whiteRook;
-        piecesImages[7][1] = whiteKnight;
-        piecesImages[7][2] = whiteBishop;
-        piecesImages[7][3] = whiteQueen;
-        piecesImages[7][4] = whiteKing;
-        piecesImages[7][5] = whiteBishop;
-        piecesImages[7][6] = whiteKnight;
-        piecesImages[7][7] = whiteRook;
+        piecesIcons[7][0] = whiteRook;
+        piecesIcons[7][1] = whiteKnight;
+        piecesIcons[7][2] = whiteBishop;
+        piecesIcons[7][3] = whiteQueen;
+        piecesIcons[7][4] = whiteKing;
+        piecesIcons[7][5] = whiteBishop;
+        piecesIcons[7][6] = whiteKnight;
+        piecesIcons[7][7] = whiteRook;
 
         // Place black piecesImages
         for (int a = 0; a < 8; a++) {
-            piecesImages[1][a] = blackPawn;
+            piecesIcons[1][a] = blackPawn;
         }
-        piecesImages[0][0] = blackRook;
-        piecesImages[0][1] = blackKnight;
-        piecesImages[0][2] = blackBishop;
-        piecesImages[0][3] = blackQueen;
-        piecesImages[0][4] = blackKing;
-        piecesImages[0][5] = blackBishop;
-        piecesImages[0][6] = blackKnight;
-        piecesImages[0][7] = blackRook;
+        piecesIcons[0][0] = blackRook;
+        piecesIcons[0][1] = blackKnight;
+        piecesIcons[0][2] = blackBishop;
+        piecesIcons[0][3] = blackQueen;
+        piecesIcons[0][4] = blackKing;
+        piecesIcons[0][5] = blackBishop;
+        piecesIcons[0][6] = blackKnight;
+        piecesIcons[0][7] = blackRook;
+    }
+
+    private void invertingMatrix() {
+        ImageIcon[][] matrix = new ImageIcon[8][8];
+        for (int a = 7; a >= 0; a--) {
+            for (int b = 0; b < 8; b++) {
+                matrix[7 - a][b] = piecesIcons[b][a];
+            }
+        }
+        piecesIcons = matrix;
     }
 }

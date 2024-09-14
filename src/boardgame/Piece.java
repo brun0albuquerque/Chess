@@ -1,17 +1,21 @@
 package boardgame;
 
 public abstract class Piece {
-    private Position position;
     private final Board board;
+    private Position position;
 
     public Piece(Board board) {
-        this.position = null;
         this.board = board;
+        this.position = null;
     }
 
-    public Piece(Position position, Board board) {
-        this.position = null;
+    public Piece(Board board, Position position) {
         this.board = board;
+        this.position = position;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
     public Position getPosition() {
@@ -20,10 +24,6 @@ public abstract class Piece {
 
     public void setPosition(Position position) {
         this.position = position;
-    }
-
-    public Board getBoard() {
-        return board;
     }
 
     public abstract boolean[][] possibleMoves();

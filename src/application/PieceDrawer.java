@@ -1,13 +1,11 @@
 package application;
 
-import boardgame.Position;
-
 import javax.swing.*;
 import java.awt.*;
 
-public class PieceDrawer extends Component {
+public class PieceDrawer extends JPanel {
 
-    private final ImageIcon[][] piecesIcons;
+    private ImageIcon[][] piecesIcons;
     private final Sizes sizes;
 
     public PieceDrawer(ImageIcon[][] piecesIcons, Sizes sizes) {
@@ -19,30 +17,26 @@ public class PieceDrawer extends Component {
         return piecesIcons;
     }
 
-    public ImageIcon getPieceIcon(int row, int col) {
-        return piecesIcons[row][col];
+    public ImageIcon getPieceIcon(int x, int y) {
+        return piecesIcons[x][y];
     }
 
-    public void setPieceIcon(int row, int col, ImageIcon image) {
-        piecesIcons[row][col] = image;
+    public void setPieceIcon(int x, int y, ImageIcon image) {
+        piecesIcons[x][y] = image;
     }
 
-    public void removePieceIcon(int row, int col) {
-        piecesIcons[row][col] = null;
+    public void removePieceIcon(int x, int y) {
+        piecesIcons[x][y] = null;
     }
 
-    // Make the move of the pieces icons on the board
-    public void movePiecesIcons(Position source, Position target) {
-        int sourceRow = source.getRow();
-        int sourceCol = source.getColumn();
-        int targetRow = target.getRow();
-        int targetCol = target.getColumn();
-
-        ImageIcon icon = getPieceIcon(sourceRow, sourceCol);
-        removePieceIcon(sourceRow, sourceCol);
-        setPieceIcon(targetRow, targetCol, icon);
-
-        repaint();
+    // Make the movements of the pieces icons on the board
+    public void movePiecesIcons(int aX, int aY, int bX, int bY) {
+        ImageIcon icon = getPieceIcon(aX, aY);
+        if (icon == null) {
+            return;
+        }
+        removePieceIcon(aX, aY);
+        setPieceIcon(bX, bY, icon);
     }
 
     // Place all the pieces images on the board
@@ -57,7 +51,7 @@ public class PieceDrawer extends Component {
                     Image image = piecesIcons[row][col].getImage();
                     Image resizedImage = image.getScaledInstance(sizes.getPIECE_SIZE(), sizes.getPIECE_SIZE(), Image.SCALE_SMOOTH);
                     ImageIcon newImage = new ImageIcon(resizedImage);
-                    newImage.paintIcon(this, g, col * sizes.getTILE_SIZE(), row * sizes.getTILE_SIZE());
+                    newImage.paintIcon(this, g, row * sizes.getTILE_SIZE(), col * sizes.getTILE_SIZE());
                 }
             }
         }
