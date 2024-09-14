@@ -13,20 +13,18 @@ public class BoardInterface extends JPanel {
     private final PieceDrawer drawer;
     private ChessMatch match;
     private ChessPiece piece;
-    private Sizes sizes;
 
     private Integer sourceX = null;
     private Integer sourceY = null;
     private Integer targetX = null;
     private Integer targetY = null;
 
-    public BoardInterface(PieceDrawer drawer, ChessMatch match, Sizes sizes) {
+    public BoardInterface(PieceDrawer drawer, ChessMatch match) {
         super();
         this.drawer = drawer;
         this.match = match;
-        this.sizes = sizes;
 
-        setPreferredSize(new Dimension(sizes.getDIMENSION(), sizes.getDIMENSION()));
+        setPreferredSize(new Dimension(InterfaceSizes.getSmallDimension(), InterfaceSizes.getSmallDimension()));
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -36,8 +34,8 @@ public class BoardInterface extends JPanel {
                 int x = e.getX();
                 int y = e.getY();
 
-                int col = x / sizes.getTILE_SIZE();
-                int row = y / sizes.getTILE_SIZE();
+                int col = x / InterfaceSizes.getSmallTileSize();
+                int row = (y / InterfaceSizes.getSmallTileSize());
 
                 col = Math.max(0, Math.min(7, col));
                 row = Math.max(0, Math.min(7, row));
@@ -77,11 +75,11 @@ public class BoardInterface extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for (int row = 0; row < sizes.getBOARD_SIZE(); row++) {
-            for (int col = 0; col < sizes.getBOARD_SIZE(); col++) {
+        for (int row = 0; row < InterfaceSizes.getBOARD_SIZE(); row++) {
+            for (int col = 0; col < InterfaceSizes.getBOARD_SIZE(); col++) {
                 g.setColor(isWhite(row, col) ? InterfaceColor.LIGHT_BROWN : InterfaceColor.BROWN);
-                g.fillRect(col * sizes.getTILE_SIZE(), row * sizes.getTILE_SIZE(),
-                        sizes.getTILE_SIZE(), sizes.getTILE_SIZE());
+                g.fillRect(col * InterfaceSizes.getSmallTileSize(), row * InterfaceSizes.getSmallTileSize(),
+                        InterfaceSizes.getSmallTileSize(), InterfaceSizes.getSmallTileSize());
             }
         }
         drawer.placePiecesOnBoard(g);

@@ -7,24 +7,24 @@ import java.util.Objects;
 
 public class UserInterface extends JFrame {
 
-    public UserInterface(ChessMatch match, Sizes sizes) {
+    public UserInterface(ChessMatch match) {
         super("Chess");
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Media source (board logo): https://www.flaticon.com/free-icon/chess-board_107617
-        ImageIcon logoIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/board.png")));
-        setIconImage(logoIcon.getImage());
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/board.png")));
+        setIconImage(icon.getImage());
 
         // Load the pieces images files
-        PieceLoader pieceLoader = new PieceLoader(new ImageIcon[sizes.getBOARD_SIZE()][sizes.getBOARD_SIZE()]);
+        PieceLoader loader = new PieceLoader(new ImageIcon[InterfaceSizes.getBOARD_SIZE()][InterfaceSizes.getBOARD_SIZE()]);
 
         // Pass the pieces images to the drawer
-        PieceDrawer pieceDrawer = new PieceDrawer(pieceLoader.getPiecesIcons(), sizes);
+        PieceDrawer drawer = new PieceDrawer(loader.getPiecesIcons());
 
         // Do the connection between the user and the board
-        BoardInterface boardInterface = new BoardInterface(pieceDrawer, match, sizes);
+        BoardInterface boardInterface = new BoardInterface(drawer, match);
         getContentPane().add(boardInterface);
 
         // Size the window based on its content

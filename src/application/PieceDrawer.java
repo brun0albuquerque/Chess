@@ -5,12 +5,10 @@ import java.awt.*;
 
 public class PieceDrawer extends JPanel {
 
-    private ImageIcon[][] piecesIcons;
-    private final Sizes sizes;
+    private final ImageIcon[][] piecesIcons;
 
-    public PieceDrawer(ImageIcon[][] piecesIcons, Sizes sizes) {
+    public PieceDrawer(ImageIcon[][] piecesIcons) {
         this.piecesIcons = piecesIcons;
-        this.sizes = sizes;
     }
 
     public ImageIcon[][] getPiecesIcons() {
@@ -45,13 +43,16 @@ public class PieceDrawer extends JPanel {
             throw new NullPointerException("No images loaded.");
         }
 
-        for (int row = 0; row < sizes.getBOARD_SIZE(); row++) {
-            for (int col = 0; col < sizes.getBOARD_SIZE(); col++) {
+        for (int row = 0; row < InterfaceSizes.getBOARD_SIZE(); row++) {
+            for (int col = 0; col < InterfaceSizes.getBOARD_SIZE(); col++) {
                 if (piecesIcons[row][col] != null) {
                     Image image = piecesIcons[row][col].getImage();
-                    Image resizedImage = image.getScaledInstance(sizes.getPIECE_SIZE(), sizes.getPIECE_SIZE(), Image.SCALE_SMOOTH);
+                    Image resizedImage = image.getScaledInstance(InterfaceSizes.getSmallPieceSize(),
+                            InterfaceSizes.getSmallPieceSize(), Image.SCALE_SMOOTH);
                     ImageIcon newImage = new ImageIcon(resizedImage);
-                    newImage.paintIcon(this, g, row * sizes.getTILE_SIZE(), col * sizes.getTILE_SIZE());
+                    newImage.paintIcon(this, g,
+                            row * InterfaceSizes.getSmallTileSize(),
+                            col * InterfaceSizes.getSmallTileSize());
                 }
             }
         }

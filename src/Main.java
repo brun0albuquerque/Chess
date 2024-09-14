@@ -1,14 +1,14 @@
 import application.InterfaceException;
-import application.Sizes;
+import application.InterfaceSizes;
 import application.UserInterface;
 import chess.ChessMatch;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            Sizes sizes = new Sizes();
-            ChessMatch match = new ChessMatch(sizes);
-            UserInterface userInterface = new UserInterface(match, sizes);
+            InterfaceSizes sizes = InterfaceSizes.SMALL;
+            ChessMatch match = new ChessMatch();
+            UserInterface userInterface = new UserInterface(match);
         } catch (NullPointerException e) {
             throw new NullPointerException(e.getMessage());
         } catch (InterfaceException e) {

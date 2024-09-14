@@ -1,6 +1,6 @@
 package chess;
 
-import application.Sizes;
+import application.InterfaceSizes;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -10,20 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChessMatch {
-    private final Board board;
+    private int turn;
+    private boolean check;
+    private boolean isCheckMate;
     private ChessColor currentPlayer;
     private ChessPiece enPassantVulnerable;
     private ChessPiece promoted;
-    private boolean check;
-    private boolean isCheckMate;
-    private int turn;
+    private final Board board;
     private List<Piece> piecesOnTheBoard;
     private List<Piece> capturedPieces;
 
-    public ChessMatch(Sizes sizes) {
+    public ChessMatch() {
         this.piecesOnTheBoard = new ArrayList<>();
         this.capturedPieces = new ArrayList<>();
-        this.board = new Board(sizes.getBOARD_SIZE(), sizes.getBOARD_SIZE());
+        this.board = new Board(InterfaceSizes.getBOARD_SIZE(), InterfaceSizes.getBOARD_SIZE());
         this.currentPlayer = ChessColor.WHITE;
         this.turn = 1;
         loadInitialPieces();
@@ -51,6 +51,7 @@ public class ChessMatch {
 
     // Validate the position and if there is a movement for the piece
     private void validateSourcePosition(Position position) {
+        System.out.println("validateSourcePosition: " + position);
         if (!board.thereIsAPiece(position)) {
             throw new ChessException("No piece on the position.");
         }
@@ -96,7 +97,7 @@ public class ChessMatch {
     }
 
     // Change the position of a piece and make the capture of an opponent piece
-    public ChessPiece performChessMove(Position source, Position target) {
+    public ChessPiece performChessMove(Position source, Position target, int x, int y) {
         validateSourcePosition(source);
         validateTargetPosition(source, target);
         Piece selectedPiece = movePiece(source, target);
@@ -112,7 +113,7 @@ public class ChessMatch {
 
     // Place a piece on the board
     private void placePiece(int row, int col, ChessPiece piece) {
-        board.placePiece(new Position(row, col), piece);
+        board.placePiece(new Position(col, row), piece);
         piecesOnTheBoard.add(piece);
     }
 
