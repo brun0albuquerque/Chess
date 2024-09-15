@@ -43,8 +43,8 @@ public class PieceLoader extends JFrame {
         piecesIcons[7][0] = whiteRook;
         piecesIcons[7][1] = whiteKnight;
         piecesIcons[7][2] = whiteBishop;
-        piecesIcons[7][3] = whiteQueen;
-        piecesIcons[7][4] = whiteKing;
+        piecesIcons[7][3] = whiteKing;
+        piecesIcons[7][4] = whiteQueen;
         piecesIcons[7][5] = whiteBishop;
         piecesIcons[7][6] = whiteKnight;
         piecesIcons[7][7] = whiteRook;
@@ -56,8 +56,8 @@ public class PieceLoader extends JFrame {
         piecesIcons[0][0] = blackRook;
         piecesIcons[0][1] = blackKnight;
         piecesIcons[0][2] = blackBishop;
-        piecesIcons[0][3] = blackQueen;
-        piecesIcons[0][4] = blackKing;
+        piecesIcons[0][3] = blackKing;
+        piecesIcons[0][4] = blackQueen;
         piecesIcons[0][5] = blackBishop;
         piecesIcons[0][6] = blackKnight;
         piecesIcons[0][7] = blackRook;
