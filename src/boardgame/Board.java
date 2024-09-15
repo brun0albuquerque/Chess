@@ -1,5 +1,7 @@
 package boardgame;
 
+import javax.swing.*;
+
 public class Board {
     private final int columns;
     private final int rows;
@@ -8,7 +10,8 @@ public class Board {
     public Board(int columns, int rows) {
         // Checks if rows and columns are positive
         if (columns != 8 || rows != 8) {
-            throw new BoardException("Error creating board.");
+            JOptionPane.showMessageDialog(null, "Error when try to create the board. The game can't start.",
+                    "Board error", JOptionPane.INFORMATION_MESSAGE, null);
         }
         this.columns = columns;
         this.rows = rows;
@@ -26,7 +29,8 @@ public class Board {
     // Change the piece position if the position is valid
     public Piece pieceOnBoard(Position position) {
         if (!positionExists(position)) {
-            throw new BoardException("Position is not on the board.");
+            JOptionPane.showMessageDialog(null, "Position is not on the board.",
+                    "Position error", JOptionPane.INFORMATION_MESSAGE, null);
         }
         return boardPieces[position.getColumn()][position.getRow()];
     }
@@ -34,7 +38,8 @@ public class Board {
     // Check if there is a piece on the board position and if not, place a piece in the matrix position
     public void placePiece(Position position, Piece piece) {
         if (thereIsAPiece(position)) {
-            throw new BoardException("There is already a piece on position.");
+            JOptionPane.showMessageDialog(null, "There is already a piece on the position.",
+                    "Position error", JOptionPane.INFORMATION_MESSAGE, null);
         }
         boardPieces[position.getColumn()][position.getRow()] = piece;
         piece.setPosition(position);
@@ -44,7 +49,8 @@ public class Board {
     then remove the piece from the board position */
     public Piece removePiece(Position position) {
         if (!positionExists(position)) {
-            throw new BoardException("Position not on the board.");
+            JOptionPane.showMessageDialog(null, "Position is not on the board.",
+                    "Position error", JOptionPane.INFORMATION_MESSAGE, null);
         }
         if (pieceOnBoard(position) == null) {
             return null;
@@ -58,7 +64,9 @@ public class Board {
     // Check if there is a piece on the board position
     public boolean thereIsAPiece(Position position) {
         if (!positionExists(position)) {
-            System.out.println("No piece found at: " + position);
+            JOptionPane.showMessageDialog(null, "There is no piece at " + position,
+                    "Position error", JOptionPane.INFORMATION_MESSAGE, null);
+
             return false;
         }
         return pieceOnBoard(position) != null;

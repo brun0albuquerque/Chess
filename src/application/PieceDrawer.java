@@ -19,7 +19,7 @@ public class PieceDrawer extends JPanel {
         return piecesIcons[x][y];
     }
 
-    public void setPieceIcon(int x, int y, ImageIcon image) {
+    public void placePieceIcon(int x, int y, ImageIcon image) {
         piecesIcons[x][y] = image;
     }
 
@@ -34,13 +34,15 @@ public class PieceDrawer extends JPanel {
             return;
         }
         removePieceIcon(aX, aY);
-        setPieceIcon(bX, bY, icon);
+        placePieceIcon(bX, bY, icon);
     }
 
     // Place all the pieces images on the board
     public void placePiecesOnBoard(Graphics g) {
         if (piecesIcons == null) {
-            throw new NullPointerException("No images loaded.");
+            JOptionPane.showMessageDialog(null, "Game files could not be loaded.",
+                    "Error", JOptionPane.ERROR_MESSAGE, null);
+            System.exit(1);
         }
 
         for (int row = 0; row < InterfaceSizes.getBOARD_SIZE(); row++) {

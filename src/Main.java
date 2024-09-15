@@ -1,18 +1,22 @@
+import application.ChessInterface;
 import application.InterfaceException;
-import application.InterfaceSizes;
-import application.UserInterface;
 import chess.ChessMatch;
+
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
         try {
-            InterfaceSizes sizes = InterfaceSizes.SMALL;
             ChessMatch match = new ChessMatch();
-            UserInterface userInterface = new UserInterface(match);
+            ChessInterface chessInterface = new ChessInterface(match);
         } catch (NullPointerException e) {
-            throw new NullPointerException(e.getMessage());
+            JOptionPane.showMessageDialog(null, "Files could not be loaded, the game will close.",
+                    "Error", JOptionPane.INFORMATION_MESSAGE, null);
+            System.exit(1);
         } catch (InterfaceException e) {
-            throw new InterfaceException("Interface exception." + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(),
+                    "Error", JOptionPane.INFORMATION_MESSAGE, null);
+            System.exit(1);
         }
     }
 }

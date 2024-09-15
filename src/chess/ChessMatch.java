@@ -6,6 +6,7 @@ import boardgame.Piece;
 import boardgame.Position;
 import pieces.*;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,19 +54,23 @@ public class ChessMatch {
     private void validateSourcePosition(Position position) {
         System.out.println("validateSourcePosition: " + position);
         if (!board.thereIsAPiece(position)) {
-            throw new ChessException("No piece on the position.");
+            JOptionPane.showMessageDialog(null, "No piece on the selected position.",
+                    "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
         }
         if (currentPlayer != ((ChessPiece) board.pieceOnBoard(position)).getColor()) {
-            throw new ChessException("Cannot move this piece.");
+            JOptionPane.showMessageDialog(null, "Can't move this piece.",
+                    "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
         }
         if (!board.pieceOnBoard(position).isThereAnyPossibleMove()) {
-            throw new ChessException("No possible moves for the piece.");
+            JOptionPane.showMessageDialog(null, "No possible moves for this piece.",
+                    "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
         }
     }
 
     private void validateTargetPosition(Position source, Position target) {
         if (!board.pieceOnBoard(source).possiblePieceMoves(target)) {
-            throw new ChessException("Cannot move to this position.");
+            JOptionPane.showMessageDialog(null, "Can't move the piece to this position.",
+                    "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
         }
     }
 

@@ -63,7 +63,8 @@ public class BoardInterface extends JPanel {
                 repaint();
             }
         } catch (RuntimeException e) {
-            throw new InterfaceException("No piece selected: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "There is no piece on this position",
+                    "No piece selected", JOptionPane.ERROR_MESSAGE, null);
         }
     }
 

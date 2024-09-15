@@ -5,9 +5,9 @@ import chess.ChessMatch;
 import javax.swing.*;
 import java.util.Objects;
 
-public class UserInterface extends JFrame {
+public class ChessInterface extends JFrame {
 
-    public UserInterface(ChessMatch match) {
+    public ChessInterface(ChessMatch match) {
         super("Chess");
         setResizable(false);
         setLocationRelativeTo(null);
