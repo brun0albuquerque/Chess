@@ -32,23 +32,23 @@ public class Pawn extends ChessPiece {
         if (getColor() == ChessColor.WHITE) {
 
             // One house move
-            if (!getBoard().thereIsAPiece(oneStepPositionWhite)) {
+            if (!getBoard().isThereAPieceAt(oneStepPositionWhite)) {
                 possibilities[oneStepPositionWhite.getRow()][oneStepPositionWhite.getColumn()] = true;
             }
 
             // Two houses move
-            if (!getBoard().thereIsAPiece(oneStepPositionWhite) && !getBoard().thereIsAPiece(twoStepsPositionWhite)
+            if (!getBoard().isThereAPieceAt(oneStepPositionWhite) && !getBoard().isThereAPieceAt(twoStepsPositionWhite)
                     && getMoveCount() == 0) {
                 possibilities[twoStepsPositionWhite.getRow()][twoStepsPositionWhite.getColumn()] = true;
             }
 
             // Capturing a piece on the left diagonal
-            if (getBoard().thereIsAPiece(leftDiagonalPositionWhite) && checkPossibleCapture(leftDiagonalPositionWhite)) {
+            if (getBoard().isThereAPieceAt(leftDiagonalPositionWhite) && checkPossibleCapture(leftDiagonalPositionWhite)) {
                 possibilities[leftDiagonalPositionWhite.getRow()][leftDiagonalPositionWhite.getColumn()] = true;
             }
 
             // Capturing a piece on the right diagonal
-            if (getBoard().thereIsAPiece(rightDiagonalPositionWhite) && checkPossibleCapture(rightDiagonalPositionWhite)) {
+            if (getBoard().isThereAPieceAt(rightDiagonalPositionWhite) && checkPossibleCapture(rightDiagonalPositionWhite)) {
                 possibilities[rightDiagonalPositionWhite.getRow()][rightDiagonalPositionWhite.getColumn()] = true;
             }
         }
@@ -56,26 +56,31 @@ public class Pawn extends ChessPiece {
         if (getColor() == ChessColor.BLACK) {
 
             // One house move
-            if (!getBoard().thereIsAPiece(oneStepPositionBlack)) {
+            if (!getBoard().isThereAPieceAt(oneStepPositionBlack)) {
                 possibilities[oneStepPositionBlack.getRow()][oneStepPositionBlack.getColumn()] = true;
             }
 
             // Two houses move
-            if (!getBoard().thereIsAPiece(oneStepPositionBlack) && !getBoard().thereIsAPiece(twoStepsPositionBlack)
+            if (!getBoard().isThereAPieceAt(oneStepPositionBlack) && !getBoard().isThereAPieceAt(twoStepsPositionBlack)
                     && getMoveCount() == 0) {
                 possibilities[twoStepsPositionBlack.getRow()][twoStepsPositionBlack.getColumn()] = true;
             }
 
             // Capturing a piece on the left diagonal
-            if (getBoard().thereIsAPiece(leftDiagonalPositionBlack) && checkPossibleCapture(leftDiagonalPositionBlack)) {
+            if (getBoard().isThereAPieceAt(leftDiagonalPositionBlack) && checkPossibleCapture(leftDiagonalPositionBlack)) {
                 possibilities[leftDiagonalPositionBlack.getRow()][leftDiagonalPositionBlack.getColumn()] = true;
             }
 
             // Capturing a piece on the right diagonal
-            if (getBoard().thereIsAPiece(rightDiagonalPositionBlack) && checkPossibleCapture(rightDiagonalPositionBlack)) {
+            if (getBoard().isThereAPieceAt(rightDiagonalPositionBlack) && checkPossibleCapture(rightDiagonalPositionBlack)) {
                 possibilities[rightDiagonalPositionBlack.getRow()][rightDiagonalPositionBlack.getColumn()] = true;
             }
         }
         return possibilities;
+    }
+
+    @Override
+    public String toString() {
+        return this.getColor() + "Pawn";
     }
 }

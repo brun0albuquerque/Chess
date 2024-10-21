@@ -30,6 +30,10 @@ public class ChessMatch {
         loadInitialPieces();
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public int getTurn() {
         return turn;
     }
@@ -52,13 +56,12 @@ public class ChessMatch {
 
     // Validate the position and if there is a movement for the piece
     private void validateSourcePosition(Position position) {
-        System.out.println("validateSourcePosition: " + position);
-        if (!board.thereIsAPiece(position)) {
+        if (!board.isThereAPieceAt(position)) {
             JOptionPane.showMessageDialog(null, "No piece on the selected position.",
                     "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
         }
         if (currentPlayer != ((ChessPiece) board.pieceOnBoard(position)).getColor()) {
-            JOptionPane.showMessageDialog(null, "Can't move this piece.",
+            JOptionPane.showMessageDialog(null, "Can't move this piece. Different colors.",
                     "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
         }
         if (!board.pieceOnBoard(position).isThereAnyPossibleMove()) {
@@ -69,7 +72,7 @@ public class ChessMatch {
 
     private void validateTargetPosition(Position source, Position target) {
         if (!board.pieceOnBoard(source).possiblePieceMoves(target)) {
-            JOptionPane.showMessageDialog(null, "Can't move the piece to this position.",
+            JOptionPane.showMessageDialog(null, "Target position is not available.",
                     "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
         }
     }
@@ -77,13 +80,13 @@ public class ChessMatch {
     // Change the player turn
     private void nextTurn() {
         turn++;
-        currentPlayer = currentPlayer == ChessColor.WHITE ? ChessColor.BLACK : ChessColor.WHITE;
+        currentPlayer = invertColor(currentPlayer);
     }
 
     // Make the action of move a piece from a position to another (change the positions in board)
     private Piece movePiece(Position source, Position target) {
         ChessPiece sourcePiece = (ChessPiece) board.removePiece(source);
-        sourcePiece.increaseMoveCount();
+        sourcePiece.setMoveCount(sourcePiece.getMoveCount() + 1);
         Piece capturedPiece = board.removePiece(target);
 
         if (capturedPiece != null) {
@@ -102,14 +105,16 @@ public class ChessMatch {
     }
 
     // Change the position of a piece and make the capture of an opponent piece
-    public ChessPiece performChessMove(Position source, Position target, int x, int y) {
+    public void performChessMove(Position source, Position target) {
         validateSourcePosition(source);
         validateTargetPosition(source, target);
-        Piece selectedPiece = movePiece(source, target);
-        ChessPiece piece = (ChessPiece) selectedPiece;
-        piece.increaseMoveCount();
+        Piece piece = movePiece(source, target);
+
+        if (piece != null) {
+            ChessPiece chesspiece = (ChessPiece) piece;
+            chesspiece.setMoveCount(chesspiece.getMoveCount() + 1);
+        }
         nextTurn();
-        return piece;
     }
 
     private ChessColor invertColor(ChessColor chessColor) {
@@ -126,8 +131,8 @@ public class ChessMatch {
         placePiece(0, 0, new Rook(board, ChessColor.WHITE));
         placePiece(0, 1, new Knight(board, ChessColor.WHITE));
         placePiece(0, 2, new Bishop(board, ChessColor.WHITE));
-        placePiece(0, 3, new Queen(board, ChessColor.WHITE));
-        placePiece(0, 4, new King(board, ChessColor.WHITE, this));
+        placePiece(0, 3, new King(board, ChessColor.WHITE, this));
+        placePiece(0, 4, new Queen(board, ChessColor.WHITE));
         placePiece(0, 5, new Bishop(board, ChessColor.WHITE));
         placePiece(0, 6, new Knight(board, ChessColor.WHITE));
         placePiece(0, 7, new Rook(board, ChessColor.WHITE));
@@ -139,8 +144,8 @@ public class ChessMatch {
         placePiece(7, 0, new Rook(board, ChessColor.BLACK));
         placePiece(7, 1, new Knight(board, ChessColor.BLACK));
         placePiece(7, 2, new Bishop(board, ChessColor.BLACK));
-        placePiece(7, 3, new Queen(board, ChessColor.BLACK));
-        placePiece(7, 4, new King(board, ChessColor.BLACK, this));
+        placePiece(7, 3, new King(board, ChessColor.BLACK, this));
+        placePiece(7, 4, new Queen(board, ChessColor.BLACK));
         placePiece(7, 5, new Bishop(board, ChessColor.BLACK));
         placePiece(7, 6, new Knight(board, ChessColor.BLACK));
         placePiece(7, 7, new Rook(board, ChessColor.BLACK));
@@ -148,5 +153,15 @@ public class ChessMatch {
         for (int a = 0; a < 8; a++) {
             placePiece(6, a, new Pawn(board, ChessColor.BLACK, this));
         }
+    }
+
+    private void invertingMatrix() {
+        Piece[][] matrix = new Piece[8][8];
+        for (int a = 7; a >= 0; a--) {
+            for (int b = 0; b <= 7; b++) {
+                matrix[a][b] = board.getBoardPieces()[b][a];
+            }
+        }
+        board.setBoardPieces(matrix);
     }
 }

@@ -21,12 +21,8 @@ public abstract class ChessPiece extends Piece {
         return moveCount;
     }
 
-    protected void increaseMoveCount() {
-        moveCount++;
-    }
-
-    protected void decreaseMoveCount() {
-        moveCount--;
+    public void setMoveCount(int moveCount) {
+        this.moveCount = moveCount;
     }
 
     // Check if there is a piece on the position and if it has, checks the color of the piece

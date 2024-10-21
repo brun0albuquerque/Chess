@@ -5,25 +5,33 @@ import javax.swing.*;
 public class Board {
     private final int columns;
     private final int rows;
-    private final Piece[][] boardPieces;
+    private Piece[][] boardPieces;
 
     public Board(int columns, int rows) {
         // Checks if rows and columns are positive
-        if (columns != 8 || rows != 8) {
-            JOptionPane.showMessageDialog(null, "Error when try to create the board. The game can't start.",
+        if (rows != 8 || columns != 8) {
+            JOptionPane.showMessageDialog(null, "Error board creation. The game can't start.",
                     "Board error", JOptionPane.INFORMATION_MESSAGE, null);
         }
-        this.columns = columns;
         this.rows = rows;
-        this.boardPieces = new Piece[columns][rows]; // This matrix represents the board itself, it's content is all pieces positions
+        this.columns = columns;
+        this.boardPieces = new Piece[rows][columns]; // This matrix represents the board itself, it's content is all pieces positions
+    }
+
+    public int getRows() {
+        return rows;
     }
 
     public int getColumns() {
         return columns;
     }
 
-    public int getRows() {
-        return rows;
+    public Piece[][] getBoardPieces() {
+        return boardPieces;
+    }
+
+    public void setBoardPieces(Piece[][] boardPieces) {
+        this.boardPieces = boardPieces;
     }
 
     // Change the piece position if the position is valid
@@ -32,16 +40,16 @@ public class Board {
             JOptionPane.showMessageDialog(null, "Position is not on the board.",
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
         }
-        return boardPieces[position.getColumn()][position.getRow()];
+        return boardPieces[position.getRow()][position.getColumn()];
     }
 
     // Check if there is a piece on the board position and if not, place a piece in the matrix position
     public void placePiece(Position position, Piece piece) {
-        if (thereIsAPiece(position)) {
+        if (isThereAPieceAt(position)) {
             JOptionPane.showMessageDialog(null, "There is already a piece on the position.",
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
         }
-        boardPieces[position.getColumn()][position.getRow()] = piece;
+        boardPieces[position.getRow()][position.getColumn()] = piece;
         piece.setPosition(position);
     }
 
@@ -57,16 +65,15 @@ public class Board {
         }
         Piece removedPiece = pieceOnBoard(position);
         removedPiece.setPosition(null);
-        boardPieces[position.getColumn()][position.getRow()] = null;
+        boardPieces[position.getRow()][position.getColumn()] = null;
         return removedPiece;
     }
 
     // Check if there is a piece on the board position
-    public boolean thereIsAPiece(Position position) {
+    public boolean isThereAPieceAt(Position position) {
         if (!positionExists(position)) {
-            JOptionPane.showMessageDialog(null, "There is no piece at " + position,
+            JOptionPane.showMessageDialog(null, "There is no piece at " + position + ".",
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
-
             return false;
         }
         return pieceOnBoard(position) != null;
@@ -74,7 +81,7 @@ public class Board {
 
     // Check if the position is positive and less than the board size
     public boolean positionExists(Position position) {
-        return position.getColumn() >= 0 && position.getColumn() < this.columns
-                && position.getRow() >= 0 && position.getRow() < this.rows;
+        return position.getRow() >= 0 && position.getRow() < this.rows
+                && position.getColumn() >= 0 && position.getColumn() < this.columns;
     }
 }

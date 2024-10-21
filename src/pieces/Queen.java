@@ -34,7 +34,7 @@ public class Queen extends ChessPiece {
 
     private void checkQueenDirection(Position queen, boolean[][] matrix, int x, int y) {
         Position position = new Position(queen.getRow() + x, queen.getColumn() + y);
-        while (!getBoard().thereIsAPiece(position) || checkPossibleCapture(position)) {
+        while (!getBoard().isThereAPieceAt(position) || checkPossibleCapture(position)) {
 
             matrix[position.getRow()][position.getColumn()] = true;// If the piece can be captured, break the loop
 
@@ -42,5 +42,10 @@ public class Queen extends ChessPiece {
             if (checkPossibleCapture(position)) break;
             position.setPosition(position.getRow() + x, position.getColumn() + y);
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.getColor() + "Queen";
     }
 }

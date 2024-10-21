@@ -1,6 +1,6 @@
-import application.ChessInterface;
-import application.InterfaceException;
 import chess.ChessMatch;
+import controller.BoardController;
+import application.ChessInterface;
 
 import javax.swing.*;
 
@@ -8,14 +8,18 @@ public class Main {
     public static void main(String[] args) {
         try {
             ChessMatch match = new ChessMatch();
-            ChessInterface chessInterface = new ChessInterface(match);
+            BoardController controller = new BoardController(match);
+            ChessInterface chessInterface = new ChessInterface(match, controller);
         } catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(null, "Files could not be loaded, the game will close.",
-                    "Error", JOptionPane.INFORMATION_MESSAGE, null);
+            JOptionPane.showMessageDialog(null, "Null pointer: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE, null);
             System.exit(1);
-        } catch (InterfaceException e) {
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(null, "Illegal argument: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE, null);
+        } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(),
-                    "Error", JOptionPane.INFORMATION_MESSAGE, null);
+                    "Error", JOptionPane.ERROR_MESSAGE, null);
             System.exit(1);
         }
     }

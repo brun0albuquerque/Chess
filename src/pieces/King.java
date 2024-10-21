@@ -35,10 +35,15 @@ public class King extends ChessPiece {
         // Check and return a boolean value the positions for each element in the matrix "directions"
         for (int[] direction : directions) {
             Position kingPosition = new Position(currentKingPosition.getRow() + direction[0], currentKingPosition.getColumn() + direction[1]);
-            if (!getBoard().thereIsAPiece(kingPosition) && checkPossibleCapture(kingPosition)) {
+            if (!getBoard().isThereAPieceAt(kingPosition) && checkPossibleCapture(kingPosition)) {
                 possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
             }
         }
         return possibilities;
+    }
+
+    @Override
+    public String toString() {
+        return this.getColor() + "King";
     }
 }

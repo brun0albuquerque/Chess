@@ -28,7 +28,7 @@ public class Bishop extends ChessPiece {
 
     private void checkBishopDirection(Position bishop, boolean[][] matrix, int x, int y) {
         Position position = new Position(bishop.getRow() + x, bishop.getColumn() + y);
-        while (!getBoard().thereIsAPiece(position) || checkPossibleCapture(position)) {
+        while (!getBoard().isThereAPieceAt(position) || checkPossibleCapture(position)) {
             matrix[position.getRow()][position.getColumn()] = true;
 
             if (checkPossibleCapture(position)) break; // If the piece can be captured, break the loop
@@ -36,5 +36,10 @@ public class Bishop extends ChessPiece {
             // Increment the value of the row and column until reach a piece or to the end of the board
             position.setPosition(position.getRow() + x, position.getColumn() + y);
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.getColor() + "Bishop";
     }
 }

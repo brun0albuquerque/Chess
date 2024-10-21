@@ -30,10 +30,15 @@ public class Knight extends ChessPiece {
 
         for (int[] direction : directions) {
             Position knightPosition = new Position(currentKnightPosition.getRow() + direction[0], currentKnightPosition.getColumn() + direction[1]);
-            if (!getBoard().thereIsAPiece(knightPosition) && checkPossibleCapture(knightPosition)) {
+            if (!getBoard().isThereAPieceAt(knightPosition) && checkPossibleCapture(knightPosition)) {
                 possibilities[knightPosition.getRow()][knightPosition.getColumn()] = true;
             }
         }
         return possibilities;
+    }
+
+    @Override
+    public String toString() {
+        return this.getColor() + "Knight";
     }
 }

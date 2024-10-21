@@ -1,28 +1,24 @@
 package application;
 
 import chess.ChessMatch;
-import chess.ChessPiece;
+import controller.BoardController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static controller.BoardController.cleanPointers;
+
 public class BoardInterface extends JPanel {
 
     private final PieceDrawer drawer;
-    private ChessMatch match;
-    private ChessPiece piece;
+    private final BoardController controller;
 
-    private Integer sourceX = null;
-    private Integer sourceY = null;
-    private Integer targetX = null;
-    private Integer targetY = null;
-
-    public BoardInterface(PieceDrawer drawer, ChessMatch match) {
+    public BoardInterface(PieceDrawer drawer, ChessMatch match, BoardController controller) {
         super();
         this.drawer = drawer;
-        this.match = match;
+        this.controller = controller;
 
         setPreferredSize(new Dimension(InterfaceSizes.getSmallDimension(), InterfaceSizes.getSmallDimension()));
 
@@ -34,39 +30,35 @@ public class BoardInterface extends JPanel {
                 int x = e.getX();
                 int y = e.getY();
 
-                int col = x / InterfaceSizes.getSmallTileSize();
-                int row = (y / InterfaceSizes.getSmallTileSize());
+                int row = x / InterfaceSizes.getSmallTileSize();
+                int col = y / InterfaceSizes.getSmallTileSize();
 
-                col = Math.max(0, Math.min(7, col));
-                row = Math.max(0, Math.min(7, row));
+                row = 7 - Math.max(0, Math.min(7, row));
+                col = 7 - Math.max(0, Math.min(7, col));
 
-                handlePieceSelection(col, row);
+                controller.handlePieceSelection(row, col);
+                movePiece(match);
             }
         });
     }
 
-    private void handlePieceSelection(Integer col, Integer row) {
-        try {
-            if (sourceX == null && sourceY == null) {
-                sourceX = col;
-                sourceY = row;
-            } else {
-                targetX = col;
-                targetY = row;
-
-                // Only call the method if all coordinates are not null to prevent a null pointer exception
-                if (sourceX != null && sourceY != null && targetX != null && targetY != null) {
-                    drawer.movePiecesIcons(sourceX, sourceY, targetX, targetY);
-                }
-                sourceX = null;
-                sourceY = null;
+    private void movePiece(ChessMatch match) {
+        if (!isCoordinatesNull()) {
+            try {
+                controller.movePiecesLogically(match);
+                drawer.movePiecesIcons(7 - controller.getaX(), 7 - controller.getaY(),
+                        7 - controller.getbX(), 7 - controller.getbY());
                 repaint();
+            } finally {
+                cleanPointers();
             }
-        } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(null, "There is no piece on this position",
-                    "No piece selected", JOptionPane.ERROR_MESSAGE, null);
         }
     }
+
+    private boolean isCoordinatesNull() {
+        return controller.getaX() == null || controller.getaY() == null || controller.getbX() == null || controller.getbY() == null;
+    }
+
 
     private boolean isWhite(int a, int b) {
         return (a + b) % 2 == 0;
