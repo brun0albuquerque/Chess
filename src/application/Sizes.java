@@ -1,6 +1,6 @@
 package application;
 
-public enum InterfaceSizes {
+public enum Sizes {
     SMALL(60, 60),
     MID(80, 80),
     BIG(96, 96);
@@ -10,7 +10,7 @@ public enum InterfaceSizes {
     private final int tileSize;
     private final int pieceSize;
 
-    InterfaceSizes(int tileSize, int pieceSize) {
+    Sizes(int tileSize, int pieceSize) {
         this.tileSize = tileSize;
         this.pieceSize = pieceSize;
     }

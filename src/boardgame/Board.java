@@ -7,7 +7,7 @@ public class Board {
     private final int rows;
     private Piece[][] boardPieces;
 
-    public Board(int columns, int rows) {
+    public Board(int rows, int columns) {
         // Checks if rows and columns are positive
         if (rows != 8 || columns != 8) {
             JOptionPane.showMessageDialog(null, "Error board creation. The game can't start.",
@@ -34,8 +34,8 @@ public class Board {
         this.boardPieces = boardPieces;
     }
 
-    // Change the piece position if the position is valid
-    public Piece pieceOnBoard(Position position) {
+    // Get the piece position if the position is valid
+    public Piece getPieceOnBoard(Position position) {
         if (!positionExists(position)) {
             JOptionPane.showMessageDialog(null, "Position is not on the board.",
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
@@ -60,13 +60,19 @@ public class Board {
             JOptionPane.showMessageDialog(null, "Position is not on the board.",
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
         }
-        if (pieceOnBoard(position) == null) {
+        if (getPieceOnBoard(position) == null) {
             return null;
         }
-        Piece removedPiece = pieceOnBoard(position);
+        Piece removedPiece = getPieceOnBoard(position);
         removedPiece.setPosition(null);
         boardPieces[position.getRow()][position.getColumn()] = null;
         return removedPiece;
+    }
+
+    // Check if the position is positive and less than the board size
+    public boolean positionExists(Position position) {
+        return position.getRow() >= 0 && position.getRow() < this.rows
+                && position.getColumn() >= 0 && position.getColumn() < this.columns;
     }
 
     // Check if there is a piece on the board position
@@ -76,12 +82,6 @@ public class Board {
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
             return false;
         }
-        return pieceOnBoard(position) != null;
-    }
-
-    // Check if the position is positive and less than the board size
-    public boolean positionExists(Position position) {
-        return position.getRow() >= 0 && position.getRow() < this.rows
-                && position.getColumn() >= 0 && position.getColumn() < this.columns;
+        return getPieceOnBoard(position) != null;
     }
 }

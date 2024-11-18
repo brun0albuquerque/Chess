@@ -1,6 +1,6 @@
 package chess;
 
-import application.InterfaceSizes;
+import application.Sizes;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -13,21 +13,20 @@ import java.util.List;
 public class ChessMatch {
     private int turn;
     private boolean check;
-    private boolean isCheckMate;
-    private ChessColor currentPlayer;
+    private boolean checkMate;
+    private List<Piece> boardPieces;
+    private ChessColor playerColor;
     private ChessPiece enPassantVulnerable;
     private ChessPiece promoted;
     private final Board board;
-    private List<Piece> piecesOnTheBoard;
-    private List<Piece> capturedPieces;
 
     public ChessMatch() {
-        this.piecesOnTheBoard = new ArrayList<>();
-        this.capturedPieces = new ArrayList<>();
-        this.board = new Board(InterfaceSizes.getBOARD_SIZE(), InterfaceSizes.getBOARD_SIZE());
-        this.currentPlayer = ChessColor.WHITE;
+        this.board = new Board(Sizes.getBOARD_SIZE(), Sizes.getBOARD_SIZE());
+        this.playerColor = ChessColor.WHITE;
+        this.boardPieces = new ArrayList<>();
         this.turn = 1;
         loadInitialPieces();
+        invertingMatrix();
     }
 
     public Board getBoard() {
@@ -38,8 +37,12 @@ public class ChessMatch {
         return turn;
     }
 
-    public ChessColor getCurrentPlayer() {
-        return currentPlayer;
+    public List<Piece> getBoardPieces() {
+        return boardPieces;
+    }
+
+    public ChessColor getPlayerColor() {
+        return playerColor;
     }
 
     // Get the position of all pieces on the board
@@ -48,83 +51,59 @@ public class ChessMatch {
         for (int a = 0; a < board.getRows(); a++) {
             for (int b = 0; b < board.getColumns(); b++) {
                 Position position = new Position(a, b);
-                matrix[a][b] = (ChessPiece) board.pieceOnBoard(position);
+                matrix[a][b] = (ChessPiece) board.getPieceOnBoard(position);
             }
         }
         return matrix;
     }
 
     // Validate the position and if there is a movement for the piece
-    private void validateSourcePosition(Position position) {
+    public void validateSourcePosition(Position position) {
         if (!board.isThereAPieceAt(position)) {
             JOptionPane.showMessageDialog(null, "No piece on the selected position.",
-                    "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
+                    "Illegal State Exception", JOptionPane.INFORMATION_MESSAGE, null);
+            throw new IllegalStateException("Invalid position: no piece at the selected position.");
         }
-        if (currentPlayer != ((ChessPiece) board.pieceOnBoard(position)).getColor()) {
-            JOptionPane.showMessageDialog(null, "Can't move this piece. Different colors.",
-                    "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
-        }
-        if (!board.pieceOnBoard(position).isThereAnyPossibleMove()) {
-            JOptionPane.showMessageDialog(null, "No possible moves for this piece.",
-                    "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
+        if (!validatePieceColor(position)) {
+            JOptionPane.showMessageDialog(null, "Can't move this piece. Different player color.",
+                    "Illegal State Exception", JOptionPane.INFORMATION_MESSAGE, null);
+            throw new IllegalStateException("Invalid move: can't move opponent's piece.");
         }
     }
 
-    private void validateTargetPosition(Position source, Position target) {
-        if (!board.pieceOnBoard(source).possiblePieceMoves(target)) {
-            JOptionPane.showMessageDialog(null, "Target position is not available.",
-                    "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
+    // Validate if the piece color is the same as the player
+    public boolean validatePieceColor(Position position) {
+        if (board.isThereAPieceAt(position)) {
+            System.out.println("Test: " + ((ChessPiece) board.getPieceOnBoard(position)).getPosition().toString() + " Player color: " + playerColor);
+            return playerColor == ((ChessPiece) board.getPieceOnBoard(position)).getColor();
+        }
+        return false;
+    }
+
+    public void validateTargetPosition(Position position) {
+        if (board.isThereAPieceAt(position)) {
+            if (validatePieceColor(position)) {
+                JOptionPane.showMessageDialog(null, "Pieces are the same color, this move is invalid.",
+                        "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
+                throw new IllegalStateException("Invalid move: can't move to this position.");
+            }
         }
     }
 
     // Change the player turn
-    private void nextTurn() {
+    public void nextTurn() {
         turn++;
-        currentPlayer = invertColor(currentPlayer);
-    }
-
-    // Make the action of move a piece from a position to another (change the positions in board)
-    private Piece movePiece(Position source, Position target) {
-        ChessPiece sourcePiece = (ChessPiece) board.removePiece(source);
-        sourcePiece.setMoveCount(sourcePiece.getMoveCount() + 1);
-        Piece capturedPiece = board.removePiece(target);
-
-        if (capturedPiece != null) {
-            piecesOnTheBoard.remove(capturedPiece);
-            capturedPieces.add(capturedPiece);
-        }
-
-        board.placePiece(target, sourcePiece);
-        return capturedPiece;
-    }
-
-    // Get the possible moves of the selected piece on the board
-    public boolean[][] possibleMoves(Position position) {
-        validateSourcePosition(position);
-        return board.pieceOnBoard(position).possibleMoves();
-    }
-
-    // Change the position of a piece and make the capture of an opponent piece
-    public void performChessMove(Position source, Position target) {
-        validateSourcePosition(source);
-        validateTargetPosition(source, target);
-        Piece piece = movePiece(source, target);
-
-        if (piece != null) {
-            ChessPiece chesspiece = (ChessPiece) piece;
-            chesspiece.setMoveCount(chesspiece.getMoveCount() + 1);
-        }
-        nextTurn();
+        playerColor = invertColor(playerColor);
     }
 
     private ChessColor invertColor(ChessColor chessColor) {
-        return (chessColor == ChessColor.WHITE) ? ChessColor.BLACK : ChessColor.WHITE;
+        return chessColor == ChessColor.WHITE ? ChessColor.BLACK : ChessColor.WHITE;
     }
 
     // Place a piece on the board
     private void placePiece(int row, int col, ChessPiece piece) {
         board.placePiece(new Position(col, row), piece);
-        piecesOnTheBoard.add(piece);
+        boardPieces.add(piece);
     }
 
     private void loadInitialPieces() {
@@ -159,7 +138,7 @@ public class ChessMatch {
         Piece[][] matrix = new Piece[8][8];
         for (int a = 7; a >= 0; a--) {
             for (int b = 0; b <= 7; b++) {
-                matrix[a][b] = board.getBoardPieces()[b][a];
+                matrix[a][7 - b] = board.getBoardPieces()[a][b];
             }
         }
         board.setBoardPieces(matrix);

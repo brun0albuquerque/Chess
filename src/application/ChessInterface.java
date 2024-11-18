@@ -1,14 +1,15 @@
 package application;
 
 import chess.ChessMatch;
-import controller.BoardController;
+import controller.MouseActions;
+import controller.Interface;
 
 import javax.swing.*;
 import java.util.Objects;
 
 public class ChessInterface extends JFrame {
 
-    public ChessInterface(ChessMatch match, BoardController controller) {
+    public ChessInterface(MouseActions controller, ChessMatch match) {
         super("Chess");
         setResizable(false);
         setLocationRelativeTo(null);
@@ -19,14 +20,14 @@ public class ChessInterface extends JFrame {
         setIconImage(icon.getImage());
 
         // Load the pieces images files
-        PieceLoader loader = new PieceLoader(new ImageIcon[InterfaceSizes.getBOARD_SIZE()][InterfaceSizes.getBOARD_SIZE()]);
+        PieceLoader loader = new PieceLoader(new ImageIcon[Sizes.getBOARD_SIZE()][Sizes.getBOARD_SIZE()]);
 
         // Pass the pieces images to the drawer
         PieceDrawer drawer = new PieceDrawer(loader.getPiecesIcons());
 
         // Do the connection between the user and the board
-        BoardInterface boardInterface = new BoardInterface(drawer, match, controller);
-        getContentPane().add(boardInterface);
+        Interface anInterface = new Interface(controller, drawer, match);
+        getContentPane().add(anInterface);
 
         // Size the window based on its content
         pack();

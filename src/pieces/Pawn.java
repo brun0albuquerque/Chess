@@ -6,6 +6,8 @@ import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.ChessColor;
 
+import javax.swing.*;
+
 public class Pawn extends ChessPiece {
 
     private final ChessMatch match;
@@ -32,23 +34,24 @@ public class Pawn extends ChessPiece {
         if (getColor() == ChessColor.WHITE) {
 
             // One house move
-            if (!getBoard().isThereAPieceAt(oneStepPositionWhite)) {
+            if (getBoard().positionExists(oneStepPositionWhite) && !getBoard().isThereAPieceAt(oneStepPositionWhite)) {
                 possibilities[oneStepPositionWhite.getRow()][oneStepPositionWhite.getColumn()] = true;
             }
 
             // Two houses move
-            if (!getBoard().isThereAPieceAt(oneStepPositionWhite) && !getBoard().isThereAPieceAt(twoStepsPositionWhite)
+            if (getBoard().positionExists(oneStepPositionWhite) && !getBoard().isThereAPieceAt(oneStepPositionWhite)
+                    && getBoard().positionExists(twoStepsPositionWhite) && !getBoard().isThereAPieceAt(twoStepsPositionWhite)
                     && getMoveCount() == 0) {
                 possibilities[twoStepsPositionWhite.getRow()][twoStepsPositionWhite.getColumn()] = true;
             }
 
             // Capturing a piece on the left diagonal
-            if (getBoard().isThereAPieceAt(leftDiagonalPositionWhite) && checkPossibleCapture(leftDiagonalPositionWhite)) {
+            if (getBoard().positionExists(leftDiagonalPositionWhite) && getBoard().isThereAPieceAt(leftDiagonalPositionWhite) && checkPossibleCapture(leftDiagonalPositionWhite)) {
                 possibilities[leftDiagonalPositionWhite.getRow()][leftDiagonalPositionWhite.getColumn()] = true;
             }
 
             // Capturing a piece on the right diagonal
-            if (getBoard().isThereAPieceAt(rightDiagonalPositionWhite) && checkPossibleCapture(rightDiagonalPositionWhite)) {
+            if (getBoard().positionExists(rightDiagonalPositionWhite) && getBoard().isThereAPieceAt(rightDiagonalPositionWhite) && checkPossibleCapture(rightDiagonalPositionWhite)) {
                 possibilities[rightDiagonalPositionWhite.getRow()][rightDiagonalPositionWhite.getColumn()] = true;
             }
         }
