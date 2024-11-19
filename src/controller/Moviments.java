@@ -2,8 +2,8 @@ package controller;
 
 import boardgame.Piece;
 import boardgame.Position;
-import chess.ChessPiece;
 import chess.ChessMatch;
+import chess.ChessPiece;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +36,7 @@ public class Moviments {
     }
 
     // Change the position of a piece and make the capture of an opponent piece
-    public void chessPieceMovement(Position source, Position target) {
-        match.validateSourcePosition(source);
-        match.validateTargetPosition(target);
+    protected void chessPieceMovement(Position source, Position target) {
         Piece piece = movingPiece(source, target);
 
         if (piece != null) {
@@ -46,11 +44,6 @@ public class Moviments {
             chessPiece.setMoveCount(chessPiece.getMoveCount() + 1);
         }
         match.nextTurn();
-    }
-
-    // Get the possible moves of the selected piece on the board
-    public boolean[][] possibleMoves(Position position) {
-        match.validateSourcePosition(position);
-        return match.getBoard().getPieceOnBoard(position).possibleMoves();
+        System.out.println("Next turn.");
     }
 }

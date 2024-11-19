@@ -58,36 +58,20 @@ public class ChessMatch {
     }
 
     // Validate the position and if there is a movement for the piece
-    public void validateSourcePosition(Position position) {
-        if (!board.isThereAPieceAt(position)) {
-            JOptionPane.showMessageDialog(null, "No piece on the selected position.",
-                    "Illegal State Exception", JOptionPane.INFORMATION_MESSAGE, null);
-            throw new IllegalStateException("Invalid position: no piece at the selected position.");
+    public boolean validateSourcePosition(Position position) {
+        return board.isThereAPieceAt(position) && validatePieceColor(position);
+    }
+
+    public boolean validateTargetPosition(Position position) {
+        if (board.isThereAPieceAt(position) && validatePieceColor(position)) {
+            return false;
         }
-        if (!validatePieceColor(position)) {
-            JOptionPane.showMessageDialog(null, "Can't move this piece. Different player color.",
-                    "Illegal State Exception", JOptionPane.INFORMATION_MESSAGE, null);
-            throw new IllegalStateException("Invalid move: can't move opponent's piece.");
-        }
+        return !board.isThereAPieceAt(position);
     }
 
     // Validate if the piece color is the same as the player
     public boolean validatePieceColor(Position position) {
-        if (board.isThereAPieceAt(position)) {
-            System.out.println("Test: " + ((ChessPiece) board.getPieceOnBoard(position)).getPosition().toString() + " Player color: " + playerColor);
-            return playerColor == ((ChessPiece) board.getPieceOnBoard(position)).getColor();
-        }
-        return false;
-    }
-
-    public void validateTargetPosition(Position position) {
-        if (board.isThereAPieceAt(position)) {
-            if (validatePieceColor(position)) {
-                JOptionPane.showMessageDialog(null, "Pieces are the same color, this move is invalid.",
-                        "Piece error", JOptionPane.INFORMATION_MESSAGE, null);
-                throw new IllegalStateException("Invalid move: can't move to this position.");
-            }
-        }
+        return playerColor == ((ChessPiece) board.getPieceOnBoard(position)).getColor();
     }
 
     // Change the player turn

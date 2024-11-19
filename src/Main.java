@@ -10,8 +10,8 @@ public class Main {
         try {
             ChessMatch match = new ChessMatch();
             Moviments moviments = new Moviments(match);
-            MouseActions controller = new MouseActions(moviments, match);
-            ChessInterface chessInterface = new ChessInterface(controller, match);
+            MouseActions mouseActions = new MouseActions(moviments, match);
+            ChessInterface chessInterface = new ChessInterface(mouseActions, match);
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(null, "Null pointer: " + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE, null);

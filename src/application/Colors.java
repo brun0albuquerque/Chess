@@ -2,7 +2,7 @@ package application;
 
 import java.awt.*;
 
-public enum InterfaceColor {
+public enum Colors {
     ;
 
     public static final Color BROWN = new Color(139, 69, 19, 220);

@@ -1,6 +1,6 @@
 package controller;
 
-import application.InterfaceColor;
+import application.Colors;
 import application.PieceDrawer;
 import application.Sizes;
 import boardgame.Position;
@@ -13,13 +13,13 @@ import java.awt.event.MouseEvent;
 
 public class Interface extends JPanel {
 
-    private final MouseActions controller;
+    private final MouseActions mouseActions;
     private final PieceDrawer drawer;
     private final ChessMatch match;
 
-    public Interface(MouseActions controller, PieceDrawer drawer, ChessMatch match) {
+    public Interface(MouseActions mouseActions, PieceDrawer drawer, ChessMatch match) {
         super();
-        this.controller = controller;
+        this.mouseActions = mouseActions;
         this.drawer = drawer;
         this.match = match;
 
@@ -39,26 +39,22 @@ public class Interface extends JPanel {
                 row = Math.max(0, Math.min(7, row));
                 col = Math.max(0, Math.min(7, col));
 
-                controller.handlePieceSelection(row, col);
+                mouseActions.handlePieceSelection(row, col);
                 movePiece(match);
             }
         });
     }
 
     private void movePiece(ChessMatch match) {
-        if (!isCoordinatesNull()) {
+        if (!mouseActions.isAllCoordinatesNull()) {
             try {
-                controller.logicMovement(match);
-                drawer.graphicMovement(controller.getaX(), controller.getaY(), controller.getbX(), controller.getbY());
+                mouseActions.logicMovement(match);
+                drawer.graphicMovement(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
                 repaint();
             } finally {
-                controller.cleanPointers();
+                mouseActions.cleanAllCoordinates();
             }
         }
-    }
-
-    private boolean isCoordinatesNull() {
-        return controller.getaX() == null || controller.getaY() == null || controller.getbX() == null || controller.getbY() == null;
     }
 
     private boolean isWhite(int a, int b) {
@@ -71,14 +67,14 @@ public class Interface extends JPanel {
 
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
-                g.setColor(isWhite(row, col) ? InterfaceColor.LIGHT_BROWN : InterfaceColor.BROWN);
+                g.setColor(isWhite(row, col) ? Colors.LIGHT_BROWN : Colors.BROWN);
                 g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
                         Sizes.getSmallTileSize(), Sizes.getSmallTileSize());
             }
         }
 
-        Integer selectedRow = controller.getaX();
-        Integer selectedCol = controller.getaY();
+        Integer selectedRow = MouseActions.aX;
+        Integer selectedCol = MouseActions.aY;
 
         if (selectedRow != null && selectedCol != null) {
             Position position = new Position(selectedRow, selectedCol);
@@ -87,8 +83,7 @@ public class Interface extends JPanel {
             for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
                 for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
                     if (selectedPiecePossibleMoves[row][col]) {
-                        System.out.println("Success!");
-                        g.setColor(InterfaceColor.LIGHT_BLUE);
+                        g.setColor(Colors.LIGHT_BLUE);
                         g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
                                 Sizes.getSmallTileSize(), Sizes.getSmallTileSize());
                     }

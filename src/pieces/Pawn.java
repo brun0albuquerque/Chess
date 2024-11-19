@@ -2,11 +2,9 @@ package pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessColor;
 import chess.ChessMatch;
 import chess.ChessPiece;
-import chess.ChessColor;
-
-import javax.swing.*;
 
 public class Pawn extends ChessPiece {
 
@@ -21,15 +19,15 @@ public class Pawn extends ChessPiece {
     public boolean[][] possibleMoves() {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
 
-        Position oneStepPositionWhite = new Position(getPosition().getRow() - 1, getPosition().getColumn());
-        Position twoStepsPositionWhite = new Position(getPosition().getRow() - 2, getPosition().getColumn());
-        Position oneStepPositionBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn());
-        Position twoStepsPositionBlack = new Position(getPosition().getRow() + 2, getPosition().getColumn());
+        Position oneStepPositionWhite = new Position(getPosition().getRow() + 1, getPosition().getColumn());
+        Position twoStepsPositionWhite = new Position(getPosition().getRow() + 2, getPosition().getColumn());
+        Position oneStepPositionBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn());
+        Position twoStepsPositionBlack = new Position(getPosition().getRow() - 2, getPosition().getColumn());
 
-        Position leftDiagonalPositionWhite = new Position(getPosition().getRow() - 1, getPosition().getColumn() - 1);
-        Position rightDiagonalPositionWhite = new Position(getPosition().getRow() - 1, getPosition().getColumn() + 1);
-        Position leftDiagonalPositionBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn() - 1);
-        Position rightDiagonalPositionBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn() + 1);
+        Position leftDiagonalPositionWhite = new Position(getPosition().getRow() + 1, getPosition().getColumn() + 1);
+        Position rightDiagonalPositionWhite = new Position(getPosition().getRow() + 1, getPosition().getColumn() - 1);
+        Position leftDiagonalPositionBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn() + 1);
+        Position rightDiagonalPositionBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn() - 1);
 
         if (getColor() == ChessColor.WHITE) {
 
@@ -46,12 +44,14 @@ public class Pawn extends ChessPiece {
             }
 
             // Capturing a piece on the left diagonal
-            if (getBoard().positionExists(leftDiagonalPositionWhite) && getBoard().isThereAPieceAt(leftDiagonalPositionWhite) && checkPossibleCapture(leftDiagonalPositionWhite)) {
+            if (getBoard().positionExists(leftDiagonalPositionWhite) && getBoard().isThereAPieceAt(leftDiagonalPositionWhite)
+                    && checkPossibleCapture(leftDiagonalPositionWhite)) {
                 possibilities[leftDiagonalPositionWhite.getRow()][leftDiagonalPositionWhite.getColumn()] = true;
             }
 
             // Capturing a piece on the right diagonal
-            if (getBoard().positionExists(rightDiagonalPositionWhite) && getBoard().isThereAPieceAt(rightDiagonalPositionWhite) && checkPossibleCapture(rightDiagonalPositionWhite)) {
+            if (getBoard().positionExists(rightDiagonalPositionWhite) && getBoard().isThereAPieceAt(rightDiagonalPositionWhite)
+                    && checkPossibleCapture(rightDiagonalPositionWhite)) {
                 possibilities[rightDiagonalPositionWhite.getRow()][rightDiagonalPositionWhite.getColumn()] = true;
             }
         }
