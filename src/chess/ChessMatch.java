@@ -6,7 +6,6 @@ import boardgame.Piece;
 import boardgame.Position;
 import pieces.*;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class ChessMatch {
         this.boardPieces = new ArrayList<>();
         this.turn = 1;
         loadInitialPieces();
-        invertingMatrix();
+        invertMatrix();
     }
 
     public Board getBoard() {
@@ -118,7 +117,7 @@ public class ChessMatch {
         }
     }
 
-    private void invertingMatrix() {
+    private void invertMatrix() {
         Piece[][] matrix = new Piece[8][8];
         for (int a = 7; a >= 0; a--) {
             for (int b = 0; b <= 7; b++) {

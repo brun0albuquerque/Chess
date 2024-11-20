@@ -8,13 +8,13 @@ import chess.ChessPiece;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Moviments {
+public class Movements {
 
     private final ChessMatch match;
     private List<Piece> boardPieces;
     private List<Piece> capturedPieces;
 
-    public Moviments(ChessMatch match) {
+    public Movements(ChessMatch match) {
         this.match = match;
         this.boardPieces = match.getBoardPieces();
         this.capturedPieces = new ArrayList<>();
@@ -44,6 +44,5 @@ public class Moviments {
             chessPiece.setMoveCount(chessPiece.getMoveCount() + 1);
         }
         match.nextTurn();
-        System.out.println("Next turn.");
     }
 }

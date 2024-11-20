@@ -8,7 +8,7 @@ import javax.swing.*;
 
 public class MouseActions {
 
-    private final Moviments moviments;
+    private final Movements movements;
     private final ChessMatch match;
 
     protected static Integer aX = null;
@@ -16,8 +16,8 @@ public class MouseActions {
     protected static Integer bX = null;
     protected static Integer bY = null;
 
-    public MouseActions(Moviments moviments, ChessMatch match) {
-        this.moviments = moviments;
+    public MouseActions(Movements movements, ChessMatch match) {
+        this.movements = movements;
         this.match = match;
     }
 
@@ -49,7 +49,7 @@ public class MouseActions {
         Position target = new Position(bX, bY);
 
         if (match.validateSourcePosition(source) && match.validateTargetPosition(target)) {
-            moviments.chessPieceMovement(source, target);
+            movements.chessPieceMovement(source, target);
         }
     }
 

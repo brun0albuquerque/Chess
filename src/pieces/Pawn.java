@@ -19,64 +19,68 @@ public class Pawn extends ChessPiece {
     public boolean[][] possibleMoves() {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
 
-        Position oneStepPositionWhite = new Position(getPosition().getRow() + 1, getPosition().getColumn());
-        Position twoStepsPositionWhite = new Position(getPosition().getRow() + 2, getPosition().getColumn());
-        Position oneStepPositionBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn());
-        Position twoStepsPositionBlack = new Position(getPosition().getRow() - 2, getPosition().getColumn());
-
-        Position leftDiagonalPositionWhite = new Position(getPosition().getRow() + 1, getPosition().getColumn() + 1);
-        Position rightDiagonalPositionWhite = new Position(getPosition().getRow() + 1, getPosition().getColumn() - 1);
-        Position leftDiagonalPositionBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn() + 1);
-        Position rightDiagonalPositionBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn() - 1);
-
         if (getColor() == ChessColor.WHITE) {
 
+            Position oneStepWhite = new Position(getPosition().getRow() + 1, 7 - getPosition().getColumn());
+            Position twoStepsWhite = new Position(getPosition().getRow() + 2, 7 - getPosition().getColumn());
+            Position leftDiagonalWhite = new Position(getPosition().getRow() + 1,  7 - getPosition().getColumn() + 1);
+            Position rightDiagonalWhite = new Position(getPosition().getRow() + 1, 7 - getPosition().getColumn() - 1);
+
+            System.out.println("One: " + oneStepWhite + ", Two: " + twoStepsWhite);
+
             // One house move
-            if (getBoard().positionExists(oneStepPositionWhite) && !getBoard().isThereAPieceAt(oneStepPositionWhite)) {
-                possibilities[oneStepPositionWhite.getRow()][oneStepPositionWhite.getColumn()] = true;
+            if (getBoard().positionExists(oneStepWhite) && !getBoard().isThereAPieceAt(oneStepWhite)) {
+                possibilities[oneStepWhite.getRow()][oneStepWhite.getColumn()] = true;
             }
 
             // Two houses move
-            if (getBoard().positionExists(oneStepPositionWhite) && !getBoard().isThereAPieceAt(oneStepPositionWhite)
-                    && getBoard().positionExists(twoStepsPositionWhite) && !getBoard().isThereAPieceAt(twoStepsPositionWhite)
+            if (getBoard().positionExists(oneStepWhite) && !getBoard().isThereAPieceAt(oneStepWhite)
+                    && getBoard().positionExists(twoStepsWhite) && !getBoard().isThereAPieceAt(twoStepsWhite)
                     && getMoveCount() == 0) {
-                possibilities[twoStepsPositionWhite.getRow()][twoStepsPositionWhite.getColumn()] = true;
+                possibilities[twoStepsWhite.getRow()][twoStepsWhite.getColumn()] = true;
             }
 
             // Capturing a piece on the left diagonal
-            if (getBoard().positionExists(leftDiagonalPositionWhite) && getBoard().isThereAPieceAt(leftDiagonalPositionWhite)
-                    && checkPossibleCapture(leftDiagonalPositionWhite)) {
-                possibilities[leftDiagonalPositionWhite.getRow()][leftDiagonalPositionWhite.getColumn()] = true;
+            if (getBoard().positionExists(leftDiagonalWhite) && getBoard().isThereAPieceAt(leftDiagonalWhite)
+                    && checkPossibleCapture(leftDiagonalWhite)) {
+                possibilities[leftDiagonalWhite.getRow()][leftDiagonalWhite.getColumn()] = true;
             }
 
             // Capturing a piece on the right diagonal
-            if (getBoard().positionExists(rightDiagonalPositionWhite) && getBoard().isThereAPieceAt(rightDiagonalPositionWhite)
-                    && checkPossibleCapture(rightDiagonalPositionWhite)) {
-                possibilities[rightDiagonalPositionWhite.getRow()][rightDiagonalPositionWhite.getColumn()] = true;
+            if (getBoard().positionExists(rightDiagonalWhite) && getBoard().isThereAPieceAt(rightDiagonalWhite)
+                    && checkPossibleCapture(rightDiagonalWhite)) {
+                possibilities[rightDiagonalWhite.getRow()][rightDiagonalWhite.getColumn()] = true;
             }
         }
 
         if (getColor() == ChessColor.BLACK) {
 
+            Position oneStepBlack = new Position(getPosition().getRow() - 1, 7 - getPosition().getColumn());
+            Position twoStepsBlack = new Position(getPosition().getRow() - 2, 7 - getPosition().getColumn());
+            Position leftDiagonalBlack = new Position(getPosition().getRow() - 1, 7 - getPosition().getColumn() + 1);
+            Position rightDiagonalBlack = new Position(getPosition().getRow() - 1, 7 - getPosition().getColumn() - 1);
+
+            System.out.println("One: " + oneStepBlack + ", Two: " + twoStepsBlack);
+
             // One house move
-            if (!getBoard().isThereAPieceAt(oneStepPositionBlack)) {
-                possibilities[oneStepPositionBlack.getRow()][oneStepPositionBlack.getColumn()] = true;
+            if (!getBoard().isThereAPieceAt(oneStepBlack)) {
+                possibilities[oneStepBlack.getRow()][oneStepBlack.getColumn()] = true;
             }
 
             // Two houses move
-            if (!getBoard().isThereAPieceAt(oneStepPositionBlack) && !getBoard().isThereAPieceAt(twoStepsPositionBlack)
+            if (!getBoard().isThereAPieceAt(oneStepBlack) && !getBoard().isThereAPieceAt(twoStepsBlack)
                     && getMoveCount() == 0) {
-                possibilities[twoStepsPositionBlack.getRow()][twoStepsPositionBlack.getColumn()] = true;
+                possibilities[twoStepsBlack.getRow()][twoStepsBlack.getColumn()] = true;
             }
 
             // Capturing a piece on the left diagonal
-            if (getBoard().isThereAPieceAt(leftDiagonalPositionBlack) && checkPossibleCapture(leftDiagonalPositionBlack)) {
-                possibilities[leftDiagonalPositionBlack.getRow()][leftDiagonalPositionBlack.getColumn()] = true;
+            if (getBoard().isThereAPieceAt(leftDiagonalBlack) && checkPossibleCapture(leftDiagonalBlack)) {
+                possibilities[leftDiagonalBlack.getRow()][leftDiagonalBlack.getColumn()] = true;
             }
 
             // Capturing a piece on the right diagonal
-            if (getBoard().isThereAPieceAt(rightDiagonalPositionBlack) && checkPossibleCapture(rightDiagonalPositionBlack)) {
-                possibilities[rightDiagonalPositionBlack.getRow()][rightDiagonalPositionBlack.getColumn()] = true;
+            if (getBoard().isThereAPieceAt(rightDiagonalBlack) && checkPossibleCapture(rightDiagonalBlack)) {
+                possibilities[rightDiagonalBlack.getRow()][rightDiagonalBlack.getColumn()] = true;
             }
         }
         return possibilities;

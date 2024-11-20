@@ -5,16 +5,16 @@ import boardgame.Piece;
 import boardgame.Position;
 
 public abstract class ChessPiece extends Piece {
-    private final ChessColor chessColor;
+    private final ChessColor color;
     private int moveCount;
 
-    public ChessPiece(Board board, ChessColor chessColor) {
+    public ChessPiece(Board board, ChessColor color) {
         super(board);
-        this.chessColor = chessColor;
+        this.color = color;
     }
 
     public ChessColor getColor() {
-        return chessColor;
+        return color;
     }
 
     public int getMoveCount() {

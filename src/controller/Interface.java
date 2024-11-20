@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 public class Interface extends JPanel {
 
@@ -40,20 +41,25 @@ public class Interface extends JPanel {
                 col = Math.max(0, Math.min(7, col));
 
                 mouseActions.handlePieceSelection(row, col);
-                movePiece(match);
+
+                if (MouseActions.aX != null && MouseActions.aY != null) {
+                    repaint();
+                }
+
+                if (!mouseActions.isAllCoordinatesNull()) {
+                    movePiece(match);
+                    mouseActions.cleanAllCoordinates();
+                }
             }
         });
     }
 
     private void movePiece(ChessMatch match) {
-        if (!mouseActions.isAllCoordinatesNull()) {
-            try {
-                mouseActions.logicMovement(match);
-                drawer.graphicMovement(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
-                repaint();
-            } finally {
-                mouseActions.cleanAllCoordinates();
-            }
+        try {
+            mouseActions.logicMovement(match);
+            drawer.graphicMovement(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
+        } finally {
+            repaint();
         }
     }
 
@@ -64,6 +70,8 @@ public class Interface extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        System.out.println("Paint Component called.");
 
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
@@ -80,9 +88,13 @@ public class Interface extends JPanel {
             Position position = new Position(selectedRow, selectedCol);
             boolean[][] selectedPiecePossibleMoves = match.getBoard().getPieceOnBoard(position).possibleMoves();
 
+//            System.out.println(Arrays.deepToString(selectedPiecePossibleMoves));
+
             for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
                 for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
+//                    System.out.println(row + ", " + col);
                     if (selectedPiecePossibleMoves[row][col]) {
+                        System.out.println(row + ", " + col);
                         g.setColor(Colors.LIGHT_BLUE);
                         g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
                                 Sizes.getSmallTileSize(), Sizes.getSmallTileSize());

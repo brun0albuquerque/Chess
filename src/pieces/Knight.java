@@ -18,10 +18,10 @@ public class Knight extends ChessPiece {
         Position currentKnightPosition = getPosition();
 
         int[][] directions = {
-                {-2, -1}, // Up-Left
-                {-2, 1}, // Up-Right
-                {2, -1}, // Down-Left
-                {2, 1}, // Down-Right
+                {2, -1}, // Up-Left
+                {2, 1}, // Up-Right
+                {-2, -1}, // Down-Left
+                {-2, 1}, // Down-Right
                 {-1, -2}, // Left-Up
                 {-1, 2}, // Right-Up
                 {1, -2}, // Left-Down
