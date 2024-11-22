@@ -5,12 +5,12 @@ import application.PieceDrawer;
 import application.Sizes;
 import boardgame.Position;
 import chess.ChessMatch;
+import chess.ChessPiece;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 
 public class Interface extends JPanel {
 
@@ -71,8 +71,6 @@ public class Interface extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        System.out.println("Paint Component called.");
-
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
                 g.setColor(isWhite(row, col) ? Colors.LIGHT_BROWN : Colors.BROWN);
@@ -88,13 +86,9 @@ public class Interface extends JPanel {
             Position position = new Position(selectedRow, selectedCol);
             boolean[][] selectedPiecePossibleMoves = match.getBoard().getPieceOnBoard(position).possibleMoves();
 
-//            System.out.println(Arrays.deepToString(selectedPiecePossibleMoves));
-
             for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
                 for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
-//                    System.out.println(row + ", " + col);
-                    if (selectedPiecePossibleMoves[row][col]) {
-                        System.out.println(row + ", " + col);
+                    if (selectedPiecePossibleMoves[7 - col][7 - row]) {
                         g.setColor(Colors.LIGHT_BLUE);
                         g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
                                 Sizes.getSmallTileSize(), Sizes.getSmallTileSize());

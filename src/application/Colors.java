@@ -16,4 +16,6 @@ public enum Colors {
 
     public static final Color DARK_GRAY = new Color(0, 0, 0, 180);
     public static final Color WHITE = new Color(210, 210, 210, 10);
+
+//    public static final Color LIGHT_
 }

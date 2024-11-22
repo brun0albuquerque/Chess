@@ -8,11 +8,11 @@ public class PieceLoader extends JFrame {
 
     private ImageIcon[][] piecesIcons;
 
-    public PieceLoader(ImageIcon[][] piecesIcons) throws HeadlessException {
+    public PieceLoader(ImageIcon[][] icons) throws HeadlessException {
         super();
-        this.piecesIcons = piecesIcons;
+        this.piecesIcons = icons;
         loadInitialPiecesIcons();
-        invertingMatrix();
+        piecesIcons = invertMatrix(piecesIcons);
     }
 
     public ImageIcon[][] getPiecesIcons() {
@@ -63,13 +63,13 @@ public class PieceLoader extends JFrame {
         piecesIcons[0][7] = blackRook;
     }
 
-    private void invertingMatrix() {
-        ImageIcon[][] matrix = new ImageIcon[8][8];
+    private ImageIcon[][] invertMatrix(ImageIcon[][] matrix) {
+        ImageIcon[][] newMatrix = new ImageIcon[8][8];
         for (int a = 7; a >= 0; a--) {
             for (int b = 0; b < 8; b++) {
-                matrix[7 - a][b] = piecesIcons[b][a];
+                newMatrix[7 - a][b] = matrix[b][a];
             }
         }
-        piecesIcons = matrix;
+        return newMatrix;
     }
 }

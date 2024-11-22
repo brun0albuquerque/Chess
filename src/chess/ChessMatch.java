@@ -25,7 +25,7 @@ public class ChessMatch {
         this.boardPieces = new ArrayList<>();
         this.turn = 1;
         loadInitialPieces();
-        invertMatrix();
+        board.setBoardPieces(invertMatrix(board.getBoardPieces()));
     }
 
     public Board getBoard() {
@@ -93,8 +93,8 @@ public class ChessMatch {
         placePiece(0, 0, new Rook(board, ChessColor.WHITE));
         placePiece(0, 1, new Knight(board, ChessColor.WHITE));
         placePiece(0, 2, new Bishop(board, ChessColor.WHITE));
-        placePiece(0, 3, new King(board, ChessColor.WHITE, this));
-        placePiece(0, 4, new Queen(board, ChessColor.WHITE));
+        placePiece(0, 3, new Queen(board, ChessColor.WHITE));
+        placePiece(0, 4, new King(board, ChessColor.WHITE, this));
         placePiece(0, 5, new Bishop(board, ChessColor.WHITE));
         placePiece(0, 6, new Knight(board, ChessColor.WHITE));
         placePiece(0, 7, new Rook(board, ChessColor.WHITE));
@@ -106,8 +106,8 @@ public class ChessMatch {
         placePiece(7, 0, new Rook(board, ChessColor.BLACK));
         placePiece(7, 1, new Knight(board, ChessColor.BLACK));
         placePiece(7, 2, new Bishop(board, ChessColor.BLACK));
-        placePiece(7, 3, new King(board, ChessColor.BLACK, this));
-        placePiece(7, 4, new Queen(board, ChessColor.BLACK));
+        placePiece(7, 3, new Queen(board, ChessColor.BLACK));
+        placePiece(7, 4, new King(board, ChessColor.BLACK, this));
         placePiece(7, 5, new Bishop(board, ChessColor.BLACK));
         placePiece(7, 6, new Knight(board, ChessColor.BLACK));
         placePiece(7, 7, new Rook(board, ChessColor.BLACK));
@@ -117,13 +117,13 @@ public class ChessMatch {
         }
     }
 
-    private void invertMatrix() {
-        Piece[][] matrix = new Piece[8][8];
+    private Piece[][] invertMatrix(Piece[][] matrix) {
+        Piece[][] newMatrix = new Piece[8][8];
         for (int a = 7; a >= 0; a--) {
             for (int b = 0; b <= 7; b++) {
-                matrix[a][7 - b] = board.getBoardPieces()[a][b];
+                newMatrix[a][7 - b] = matrix[a][b];
             }
         }
-        board.setBoardPieces(matrix);
+        return newMatrix;
     }
 }

@@ -25,6 +25,8 @@ public class MouseActions {
         Position position = new Position(x, y);
         ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPieceOnBoard(position);
 
+        System.out.println("Coord: " + x + ", " + y);
+
         if (isAllCoordinatesNull() && selectedPiece != null && match.validatePieceColor(position)) {
             aX = x;
             aY = y;
