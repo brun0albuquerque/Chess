@@ -14,6 +14,7 @@ public class Board {
         if (rows != 8 || columns != 8) {
             JOptionPane.showMessageDialog(null, "Error board creation. The game can't start.",
                     "Board error", JOptionPane.INFORMATION_MESSAGE, null);
+            System.exit(1);
         }
         this.rows = rows;
         this.columns = columns;
@@ -39,8 +40,6 @@ public class Board {
     // Get the piece position, if the position is valid
     public Piece getPieceOn(Position position) {
         if (!positionExists(position)) {
-            JOptionPane.showMessageDialog(null, "Position is not on the board.",
-                    "Position error", JOptionPane.INFORMATION_MESSAGE, null);
             return null;
         }
         return boardPieces[position.getRow()][position.getColumn()];
@@ -51,18 +50,15 @@ public class Board {
         if (isThereAPieceAt(position)) {
             return;
         }
-
         boardPieces[position.getRow()][position.getColumn()] = piece;
         piece.setPosition(position);
     }
 
     public void placePiece(int x, int y, ChessPiece piece) {
         Position position = new Position(x, y);
-
         if (isThereAPieceAt(position)) {
             return;
         }
-
         boardPieces[position.getRow()][position.getColumn()] = piece;
         piece.setPosition(position);
     }
@@ -73,7 +69,6 @@ public class Board {
         if (getPieceOn(position) == null) {
             return;
         }
-        System.out.println("Remove: " + getPieceOn(position) + position);
         Piece piece = getPieceOn(position);
         piece.setPosition(null);
         boardPieces[position.getRow()][position.getColumn()] = null;
@@ -88,8 +83,6 @@ public class Board {
     // Check if there is a piece on the board position
     public boolean isThereAPieceAt(Position position) {
         if (!positionExists(position)) {
-            JOptionPane.showMessageDialog(null, "There is no piece at " + position + ".",
-                    "Position error", JOptionPane.INFORMATION_MESSAGE, null);
             return false;
         }
         return getPieceOn(position) != null;
