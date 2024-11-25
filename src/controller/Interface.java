@@ -3,6 +3,7 @@ package controller;
 import application.Colors;
 import application.PieceDrawer;
 import application.Sizes;
+import boardgame.Position;
 import chess.ChessMatch;
 
 import javax.swing.*;
@@ -13,10 +14,12 @@ import java.awt.event.MouseEvent;
 public class Interface extends JPanel {
 
     private final PieceDrawer drawer;
+    private final ChessMatch match;
 
     public Interface(MouseActions mouseActions, PieceDrawer drawer, ChessMatch match) {
         super();
         this.drawer = drawer;
+        this.match = match;
 
         setPreferredSize(new Dimension(Sizes.getSmallDimension(), Sizes.getSmallDimension()));
 
@@ -57,15 +60,34 @@ public class Interface extends JPanel {
         return (a + b) % 2 == 0;
     }
 
+    // This integrated method paints the board at the interface
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
-                g.setColor(isWhite(row, col) ? Colors.LIGHT_BLUE : Colors.BLUE);
+                g.setColor(isWhite(row, col) ? Colors.LIGHT_BROWN : Colors.BROWN);
                 g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
                         Sizes.getSmallTileSize(), Sizes.getSmallTileSize());
+            }
+        }
+
+        Integer selectedRow = MouseActions.aX;
+        Integer selectedCol = MouseActions.aY;
+
+        if (selectedRow != null && selectedCol != null) {
+            Position position = new Position(selectedRow, selectedCol);
+            boolean[][] selectedPiecePossibleMoves = match.getBoard().getPieceOn(position).possibleMoves();
+
+            for (int row = 0; row <= 7; row++) {
+                for (int col = 7; col >= 0; col--) {
+                    if (selectedPiecePossibleMoves[col][7 - row]) {
+                        g.setColor(Colors.LIGHT_BLUE);
+                        g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
+                                Sizes.getSmallTileSize(), Sizes.getSmallTileSize());
+                    }
+                }
             }
         }
         drawer.placePiecesOnBoard(g);
