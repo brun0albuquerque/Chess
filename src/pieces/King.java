@@ -2,9 +2,9 @@ package pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessColor;
 import chess.ChessMatch;
 import chess.ChessPiece;
-import chess.ChessColor;
 
 public class King extends ChessPiece {
 
@@ -22,29 +22,26 @@ public class King extends ChessPiece {
         Position currentKingPosition = getPosition();
 
         int[][] directions = {
-                {1, 0}, // Up
-                {-1, 0},  // Down
-                {0, -1}, // Left
-                {0, 1},  // Right
-                {1, -1}, // Up-Left
-                {1, 1},  // Up-Right
-                {-1, -1},  // Down-Left
-                {-1, 1}    // Down-Right
+                {0, -1}, // Up
+                {0, 1},  // Down
+                {-1, 0}, // Left
+                {1, 0},  // Right
+                {-1, -1}, // Up-Left
+                {1, -1},  // Up-Right
+                {-1, 1},  // Down-Left
+                {1, 1}    // Down-Right
         };
 
         // Check and return a boolean value the positions for each element in the matrix "directions"
         for (int[] direction : directions) {
             Position kingPosition = new Position(currentKingPosition.getRow() + direction[0],
                     currentKingPosition.getColumn() + direction[1]);
-            if (!getBoard().isThereAPieceAt(kingPosition) && checkPossibleCapture(kingPosition)) {
+
+            if (getBoard().positionExists(kingPosition) && !getBoard().isThereAPieceAt(kingPosition)
+                    || checkPossibleCapture(kingPosition)) {
                 possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
             }
         }
         return possibilities;
-    }
-
-    @Override
-    public String toString() {
-        return this.getColor() + "King";
     }
 }
