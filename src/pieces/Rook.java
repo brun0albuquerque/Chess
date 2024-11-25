@@ -19,9 +19,9 @@ public class Rook extends ChessPiece {
 
         // All the sides directions
         checkRookDirection(currentRookPosition, possibilities, 0, -1); // Up
-        checkRookDirection(currentRookPosition, possibilities, 0, +1); // Down
+        checkRookDirection(currentRookPosition, possibilities, 0, 1); // Down
         checkRookDirection(currentRookPosition, possibilities, -1, 0); // Left
-        checkRookDirection(currentRookPosition, possibilities, +1, 0); // Right
+        checkRookDirection(currentRookPosition, possibilities, 1, 0); // Right
 
         return possibilities;
     }
@@ -38,10 +38,5 @@ public class Rook extends ChessPiece {
             // Increment the value of the row and column until reach a piece or to the end of the board
             position.setPosition(position.getRow() + x, position.getColumn() + y);
         }
-    }
-
-    @Override
-    public String toString() {
-        return this.getColor() + "Rook";
     }
 }

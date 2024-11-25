@@ -81,9 +81,4 @@ public class Pawn extends ChessPiece {
         }
         return possibilities;
     }
-
-    @Override
-    public String toString() {
-        return this.getColor() + "Pawn";
-    }
 }
