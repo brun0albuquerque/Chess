@@ -73,7 +73,7 @@ public class Board {
         if (getPieceOn(position) == null) {
             return;
         }
-
+        System.out.println("Remove: " + getPieceOn(position) + position);
         Piece piece = getPieceOn(position);
         piece.setPosition(null);
         boardPieces[position.getRow()][position.getColumn()] = null;

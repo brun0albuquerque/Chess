@@ -2,7 +2,6 @@ package chess;
 
 import application.Sizes;
 import boardgame.Board;
-import boardgame.Piece;
 import boardgame.Position;
 import pieces.*;
 
@@ -20,7 +19,6 @@ public class ChessMatch {
         this.playerColor = ChessColor.WHITE;
         this.turn = 0;
         loadInitialPieces();
-        invertMatrix(board.getBoardPieces());
     }
 
     public Board getBoard() {
@@ -55,9 +53,9 @@ public class ChessMatch {
     // Validates if there is a piece on the target position and check if it's not the same color as the player
     public boolean validateTargetPosition(Position position) {
         if (board.isThereAPieceAt(position) && validatePieceColor(position)) {
-            return false;
+            throw new RuntimeException("Validate target position error.");
         }
-        return !board.isThereAPieceAt(position);
+        return !board.isThereAPieceAt(position) || board.isThereAPieceAt(position) && !validatePieceColor(position);
     }
 
     // Compare the color of the player and the piece
@@ -78,41 +76,30 @@ public class ChessMatch {
 
     // Load the pieces before the game starts
     private void loadInitialPieces() {
-        board.placePiece(0, 0, new Rook(board, ChessColor.WHITE));
-        board.placePiece(1, 0, new Knight(board, ChessColor.WHITE));
-        board.placePiece(2, 0, new Bishop(board, ChessColor.WHITE));
-        board.placePiece(3, 0, new King(board, ChessColor.WHITE, this));
-        board.placePiece(4, 0, new Queen(board, ChessColor.WHITE));
-        board.placePiece(5, 0, new Bishop(board, ChessColor.WHITE));
-        board.placePiece(6, 0, new Knight(board, ChessColor.WHITE));
-        board.placePiece(7, 0, new Rook(board, ChessColor.WHITE));
+        board.placePiece(0, 7, new Rook(board, ChessColor.WHITE));
+        board.placePiece(1, 7, new Knight(board, ChessColor.WHITE));
+        board.placePiece(2, 7, new Bishop(board, ChessColor.WHITE));
+        board.placePiece(3, 7, new King(board, ChessColor.WHITE, this));
+        board.placePiece(4, 7, new Queen(board, ChessColor.WHITE));
+        board.placePiece(5, 7, new Bishop(board, ChessColor.WHITE));
+        board.placePiece(6, 7, new Knight(board, ChessColor.WHITE));
+        board.placePiece(7, 7, new Rook(board, ChessColor.WHITE));
 
         for (int a = 0; a <= 7; a++) {
-            board.placePiece(a, 1, new Pawn(board, ChessColor.WHITE, this));
+            board.placePiece(a, 6, new Pawn(board, ChessColor.WHITE, this));
         }
 
-        board.placePiece(0, 7, new Rook(board, ChessColor.BLACK));
-        board.placePiece(1, 7, new Knight(board, ChessColor.BLACK));
-        board.placePiece(2, 7, new Bishop(board, ChessColor.BLACK));
-        board.placePiece(3, 7, new King(board, ChessColor.BLACK, this));
-        board.placePiece(4, 7, new Queen(board, ChessColor.BLACK));
-        board.placePiece(5, 7, new Bishop(board, ChessColor.BLACK));
-        board.placePiece(6, 7, new Knight(board, ChessColor.BLACK));
-        board.placePiece(7, 7, new Rook(board, ChessColor.BLACK));
+        board.placePiece(0, 0, new Rook(board, ChessColor.BLACK));
+        board.placePiece(1, 0, new Knight(board, ChessColor.BLACK));
+        board.placePiece(2, 0, new Bishop(board, ChessColor.BLACK));
+        board.placePiece(3, 0, new King(board, ChessColor.BLACK, this));
+        board.placePiece(4, 0, new Queen(board, ChessColor.BLACK));
+        board.placePiece(5, 0, new Bishop(board, ChessColor.BLACK));
+        board.placePiece(6, 0, new Knight(board, ChessColor.BLACK));
+        board.placePiece(7, 0, new Rook(board, ChessColor.BLACK));
 
         for (int a = 0; a <= 7; a++) {
-            board.placePiece(a, 6, new Pawn(board, ChessColor.BLACK, this));
+            board.placePiece(a, 1, new Pawn(board, ChessColor.BLACK, this));
         }
-    }
-
-    // Inverts the matrix columns
-    private void invertMatrix(Piece[][] matrix) {
-        Piece[][] newMatrix = new Piece[8][8];
-        for (int a = 7; a >= 0; a--) {
-            for (int b = 0; b <= 7; b++) {
-                newMatrix[a][7 - b] = matrix[a][b];
-            }
-        }
-        getBoard().setBoardPieces(newMatrix);
     }
 }

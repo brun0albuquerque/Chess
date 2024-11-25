@@ -47,6 +47,8 @@ public class Interface extends JPanel {
                     try {
                         mouseActions.logicMovement(match);
                         drawer.graphicMovement(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
+                    } catch (NullPointerException n) {
+                        mouseActions.cleanAllCoordinates();
                     } finally {
                         repaint();
                         mouseActions.cleanAllCoordinates();
@@ -82,7 +84,7 @@ public class Interface extends JPanel {
 
             for (int row = 0; row <= 7; row++) {
                 for (int col = 7; col >= 0; col--) {
-                    if (selectedPiecePossibleMoves[col][7 - row]) {
+                    if (selectedPiecePossibleMoves[col][row]) {
                         g.setColor(Colors.LIGHT_BLUE);
                         g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
                                 Sizes.getSmallTileSize(), Sizes.getSmallTileSize());

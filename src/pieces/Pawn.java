@@ -18,10 +18,10 @@ public class Pawn extends ChessPiece {
 
         if (getColor() == ChessColor.WHITE) {
 
-            Position oneStepWhite = new Position(getPosition().getRow(), getPosition().getColumn() + 1);
-            Position twoStepsWhite = new Position(getPosition().getRow(), getPosition().getColumn() + 2);
-            Position leftDiagonalWhite = new Position(getPosition().getRow() - 1, getPosition().getColumn() + 1);
-            Position rightDiagonalWhite = new Position(getPosition().getRow() + 1, getPosition().getColumn() + 1);
+            Position oneStepWhite = new Position(getPosition().getRow(), getPosition().getColumn() - 1);
+            Position twoStepsWhite = new Position(getPosition().getRow(), getPosition().getColumn() - 2);
+            Position leftDiagonalWhite = new Position(getPosition().getRow() - 1, getPosition().getColumn() - 1);
+            Position rightDiagonalWhite = new Position(getPosition().getRow() + 1, getPosition().getColumn() - 1);
 
             // One house move
             if (getBoard().positionExists(oneStepWhite) && !getBoard().isThereAPieceAt(oneStepWhite)) {
@@ -50,10 +50,10 @@ public class Pawn extends ChessPiece {
 
         if (getColor() == ChessColor.BLACK) {
 
-            Position oneStepBlack = new Position(getPosition().getRow(), getPosition().getColumn() - 1);
-            Position twoStepsBlack = new Position(getPosition().getRow(), getPosition().getColumn() - 2);
-            Position leftDiagonalBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn() - 1);
-            Position rightDiagonalBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn() - 1);
+            Position oneStepBlack = new Position(getPosition().getRow(), getPosition().getColumn() + 1);
+            Position twoStepsBlack = new Position(getPosition().getRow(), getPosition().getColumn() + 2);
+            Position leftDiagonalBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn() + 1);
+            Position rightDiagonalBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn() + 1);
 
             // One house move
             if (getBoard().positionExists(oneStepBlack) && !getBoard().isThereAPieceAt(oneStepBlack)) {

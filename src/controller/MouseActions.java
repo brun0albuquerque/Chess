@@ -24,7 +24,7 @@ public class MouseActions {
         Position position = new Position(x, y);
         ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPieceOn(position);
 
-        System.out.println("Click: " + selectedPiece);
+        System.out.println("Click: " + selectedPiece + "; " + x + ", " + y);
 
         if (isAllCoordinatesNull() && selectedPiece != null && match.validatePieceColor(position)) {
             aX = x;
@@ -49,10 +49,11 @@ public class MouseActions {
         Position target = new Position(bX, bY);
 
         if (match.validateSourcePosition(source) && match.validateTargetPosition(target)) {
-            movements.chessPieceMovement(source, target);
+            if (!movements.chessPieceMovement(source, target)) cleanAllCoordinates();
         }
     }
 
+    // Checks if any coordinate is null
     protected boolean isAllCoordinatesNull() {
         return aX == null || aY == null || bX == null || bY == null;
     }

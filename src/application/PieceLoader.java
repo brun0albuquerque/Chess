@@ -6,13 +6,12 @@ import java.util.Objects;
 
 public class PieceLoader extends JFrame {
 
-    private ImageIcon[][] piecesIcons;
+    private final ImageIcon[][] piecesIcons;
 
     public PieceLoader(ImageIcon[][] piecesIcons) throws HeadlessException {
         super();
         this.piecesIcons = piecesIcons;
         loadInitialPiecesIcons();
-        invertingMatrix();
     }
 
     public ImageIcon[][] getPiecesIcons() {
@@ -38,38 +37,28 @@ public class PieceLoader extends JFrame {
 
         // Place white piecesImages
         for (int a = 0; a < 8; a++) {
-            piecesIcons[6][a] = whitePawn;
+            piecesIcons[a][6] = whitePawn;
         }
-        piecesIcons[7][0] = whiteRook;
-        piecesIcons[7][1] = whiteKnight;
-        piecesIcons[7][2] = whiteBishop;
-        piecesIcons[7][3] = whiteKing;
-        piecesIcons[7][4] = whiteQueen;
-        piecesIcons[7][5] = whiteBishop;
-        piecesIcons[7][6] = whiteKnight;
+        piecesIcons[0][7] = whiteRook;
+        piecesIcons[1][7] = whiteKnight;
+        piecesIcons[2][7] = whiteBishop;
+        piecesIcons[3][7] = whiteKing;
+        piecesIcons[4][7] = whiteQueen;
+        piecesIcons[5][7] = whiteBishop;
+        piecesIcons[6][7] = whiteKnight;
         piecesIcons[7][7] = whiteRook;
 
         // Place black piecesImages
         for (int a = 0; a < 8; a++) {
-            piecesIcons[1][a] = blackPawn;
+            piecesIcons[a][1] = blackPawn;
         }
         piecesIcons[0][0] = blackRook;
-        piecesIcons[0][1] = blackKnight;
-        piecesIcons[0][2] = blackBishop;
-        piecesIcons[0][3] = blackKing;
-        piecesIcons[0][4] = blackQueen;
-        piecesIcons[0][5] = blackBishop;
-        piecesIcons[0][6] = blackKnight;
-        piecesIcons[0][7] = blackRook;
-    }
-
-    private void invertingMatrix() {
-        ImageIcon[][] matrix = new ImageIcon[8][8];
-        for (int a = 7; a >= 0; a--) {
-            for (int b = 0; b < 8; b++) {
-                matrix[7 - a][b] = piecesIcons[b][a];
-            }
-        }
-        piecesIcons = matrix;
+        piecesIcons[1][0] = blackKnight;
+        piecesIcons[2][0] = blackBishop;
+        piecesIcons[3][0] = blackKing;
+        piecesIcons[4][0] = blackQueen;
+        piecesIcons[5][0] = blackBishop;
+        piecesIcons[6][0] = blackKnight;
+        piecesIcons[7][0] = blackRook;
     }
 }
