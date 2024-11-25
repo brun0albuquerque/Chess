@@ -1,5 +1,7 @@
 package boardgame;
 
+import chess.ChessPiece;
+
 import javax.swing.*;
 
 public class Board {
@@ -34,11 +36,12 @@ public class Board {
         this.boardPieces = boardPieces;
     }
 
-    // Get the piece position if the position is valid
+    // Get the piece position, if the position is valid
     public Piece getPieceOn(Position position) {
         if (!positionExists(position)) {
             JOptionPane.showMessageDialog(null, "Position is not on the board.",
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
+            return null;
         }
         return boardPieces[position.getRow()][position.getColumn()];
     }
@@ -46,28 +49,34 @@ public class Board {
     // Check if there is a piece on the board position and if not, place a piece in the matrix position
     public void placePiece(Position position, Piece piece) {
         if (isThereAPieceAt(position)) {
-            JOptionPane.showMessageDialog(null, "There is already a piece on the position.",
-                    "Position error", JOptionPane.INFORMATION_MESSAGE, null);
             return;
         }
+
+        boardPieces[position.getRow()][position.getColumn()] = piece;
+        piece.setPosition(position);
+    }
+
+    public void placePiece(int x, int y, ChessPiece piece) {
+        Position position = new Position(x, y);
+
+        if (isThereAPieceAt(position)) {
+            return;
+        }
+
         boardPieces[position.getRow()][position.getColumn()] = piece;
         piece.setPosition(position);
     }
 
     /* Check if the position is valid and if there is a piece on the board position, if it has a piece,
     then remove the piece from the board position */
-    public Piece removePiece(Position position) {
-        if (!positionExists(position)) {
-            JOptionPane.showMessageDialog(null, "Position is not on the board.",
-                    "Position error", JOptionPane.INFORMATION_MESSAGE, null);
-        }
+    public void removePiece(Position position) {
         if (getPieceOn(position) == null) {
-            return null;
+            return;
         }
-        Piece removedPiece = getPieceOn(position);
-        removedPiece.setPosition(null);
+
+        Piece piece = getPieceOn(position);
+        piece.setPosition(null);
         boardPieces[position.getRow()][position.getColumn()] = null;
-        return removedPiece;
     }
 
     // Check if the position is positive and less than the board size

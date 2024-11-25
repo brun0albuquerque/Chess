@@ -4,8 +4,6 @@ import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
 
-import javax.swing.*;
-
 public class MouseActions {
 
     private final Movements movements;
@@ -21,11 +19,12 @@ public class MouseActions {
         this.match = match;
     }
 
+    // Handle the player interactions on the board
     protected void handlePieceSelection(int x, int y) {
         Position position = new Position(x, y);
         ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPieceOn(position);
 
-//        System.out.println("Piece: " + selectedPiece + ", " + position.getRow() + ", " + position.getColumn());
+        System.out.println("Click: " + selectedPiece);
 
         if (isAllCoordinatesNull() && selectedPiece != null && match.validatePieceColor(position)) {
             aX = x;
@@ -40,10 +39,9 @@ public class MouseActions {
         }
     }
 
+    // Perform the logic movement on the board
     protected void logicMovement(ChessMatch match) {
         if (match.getPieces()[aX][aY] == null) {
-            JOptionPane.showMessageDialog(null, "There is no piece to move.",
-                    "Move error", JOptionPane.INFORMATION_MESSAGE, null);
             return;
         }
 
@@ -59,6 +57,7 @@ public class MouseActions {
         return aX == null || aY == null || bX == null || bY == null;
     }
 
+    // Clear all the saved coordinates
     protected void cleanAllCoordinates() {
         aX = null;
         aY = null;

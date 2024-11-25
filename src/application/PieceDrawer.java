@@ -27,7 +27,7 @@ public class PieceDrawer extends JPanel {
         piecesIcons[x][y] = null;
     }
 
-    // Make the movements of the pieces icons on the board
+    // Make the moves of the piece icons on the board
     public void graphicMovement(int aX, int aY, int bX, int bY) {
         ImageIcon icon = getPieceIcon(aX, aY);
         if (icon == null) {
@@ -37,7 +37,7 @@ public class PieceDrawer extends JPanel {
         placePieceIcon(bX, bY, icon);
     }
 
-    // Place all the pieces images on the board
+    // Load all pieces icons on the board
     public void placePiecesOnBoard(Graphics g) {
         if (piecesIcons == null) {
             JOptionPane.showMessageDialog(null, "Game files could not be loaded.",
