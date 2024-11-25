@@ -2,8 +2,8 @@ package pieces;
 
 import boardgame.Board;
 import boardgame.Position;
-import chess.ChessPiece;
 import chess.ChessColor;
+import chess.ChessPiece;
 
 public class Bishop extends ChessPiece {
 
@@ -28,7 +28,8 @@ public class Bishop extends ChessPiece {
 
     private void checkBishopDirection(Position bishop, boolean[][] matrix, int x, int y) {
         Position position = new Position(bishop.getRow() + x, bishop.getColumn() + y);
-        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || checkPossibleCapture(position)) {
+        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position)
+                || checkPossibleCapture(position)) {
 
             matrix[position.getRow()][position.getColumn()] = true;
 

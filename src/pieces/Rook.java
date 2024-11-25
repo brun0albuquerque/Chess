@@ -28,7 +28,8 @@ public class Rook extends ChessPiece {
 
     private void checkRookDirection(Position rook, boolean[][] matrix, int x, int y) {
         Position position = new Position(rook.getRow() + x, rook.getColumn() + y);
-        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || checkPossibleCapture(position)) {
+        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position)
+                || checkPossibleCapture(position)) {
 
             matrix[position.getRow()][position.getColumn()] = true;
 

@@ -2,8 +2,8 @@ package pieces;
 
 import boardgame.Board;
 import boardgame.Position;
-import chess.ChessPiece;
 import chess.ChessColor;
+import chess.ChessPiece;
 
 public class Knight extends ChessPiece {
 
@@ -15,30 +15,30 @@ public class Knight extends ChessPiece {
     public boolean[][] possibleMoves() {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
 
-        Position currentKnightPosition = getPosition();
+        Position currentKnightPosition = this.getPosition();
 
         int[][] directions = {
-                {2, -1}, // Up-Left
-                {2, 1}, // Up-Right
-                {-2, -1}, // Down-Left
-                {-2, 1}, // Down-Right
-                {-1, -2}, // Left-Up
-                {-1, 2}, // Right-Up
-                {1, -2}, // Left-Down
-                {1, 2}, // Right-Down
+                {-1, -2}, // Up-Left
+                {1, -2}, // Up-Right
+                {2, -1}, // Up-Right
+                {2, 1}, // Down-Right
+                {1, 2}, // Down-Right
+                {-1, 2}, // Down-Left
+                {-2, 1}, // Down-Left
+                {-2, -1}, // Up-Left
         };
 
         for (int[] direction : directions) {
-            Position knightPosition = new Position(currentKnightPosition.getRow() + direction[0], currentKnightPosition.getColumn() + direction[1]);
-            if (!getBoard().isThereAPieceAt(knightPosition) && checkPossibleCapture(knightPosition)) {
-                possibilities[knightPosition.getRow()][knightPosition.getColumn()] = true;
+
+            Position newKnightPosition = new Position(
+                    currentKnightPosition.getRow() + direction[0],
+                    currentKnightPosition.getColumn() + direction[1]
+            );
+            if (getBoard().positionExists(newKnightPosition) && !getBoard().isThereAPieceAt(newKnightPosition)
+                    || checkPossibleCapture(newKnightPosition)) {
+                possibilities[newKnightPosition.getRow()][newKnightPosition.getColumn()] = true;
             }
         }
         return possibilities;
-    }
-
-    @Override
-    public String toString() {
-        return this.getColor() + "Knight";
     }
 }

@@ -4,8 +4,6 @@ import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
 
-import javax.swing.*;
-
 
 public class Movements {
 
@@ -18,8 +16,6 @@ public class Movements {
     // Changes the position of a piece and make the capture of an opponent piece
     protected boolean chessPieceMovement(Position source, Position target) {
         if (!validateMovePosition(source, target)) {
-            JOptionPane.showMessageDialog(null, "Invalid position.",
-                    "Position error", JOptionPane.INFORMATION_MESSAGE, null);
             return false;
         }
 
