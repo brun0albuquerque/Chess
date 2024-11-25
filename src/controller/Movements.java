@@ -3,6 +3,8 @@ package controller;
 import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
+import pieces.Pawn;
+import pieces.Queen;
 
 
 public class Movements {
@@ -18,7 +20,6 @@ public class Movements {
         if (!validateMovePosition(source, target)) {
             return false;
         }
-
         ChessPiece sourcePiece = (ChessPiece) match.getBoard().getPieceOn(source);
         sourcePiece.addMoveCount();
         match.getBoard().removePiece(source);
@@ -32,5 +33,17 @@ public class Movements {
     protected boolean validateMovePosition(Position source, Position target) {
         boolean[][] possibilities = match.getBoard().getPieceOn(source).possibleMoves();
         return possibilities[target.getRow()][target.getColumn()];
+    }
+
+    public boolean checkPawnPromotion(Position position) {
+        ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(position);
+
+        if (piece instanceof Pawn && piece.getPosition().getColumn() == 0
+                || piece instanceof Pawn && piece.getPosition().getColumn() == 7) {
+            match.getBoard().removePiece(position);
+            match.getBoard().placePiece(position, new Queen(match.getBoard(), piece.getColor()));
+            return true;
+        }
+        return false;
     }
 }

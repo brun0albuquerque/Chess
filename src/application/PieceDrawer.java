@@ -1,7 +1,10 @@
 package application;
 
+import chess.ChessColor;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class PieceDrawer extends JPanel {
 
@@ -35,6 +38,18 @@ public class PieceDrawer extends JPanel {
         }
         removePieceIcon(aX, aY);
         placePieceIcon(bX, bY, icon);
+    }
+
+    public void graphicPawnPromotion(int aX, int aY, ChessColor color) {
+        if (color == ChessColor.WHITE) {
+            ImageIcon whiteQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/white_queen.png")));
+            removePieceIcon(aX, aY);
+            placePieceIcon(aX, aY, whiteQueen);
+        } else {
+            ImageIcon blackQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/black_queen.png")));
+            removePieceIcon(aX, aY);
+            placePieceIcon(aX, aY, blackQueen);
+        }
     }
 
     // Load all pieces icons on the board

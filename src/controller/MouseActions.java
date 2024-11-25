@@ -19,12 +19,16 @@ public class MouseActions {
         this.match = match;
     }
 
+    public Movements getMovements() {
+        return movements;
+    }
+
     // Handle the player interactions on the board
     protected void handlePieceSelection(int x, int y) {
         Position position = new Position(x, y);
         ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPieceOn(position);
 
-        System.out.println("Click: " + x + ", " + y);
+        System.out.println(selectedPiece);
 
         if (isAllCoordinatesNull() && selectedPiece != null && match.validatePieceColor(position)) {
             aX = x;

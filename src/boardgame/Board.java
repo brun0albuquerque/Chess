@@ -1,7 +1,5 @@
 package boardgame;
 
-import chess.ChessPiece;
-
 import javax.swing.*;
 
 public class Board {
@@ -47,15 +45,6 @@ public class Board {
 
     // Check if there is a piece on the board position and if not, place a piece in the matrix position
     public void placePiece(Position position, Piece piece) {
-        if (isThereAPieceAt(position)) {
-            return;
-        }
-        boardPieces[position.getRow()][position.getColumn()] = piece;
-        piece.setPosition(position);
-    }
-
-    public void placePiece(int x, int y, ChessPiece piece) {
-        Position position = new Position(x, y);
         if (isThereAPieceAt(position)) {
             return;
         }

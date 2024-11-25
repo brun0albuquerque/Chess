@@ -11,7 +11,6 @@ public class ChessMatch {
     private boolean checkMate;
     private ChessColor playerColor;
     private ChessPiece enPassantVulnerable;
-    private ChessPiece promoted;
     private final Board board;
 
     public ChessMatch() {
@@ -53,7 +52,7 @@ public class ChessMatch {
     // Validates if there is a piece on the target position and check if it's not the same color as the player
     public boolean validateTargetPosition(Position position) {
         if (board.isThereAPieceAt(position) && validatePieceColor(position)) {
-            throw new RuntimeException("Validate target position error.");
+            return false;
         }
         return !board.isThereAPieceAt(position) || board.isThereAPieceAt(position) && !validatePieceColor(position);
     }
@@ -76,30 +75,30 @@ public class ChessMatch {
 
     // Load the pieces before the game starts
     private void loadInitialPieces() {
-        board.placePiece(0, 7, new Rook(board, ChessColor.WHITE));
-        board.placePiece(1, 7, new Knight(board, ChessColor.WHITE));
-        board.placePiece(2, 7, new Bishop(board, ChessColor.WHITE));
-        board.placePiece(3, 7, new King(board, ChessColor.WHITE, this));
-        board.placePiece(4, 7, new Queen(board, ChessColor.WHITE));
-        board.placePiece(5, 7, new Bishop(board, ChessColor.WHITE));
-        board.placePiece(6, 7, new Knight(board, ChessColor.WHITE));
-        board.placePiece(7, 7, new Rook(board, ChessColor.WHITE));
+        board.placePiece(new Position(0, 7), new Rook(board, ChessColor.WHITE));
+        board.placePiece(new Position(1, 7), new Knight(board, ChessColor.WHITE));
+        board.placePiece(new Position(2, 7), new Bishop(board, ChessColor.WHITE));
+        board.placePiece(new Position(3, 7), new King(board, ChessColor.WHITE, this));
+        board.placePiece(new Position(4, 7), new Queen(board, ChessColor.WHITE));
+        board.placePiece(new Position(5, 7), new Bishop(board, ChessColor.WHITE));
+        board.placePiece(new Position(6, 7), new Knight(board, ChessColor.WHITE));
+        board.placePiece(new Position(7, 7), new Rook(board, ChessColor.WHITE));
 
         for (int a = 0; a <= 7; a++) {
-            board.placePiece(a, 6, new Pawn(board, ChessColor.WHITE, this));
+            board.placePiece(new Position(a, 6), new Pawn(board, ChessColor.WHITE, this));
         }
 
-        board.placePiece(0, 0, new Rook(board, ChessColor.BLACK));
-        board.placePiece(1, 0, new Knight(board, ChessColor.BLACK));
-        board.placePiece(2, 0, new Bishop(board, ChessColor.BLACK));
-        board.placePiece(3, 0, new King(board, ChessColor.BLACK, this));
-        board.placePiece(4, 0, new Queen(board, ChessColor.BLACK));
-        board.placePiece(5, 0, new Bishop(board, ChessColor.BLACK));
-        board.placePiece(6, 0, new Knight(board, ChessColor.BLACK));
-        board.placePiece(7, 0, new Rook(board, ChessColor.BLACK));
+        board.placePiece(new Position(0, 0), new Rook(board, ChessColor.BLACK));
+        board.placePiece(new Position(1, 0), new Knight(board, ChessColor.BLACK));
+        board.placePiece(new Position(2, 0), new Bishop(board, ChessColor.BLACK));
+        board.placePiece(new Position(3, 0), new King(board, ChessColor.BLACK, this));
+        board.placePiece(new Position(4, 0), new Queen(board, ChessColor.BLACK));
+        board.placePiece(new Position(5, 0), new Bishop(board, ChessColor.BLACK));
+        board.placePiece(new Position(6, 0), new Knight(board, ChessColor.BLACK));
+        board.placePiece(new Position(7, 0), new Rook(board, ChessColor.BLACK));
 
         for (int a = 0; a <= 7; a++) {
-            board.placePiece(a, 1, new Pawn(board, ChessColor.BLACK, this));
+            board.placePiece(new Position(a, 1), new Pawn(board, ChessColor.BLACK, this));
         }
     }
 }

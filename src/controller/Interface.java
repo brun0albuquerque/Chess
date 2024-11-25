@@ -5,6 +5,7 @@ import application.PieceDrawer;
 import application.Sizes;
 import boardgame.Position;
 import chess.ChessMatch;
+import chess.ChessPiece;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,6 +48,13 @@ public class Interface extends JPanel {
                     try {
                         mouseActions.logicMovement(match);
                         drawer.graphicMovement(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
+
+                        Position position = new Position(MouseActions.bX, MouseActions.bY);
+                        ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(position);
+
+                        if (mouseActions.getMovements().checkPawnPromotion(position)) {
+                            drawer.graphicPawnPromotion(MouseActions.bX, MouseActions.bY, piece.getColor());
+                        }
                     } catch (NullPointerException n) {
                         mouseActions.cleanAllCoordinates();
                     } finally {
@@ -67,11 +75,14 @@ public class Interface extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, getWidth(), getHeight());
+
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
                 g.setColor(isWhite(row, col) ? Colors.LIGHT_BROWN : Colors.BROWN);
                 g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
-                        Sizes.getSmallTileSize(), Sizes.getSmallTileSize());
+                        Sizes.getSmallTileSize() - 1, Sizes.getSmallTileSize() - 1);
             }
         }
 
@@ -87,7 +98,7 @@ public class Interface extends JPanel {
                     if (selectedPiecePossibleMoves[col][row]) {
                         g.setColor(Colors.LIGHT_BLUE);
                         g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
-                                Sizes.getSmallTileSize(), Sizes.getSmallTileSize());
+                                Sizes.getSmallTileSize() - 1, Sizes.getSmallTileSize() - 1);
                     }
                 }
             }
