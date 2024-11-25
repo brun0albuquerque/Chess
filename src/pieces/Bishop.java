@@ -28,6 +28,7 @@ public class Bishop extends ChessPiece {
 
     private void checkBishopDirection(Position bishop, boolean[][] matrix, int x, int y) {
         Position position = new Position(bishop.getRow() + x, bishop.getColumn() + y);
+
         while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position)
                 || checkPossibleCapture(position)) {
 

@@ -15,7 +15,7 @@ public class Knight extends ChessPiece {
     public boolean[][] possibleMoves() {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
 
-        Position currentKnightPosition = this.getPosition();
+        Position currentKnightPosition = getPosition();
 
         int[][] directions = {
                 {-1, -2}, // Up-Left
@@ -29,11 +29,11 @@ public class Knight extends ChessPiece {
         };
 
         for (int[] direction : directions) {
-
             Position newKnightPosition = new Position(
                     currentKnightPosition.getRow() + direction[0],
                     currentKnightPosition.getColumn() + direction[1]
             );
+
             if (getBoard().positionExists(newKnightPosition) && !getBoard().isThereAPieceAt(newKnightPosition)
                     || checkPossibleCapture(newKnightPosition)) {
                 possibilities[newKnightPosition.getRow()][newKnightPosition.getColumn()] = true;
