@@ -44,7 +44,7 @@ public enum Sizes {
     }
 
     public static int getSmallDimension() {
-        return BOARD_SIZE * SMALL.tileSize;
+        return BOARD_SIZE * SMALL.tileSize + 1;
     }
 
     public static int getMidDimension() {

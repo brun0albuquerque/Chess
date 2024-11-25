@@ -80,8 +80,8 @@ public class Interface extends JPanel {
 
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
-                g.setColor(isWhite(row, col) ? Colors.LIGHT_BROWN : Colors.BROWN);
-                g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
+                g.setColor(isWhite(row, col) ? Colors.LIGHT_GREEN : Colors.GREEN);
+                g.fillRect(1 + col * Sizes.getSmallTileSize(), 1 + row * Sizes.getSmallTileSize(),
                         Sizes.getSmallTileSize() - 1, Sizes.getSmallTileSize() - 1);
             }
         }
@@ -97,7 +97,7 @@ public class Interface extends JPanel {
                 for (int col = 7; col >= 0; col--) {
                     if (selectedPiecePossibleMoves[col][row]) {
                         g.setColor(Colors.LIGHT_BLUE);
-                        g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
+                        g.fillRect(1 + col * Sizes.getSmallTileSize(),  1 + row * Sizes.getSmallTileSize(),
                                 Sizes.getSmallTileSize() - 1, Sizes.getSmallTileSize() - 1);
                     }
                 }
