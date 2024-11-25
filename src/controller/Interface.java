@@ -3,26 +3,20 @@ package controller;
 import application.Colors;
 import application.PieceDrawer;
 import application.Sizes;
-import boardgame.Position;
 import chess.ChessMatch;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
 
 public class Interface extends JPanel {
 
-    private final MouseActions mouseActions;
     private final PieceDrawer drawer;
-    private final ChessMatch match;
 
     public Interface(MouseActions mouseActions, PieceDrawer drawer, ChessMatch match) {
         super();
-        this.mouseActions = mouseActions;
         this.drawer = drawer;
-        this.match = match;
 
         setPreferredSize(new Dimension(Sizes.getSmallDimension(), Sizes.getSmallDimension()));
 
@@ -47,20 +41,16 @@ public class Interface extends JPanel {
                 }
 
                 if (!mouseActions.isAllCoordinatesNull()) {
-                    movePiece(match);
-                    mouseActions.cleanAllCoordinates();
+                    try {
+                        mouseActions.logicMovement(match);
+                        drawer.graphicMovement(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
+                    } finally {
+                        repaint();
+                        mouseActions.cleanAllCoordinates();
+                    }
                 }
             }
         });
-    }
-
-    private void movePiece(ChessMatch match) {
-        try {
-            mouseActions.logicMovement(match);
-            drawer.graphicMovement(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
-        } finally {
-            repaint();
-        }
     }
 
     private boolean isWhite(int a, int b) {
@@ -71,35 +61,11 @@ public class Interface extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        System.out.println("Paint Component called.");
-
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
-                g.setColor(isWhite(row, col) ? Colors.LIGHT_BROWN : Colors.BROWN);
+                g.setColor(isWhite(row, col) ? Colors.LIGHT_BLUE : Colors.BLUE);
                 g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
                         Sizes.getSmallTileSize(), Sizes.getSmallTileSize());
-            }
-        }
-
-        Integer selectedRow = MouseActions.aX;
-        Integer selectedCol = MouseActions.aY;
-
-        if (selectedRow != null && selectedCol != null) {
-            Position position = new Position(selectedRow, selectedCol);
-            boolean[][] selectedPiecePossibleMoves = match.getBoard().getPieceOnBoard(position).possibleMoves();
-
-//            System.out.println(Arrays.deepToString(selectedPiecePossibleMoves));
-
-            for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
-                for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
-//                    System.out.println(row + ", " + col);
-                    if (selectedPiecePossibleMoves[row][col]) {
-                        System.out.println(row + ", " + col);
-                        g.setColor(Colors.LIGHT_BLUE);
-                        g.fillRect(col * Sizes.getSmallTileSize(), row * Sizes.getSmallTileSize(),
-                                Sizes.getSmallTileSize(), Sizes.getSmallTileSize());
-                    }
-                }
             }
         }
         drawer.placePiecesOnBoard(g);

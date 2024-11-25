@@ -5,6 +5,7 @@ import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +21,15 @@ public class Movements {
         this.capturedPieces = new ArrayList<>();
     }
 
-    // Make the action of move a piece from a position to another (change the positions in board)
-    private Piece movingPiece(Position source, Position target) {
-        ChessPiece sourcePiece = (ChessPiece) match.getBoard().removePiece(source);
-        sourcePiece.setMoveCount(sourcePiece.getMoveCount() + 1);
+    // Change the position of a piece and make the capture of an opponent piece
+    protected void chessPieceMovement(Position source, Position target) {
+        if (!validateMovePosition(source, target)) {
+            JOptionPane.showMessageDialog(null, "Target position invalid.",
+                    "Position error", JOptionPane.INFORMATION_MESSAGE, null);
+            throw new RuntimeException("Invalid move.");
+        }
+
+        ChessPiece selectedPiece = (ChessPiece) match.getBoard().removePiece(source);
         Piece capturedPiece = match.getBoard().removePiece(target);
 
         if (capturedPiece != null) {
@@ -31,18 +37,27 @@ public class Movements {
             capturedPieces.add(capturedPiece);
         }
 
-        match.getBoard().placePiece(target, sourcePiece);
-        return capturedPiece;
+        if (selectedPiece != null) selectedPiece.addMoveCount();
+
+        match.getBoard().placePiece(target, selectedPiece);
+        match.nextTurn();
     }
 
-    // Change the position of a piece and make the capture of an opponent piece
-    protected void chessPieceMovement(Position source, Position target) {
-        Piece piece = movingPiece(source, target);
+    protected boolean validateMovePosition(Position source, Position target) {
+        boolean[][] possibilities = match.getBoard().getPieceOn(source).possibleMoves();
+        possibilities = invertMatrix(possibilities);
+        System.out.println("Possibilities: " + possibilities[target.getRow()][target.getColumn()] + ", " + target);
+        return possibilities[target.getRow()][target.getColumn()];
+    }
 
-        if (piece != null) {
-            ChessPiece chessPiece = (ChessPiece) piece;
-            chessPiece.setMoveCount(chessPiece.getMoveCount() + 1);
+    private boolean[][] invertMatrix(boolean[][] matrix) {
+        boolean[][] newMatrix = new boolean[8][8];
+
+        for (int a = 0; a <= 7; a++) {
+            for (int b = 0; b <= 7; b++) {
+                newMatrix[a][b] = matrix[a][7 - b];
+            }
         }
-        match.nextTurn();
+        return newMatrix;
     }
 }

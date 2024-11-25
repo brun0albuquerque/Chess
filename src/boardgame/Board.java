@@ -35,7 +35,7 @@ public class Board {
     }
 
     // Get the piece position if the position is valid
-    public Piece getPieceOnBoard(Position position) {
+    public Piece getPieceOn(Position position) {
         if (!positionExists(position)) {
             JOptionPane.showMessageDialog(null, "Position is not on the board.",
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
@@ -48,6 +48,7 @@ public class Board {
         if (isThereAPieceAt(position)) {
             JOptionPane.showMessageDialog(null, "There is already a piece on the position.",
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
+            return;
         }
         boardPieces[position.getRow()][position.getColumn()] = piece;
         piece.setPosition(position);
@@ -60,10 +61,10 @@ public class Board {
             JOptionPane.showMessageDialog(null, "Position is not on the board.",
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
         }
-        if (getPieceOnBoard(position) == null) {
+        if (getPieceOn(position) == null) {
             return null;
         }
-        Piece removedPiece = getPieceOnBoard(position);
+        Piece removedPiece = getPieceOn(position);
         removedPiece.setPosition(null);
         boardPieces[position.getRow()][position.getColumn()] = null;
         return removedPiece;
@@ -82,6 +83,6 @@ public class Board {
                     "Position error", JOptionPane.INFORMATION_MESSAGE, null);
             return false;
         }
-        return getPieceOnBoard(position) != null;
+        return getPieceOn(position) != null;
     }
 }

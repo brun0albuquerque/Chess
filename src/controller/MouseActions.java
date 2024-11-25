@@ -23,7 +23,9 @@ public class MouseActions {
 
     protected void handlePieceSelection(int x, int y) {
         Position position = new Position(x, y);
-        ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPieceOnBoard(position);
+        ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPieceOn(position);
+
+//        System.out.println("Piece: " + selectedPiece + ", " + position.getRow() + ", " + position.getColumn());
 
         if (isAllCoordinatesNull() && selectedPiece != null && match.validatePieceColor(position)) {
             aX = x;

@@ -50,7 +50,7 @@ public class ChessMatch {
         for (int a = 0; a < board.getRows(); a++) {
             for (int b = 0; b < board.getColumns(); b++) {
                 Position position = new Position(a, b);
-                matrix[a][b] = (ChessPiece) board.getPieceOnBoard(position);
+                matrix[a][b] = (ChessPiece) board.getPieceOn(position);
             }
         }
         return matrix;
@@ -70,7 +70,7 @@ public class ChessMatch {
 
     // Validate if the piece color is the same as the player
     public boolean validatePieceColor(Position position) {
-        return playerColor == ((ChessPiece) board.getPieceOnBoard(position)).getColor();
+        return playerColor == ((ChessPiece) board.getPieceOn(position)).getColor();
     }
 
     // Change the player turn
