@@ -1,8 +1,10 @@
 package controller;
 
+import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
+import pieces.King;
 import pieces.Pawn;
 import pieces.Queen;
 
@@ -16,25 +18,35 @@ public class Movements {
     }
 
     // Changes the position of a piece and make the capture of an opponent piece
-    protected boolean chessPieceMovement(Position source, Position target) {
+    protected boolean pieceMove(Position source, Position target) {
+        ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(source);
+
         if (!validateMovePosition(source, target)) {
             return false;
         }
-        ChessPiece sourcePiece = (ChessPiece) match.getBoard().getPieceOn(source);
-        sourcePiece.addMoveCount();
+
+        piece.addMoveCount();
         match.getBoard().removePiece(source);
         match.getBoard().removePiece(target);
-        match.getBoard().placePiece(target, sourcePiece);
+        match.getBoard().placePiece(target, piece);
         match.nextTurn();
         return true;
     }
 
-    // Validates all positions of a movement to ensure it can be done
+    // Validates weather the selected position matches with any true position of possibilities
     protected boolean validateMovePosition(Position source, Position target) {
-        boolean[][] possibilities = match.getBoard().getPieceOn(source).possibleMoves();
+        boolean[][] possibilities;
+        Piece piece = match.getBoard().getPieceOn(source);
+
+        if (piece instanceof King) {
+            possibilities = ((King) piece).possibleMoves(piece.possibleMoves());
+        } else {
+            possibilities = match.getBoard().getPieceOn(source).possibleMoves();
+        }
         return possibilities[target.getRow()][target.getColumn()];
     }
 
+    // Checks weather the pawn can be promoted or not, by checking its position
     public boolean checkPawnPromotion(Position position) {
         ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(position);
 

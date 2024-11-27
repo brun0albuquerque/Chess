@@ -1,6 +1,7 @@
 package pieces;
 
 import boardgame.Board;
+import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessColor;
 import chess.ChessMatch;
@@ -43,5 +44,39 @@ public class King extends ChessPiece {
             }
         }
         return possibilities;
+    }
+
+    // Validate every king move to only permit the safe houses
+    public boolean[][] possibleMoves(boolean[][] source) {
+        boolean[][] result = new boolean[8][8];
+
+        for (int a = 0; a < source.length; a++) {
+            for (int b = 0; b < source.length; b++) {
+                Position position = new Position(a, b);
+                Piece piece = match.getBoard().getPieceOn(position);
+                boolean[][] aux;
+
+                if (match.validateCheckPosition(position)) {
+                    if (piece instanceof Pawn) {
+                        aux = ((Pawn) piece).offensiveMoves();
+                    } else {
+                        aux = piece.possibleMoves();
+                    }
+                    result = mergePossibilities(aux, source);
+
+                }
+            }
+        }
+        return result;
+    }
+
+    // Merges the enemy's moves matrices with the king's moves matrices
+    private boolean[][] mergePossibilities(boolean[][] source, boolean[][] result) {
+        for (int a = 0; a < source.length; a++) {
+            for (int b = 0; b < source.length; b++) {
+                if (source[a][b]) result[a][b] = false;
+            }
+        }
+        return result;
     }
 }

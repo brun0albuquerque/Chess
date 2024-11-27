@@ -43,8 +43,8 @@ public class MouseActions {
         }
     }
 
-    // Perform the logic movement on the board
-    protected void logicMovement(ChessMatch match) {
+    // Perform the logic move on the board
+    protected void logicMove(ChessMatch match) {
         if (match.getPieces()[aX][aY] == null) {
             return;
         }
@@ -53,7 +53,7 @@ public class MouseActions {
         Position target = new Position(bX, bY);
 
         if (match.validateSourcePosition(source) && match.validateTargetPosition(target)) {
-            if (!movements.chessPieceMovement(source, target)) cleanAllCoordinates();
+            if (!movements.pieceMove(source, target)) cleanAllCoordinates();
         }
     }
 

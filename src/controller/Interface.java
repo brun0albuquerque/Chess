@@ -3,9 +3,11 @@ package controller;
 import application.Colors;
 import application.PieceDrawer;
 import application.Sizes;
+import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
+import pieces.King;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,8 +48,8 @@ public class Interface extends JPanel {
 
                 if (!mouseActions.isAllCoordinatesNull()) {
                     try {
-                        mouseActions.logicMovement(match);
-                        drawer.graphicMovement(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
+                        mouseActions.logicMove(match);
+                        drawer.iconMove(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
 
                         Position position = new Position(MouseActions.bX, MouseActions.bY);
                         ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(position);
@@ -91,13 +93,20 @@ public class Interface extends JPanel {
 
         if (selectedRow != null && selectedCol != null) {
             Position position = new Position(selectedRow, selectedCol);
-            boolean[][] selectedPiecePossibleMoves = match.getBoard().getPieceOn(position).possibleMoves();
+            Piece piece = match.getBoard().getPieceOn(position);
+            boolean[][] possibilities;
+
+            if (piece instanceof King) {
+                possibilities = ((King) piece).possibleMoves(piece.possibleMoves());
+            } else {
+                possibilities = piece.possibleMoves();
+            }
 
             for (int row = 0; row <= 7; row++) {
                 for (int col = 7; col >= 0; col--) {
-                    if (selectedPiecePossibleMoves[col][row]) {
+                    if (possibilities[col][row]) {
                         g.setColor(Colors.LIGHT_BLUE);
-                        g.fillRect(1 + col * Sizes.getSmallTileSize(),  1 + row * Sizes.getSmallTileSize(),
+                        g.fillRect(1 + col * Sizes.getSmallTileSize(), 1 + row * Sizes.getSmallTileSize(),
                                 Sizes.getSmallTileSize() - 1, Sizes.getSmallTileSize() - 1);
                     }
                 }

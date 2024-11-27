@@ -31,7 +31,7 @@ public class PieceDrawer extends JPanel {
     }
 
     // Make the moves of the piece icons on the board
-    public void graphicMovement(int aX, int aY, int bX, int bY) {
+    public void iconMove(int aX, int aY, int bX, int bY) {
         ImageIcon icon = getPieceIcon(aX, aY);
         if (icon == null) {
             return;

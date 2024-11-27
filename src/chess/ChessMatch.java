@@ -7,7 +7,6 @@ import pieces.*;
 
 public class ChessMatch {
     private int turn;
-    private boolean check;
     private boolean checkMate;
     private ChessColor playerColor;
     private ChessPiece enPassantVulnerable;
@@ -44,17 +43,20 @@ public class ChessMatch {
         return matrix;
     }
 
-    // Validates if there is a movement for the piece on the source position
+    // Validates if there is a move for the piece on the source position
     public boolean validateSourcePosition(Position position) {
         return board.isThereAPieceAt(position) && validatePieceColor(position);
     }
 
-    // Validates if there is a piece on the target position and check if it's not the same color as the player
+    // Validates if there is a piece on the target position and isKingInCheck if it's not the same color as the player
     public boolean validateTargetPosition(Position position) {
-        if (board.isThereAPieceAt(position) && validatePieceColor(position)) {
-            return false;
-        }
+        if (board.isThereAPieceAt(position) && validatePieceColor(position)) return false;
         return !board.isThereAPieceAt(position) || board.isThereAPieceAt(position) && !validatePieceColor(position);
+    }
+
+    public boolean validateCheckPosition(Position position) {
+        if (!board.isThereAPieceAt(position) || validateSourcePosition(position)) return false;
+        return board.isThereAPieceAt(position) && !validatePieceColor(position);
     }
 
     // Compare the color of the player and the piece

@@ -28,7 +28,7 @@ public abstract class Piece {
 
     public abstract boolean[][] possibleMoves();
 
-    //Check if there is any movement for the piece to make on the board
+    //Check if there is any move for the piece to make on the board
     public boolean isThereAnyPossibleMove() {
         boolean[][] matrix = possibleMoves();
         for (boolean[] rows : matrix) {
@@ -36,6 +36,15 @@ public abstract class Piece {
                 if (column) {
                     return true;
                 }
+            }
+        }
+        return false;
+    }
+
+    public boolean isThereAnyPossibleMove(boolean[][] matrix) {
+        for (boolean[] rows : matrix) {
+            for (boolean column : rows) {
+                if (column) return true;
             }
         }
         return false;

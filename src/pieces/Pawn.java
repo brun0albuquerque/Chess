@@ -81,4 +81,41 @@ public class Pawn extends ChessPiece {
         }
         return possibilities;
     }
+
+    public boolean[][] offensiveMoves() {
+        boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
+
+        if (getColor() == ChessColor.WHITE) {
+
+            Position leftDiagonalWhite = new Position(getPosition().getRow() - 1, getPosition().getColumn() - 1);
+            Position rightDiagonalWhite = new Position(getPosition().getRow() + 1, getPosition().getColumn() - 1);
+
+            // Capturing a piece on the left diagonal
+            if (getBoard().positionExists(leftDiagonalWhite) && !getBoard().isThereAPieceAt(leftDiagonalWhite)) {
+                possibilities[leftDiagonalWhite.getRow()][leftDiagonalWhite.getColumn()] = true;
+            }
+
+            // Capturing a piece on the right diagonal
+            if (getBoard().positionExists(rightDiagonalWhite) && !getBoard().isThereAPieceAt(rightDiagonalWhite)) {
+                possibilities[rightDiagonalWhite.getRow()][rightDiagonalWhite.getColumn()] = true;
+            }
+        }
+
+        if (getColor() == ChessColor.BLACK) {
+
+            Position leftDiagonalBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn() + 1);
+            Position rightDiagonalBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn() + 1);
+
+            // Capturing a piece on the left diagonal
+            if (getBoard().positionExists(leftDiagonalBlack) && !getBoard().isThereAPieceAt(leftDiagonalBlack)) {
+                possibilities[leftDiagonalBlack.getRow()][leftDiagonalBlack.getColumn()] = true;
+            }
+
+            // Capturing a piece on the right diagonal
+            if (getBoard().positionExists(rightDiagonalBlack) && !getBoard().isThereAPieceAt(rightDiagonalBlack)) {
+                possibilities[rightDiagonalBlack.getRow()][rightDiagonalBlack.getColumn()] = true;
+            }
+        }
+        return possibilities;
+    }
 }
