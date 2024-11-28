@@ -23,12 +23,10 @@ public class MouseActions {
         return movements;
     }
 
-    // Handle the player interactions on the board
+    /* Handle the player interactions on the board. */
     protected void handlePieceSelection(int x, int y) {
         Position position = new Position(x, y);
         ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPieceOn(position);
-
-        System.out.println(selectedPiece);
 
         if (isAllCoordinatesNull() && selectedPiece != null && match.validatePieceColor(position)) {
             aX = x;
@@ -36,18 +34,12 @@ public class MouseActions {
         } else if (aX != null && aY != null) {
             bX = x;
             bY = y;
-
-            if (aX.equals(bX) && aY.equals(bY)) {
-                cleanAllCoordinates();
-            }
         }
     }
 
-    // Perform the logic move on the board
+    /* Perform the logic move on the board. */
     protected void logicMove(ChessMatch match) {
-        if (match.getPieces()[aX][aY] == null) {
-            return;
-        }
+        if (match.getPieces()[aX][aY] == null) return;
 
         Position source = new Position(aX, aY);
         Position target = new Position(bX, bY);
@@ -57,12 +49,12 @@ public class MouseActions {
         }
     }
 
-    // Checks if any coordinate is null
+    /* Checks if any coordinate is null. */
     protected boolean isAllCoordinatesNull() {
         return aX == null || aY == null || bX == null || bY == null;
     }
 
-    // Clear all the saved coordinates
+    /* Set all coordinates null. */
     protected void cleanAllCoordinates() {
         aX = null;
         aY = null;

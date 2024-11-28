@@ -45,22 +45,30 @@ public class King extends ChessPiece {
         return possibilities;
     }
 
-    // Validate every king move to only permit the safe houses
-    public boolean[][] possibleMoves(boolean[][] source) {
+    // Validate every king move and only permit the safe houses
+    public boolean[][] possibleMoves() {
+        /* The source matrix receive all possible moves for the king on the board. */
+        boolean[][] source = possibleMoves(true);
+
+        /* Result instance, which is the matrix to be returned by the method. */
         boolean[][] result = new boolean[8][8];
 
+        /* Iterate through every position on the board. */
         for (int a = 0; a < source.length; a++) {
             for (int b = 0; b < source.length; b++) {
                 Position position = new Position(a, b);
                 Piece piece = match.getBoard().getPieceOn(position);
                 boolean[][] aux;
 
+                /* Do the merge of the source and auxiliary matrices if the position has an enemy piece. */
                 if (match.validateCheckPosition(position)) {
-                    if (piece instanceof Pawn) {
-                        aux = piece.possibleMoves(false);
-                    } else {
-                        aux = piece.possibleMoves(true);
-                    }
+
+                    /* The auxiliary matrix receive the piece possible movements. If the piece is a pawn,
+                    only consider the capture positions (diagonal). */
+                    if (piece instanceof Pawn) aux = piece.possibleMoves(false);
+                    else aux = piece.possibleMoves(true);
+
+                    /* Result receive the merge of the two matrices. */
                     result = mergePossibilities(aux, source);
                 }
             }
@@ -68,10 +76,12 @@ public class King extends ChessPiece {
         return result;
     }
 
-    // Merges the enemy's moves matrices with the king's moves matrices
+    /* Merge two matrices values. This method is used allow the king to move to safe squares, by setting
+    false to all positions an enemy piece can move to. */
     private boolean[][] mergePossibilities(boolean[][] source, boolean[][] result) {
         for (int a = 0; a < source.length; a++) {
             for (int b = 0; b < source.length; b++) {
+                /* If a position at the source is true, the result is marked as false at the same position in result. */
                 if (source[a][b]) result[a][b] = false;
             }
         }

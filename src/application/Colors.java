@@ -4,7 +4,6 @@ import java.awt.*;
 
 public enum Colors {
     ;
-
     public static final Color BROWN = new Color(139, 69, 19, 220);
     public static final Color LIGHT_BROWN = new Color(215, 195, 155);
 
@@ -15,5 +14,5 @@ public enum Colors {
     public static final Color LIGHT_BLUE = new Color(171, 202, 255);
 
     public static final Color DARK_GRAY = new Color(0, 0, 0, 180);
-    public static final Color WHITE = new Color(210, 210, 210, 10);
+    public static final Color YELLOW = new Color(255, 255, 159, 255);
 }

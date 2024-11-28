@@ -31,9 +31,9 @@ public class ChessMatch {
         return playerColor;
     }
 
-    // Get the position of all pieces on the board
+    /* Get the position of all pieces on the board. */
     public ChessPiece[][] getPieces() {
-        ChessPiece[][] matrix = new ChessPiece[8][board.getColumns()];
+        ChessPiece[][] matrix = new ChessPiece[board.getRows()][board.getColumns()];
         for (int a = 0; a < board.getRows(); a++) {
             for (int b = 0; b < board.getColumns(); b++) {
                 Position position = new Position(a, b);
@@ -43,39 +43,40 @@ public class ChessMatch {
         return matrix;
     }
 
-    // Validates if there is a move for the piece on the source position
+    /* Validates if there is a piece at the position and if it's the same color as the player. */
     public boolean validateSourcePosition(Position position) {
         return board.isThereAPieceAt(position) && validatePieceColor(position);
     }
 
-    // Validates if there is a piece on the target position and isKingInCheck if it's not the same color as the player
+    /* Validates if there is a piece on the target position and if it's not the same color as the player. */
     public boolean validateTargetPosition(Position position) {
         if (board.isThereAPieceAt(position) && validatePieceColor(position)) return false;
         return !board.isThereAPieceAt(position) || board.isThereAPieceAt(position) && !validatePieceColor(position);
     }
 
+    /* Validate the position to make sure it has a piece from the opposite color to the player. */
     public boolean validateCheckPosition(Position position) {
         if (!board.isThereAPieceAt(position) || validateSourcePosition(position)) return false;
         return board.isThereAPieceAt(position) && !validatePieceColor(position);
     }
 
-    // Compare the color of the player and the piece
+    /* Compare the color of the player and the piece. */
     public boolean validatePieceColor(Position position) {
         return playerColor == ((ChessPiece) board.getPieceOn(position)).getColor();
     }
 
-    // Changes the player turn
+    /* Changes the player turn. */
     public void nextTurn() {
         turn++;
         playerColor = invertColor(playerColor);
     }
 
-    // Inverts the color of the player
+    /* Inverts the color of the player. */
     private ChessColor invertColor(ChessColor chessColor) {
         return chessColor == ChessColor.WHITE ? ChessColor.BLACK : ChessColor.WHITE;
     }
 
-    // Load the pieces before the game starts
+    /* Load the pieces when game starts. */
     private void loadInitialPieces() {
         board.placePiece(new Position(0, 7), new Rook(board, ChessColor.WHITE));
         board.placePiece(new Position(1, 7), new Knight(board, ChessColor.WHITE));
