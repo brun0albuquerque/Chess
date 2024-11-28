@@ -2,8 +2,8 @@ package pieces;
 
 import boardgame.Board;
 import boardgame.Position;
-import chess.ChessPiece;
 import chess.ChessColor;
+import chess.ChessPiece;
 
 public class Queen extends ChessPiece {
 
@@ -11,40 +11,59 @@ public class Queen extends ChessPiece {
         super(board, chessColor);
     }
 
+    int[][] directions = {
+            {0, -1}, // Up
+            {0, 1}, // Down
+            {-1, 0}, // Left
+            {1, 0}, // Right
+            {-1, -1}, // Up-Left
+            {1, -1}, // Down-Right
+            {-1, 1}, // Down-Left
+            {1, 1}, // Up-Right
+    };
+
     @Override
-    public boolean[][] possibleMoves() {
+    public boolean[][] possibleMoves(boolean captureMatters) {
         boolean[][] possibilities = new boolean[getBoard().getColumns()][getBoard().getRows()];
+        Position queenPosition = getPosition();
 
-        Position currentQueenPosition = getPosition();
 
-        // All the sides directions
-        checkQueenDirection(currentQueenPosition, possibilities, 0, -1); // Up
-        checkQueenDirection(currentQueenPosition, possibilities, 0, 1); // Down
-        checkQueenDirection(currentQueenPosition, possibilities, -1, 0); // Left
-        checkQueenDirection(currentQueenPosition, possibilities, 1, 0); // Right
-
-        // All the diagonal directions
-        checkQueenDirection(currentQueenPosition, possibilities, -1, -1); // Up-Left
-        checkQueenDirection(currentQueenPosition, possibilities, 1, -1); // Up-Right
-        checkQueenDirection(currentQueenPosition, possibilities, -1, 1); // Down-Left
-        checkQueenDirection(currentQueenPosition, possibilities, 1, 1); // Down-Right
-
+        // Iterate through all directions
+        for (int[] direction : directions) {
+            if (captureMatters) {
+                checkQueenDirection(queenPosition, possibilities, direction);
+            } else {
+                checkDirectionWithoutCapture(queenPosition, possibilities, direction);
+            }
+        }
         return possibilities;
     }
 
-    private void checkQueenDirection(Position queen, boolean[][] matrix, int x, int y) {
-        Position position = new Position(queen.getRow() + x, queen.getColumn() + y);
+    private void checkQueenDirection(Position queen, boolean[][] matrix, int[] arr) {
+        Position position = new Position(queen.getRow() + arr[0], queen.getColumn() + arr[1]);
 
-        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position)
-                || checkPossibleCapture(position)) {
-
+        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || checkCapture(position)) {
             // If the piece can be captured, breaks the loop
             matrix[position.getRow()][position.getColumn()] = true;
 
             // Increment the value of the row and column until reach a piece or to the end of the board
-            if (checkPossibleCapture(position)) break;
+            if (checkCapture(position)) break;
 
-            position.setPosition(position.getRow() + x, position.getColumn() + y);
+            position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
+        }
+    }
+
+    private void checkDirectionWithoutCapture(Position queen, boolean[][] matrix, int[] arr) {
+        Position position = new Position(queen.getRow() + arr[0], queen.getColumn() + arr[1]);
+
+        while (getBoard().positionExists(position)) {
+            // If the piece can be captured, breaks the loop
+            matrix[position.getRow()][position.getColumn()] = true;
+
+            // If there is a piece at the position, breaks the loop
+            if (getBoard().isThereAPieceAt(position)) break;
+
+            position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
         }
     }
 }

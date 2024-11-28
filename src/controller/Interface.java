@@ -42,9 +42,7 @@ public class Interface extends JPanel {
 
                 mouseActions.handlePieceSelection(row, col);
 
-                if (MouseActions.aX != null && MouseActions.aY != null) {
-                    repaint();
-                }
+                if (MouseActions.aX != null && MouseActions.aY != null) repaint();
 
                 if (!mouseActions.isAllCoordinatesNull()) {
                     try {
@@ -97,9 +95,9 @@ public class Interface extends JPanel {
             boolean[][] possibilities;
 
             if (piece instanceof King) {
-                possibilities = ((King) piece).possibleMoves(piece.possibleMoves());
+                possibilities = ((King) piece).possibleMoves(piece.possibleMoves(true));
             } else {
-                possibilities = piece.possibleMoves();
+                possibilities = piece.possibleMoves(true);
             }
 
             for (int row = 0; row <= 7; row++) {

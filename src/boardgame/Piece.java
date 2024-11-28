@@ -26,11 +26,11 @@ public abstract class Piece {
         this.position = position;
     }
 
-    public abstract boolean[][] possibleMoves();
+    public abstract boolean[][] possibleMoves(boolean captureMatters);
 
     //Check if there is any move for the piece to make on the board
     public boolean isThereAnyPossibleMove() {
-        boolean[][] matrix = possibleMoves();
+        boolean[][] matrix = possibleMoves(true);
         for (boolean[] rows : matrix) {
             for (boolean column : rows) {
                 if (column) {

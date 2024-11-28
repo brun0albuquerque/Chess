@@ -16,22 +16,21 @@ public class King extends ChessPiece {
         this.match = match;
     }
 
+    int[][] directions = {
+            {0, -1}, // Up
+            {0, 1},  // Down
+            {-1, 0}, // Left
+            {1, 0},  // Right
+            {-1, -1}, // Up-Left
+            {1, -1},  // Up-Right
+            {-1, 1},  // Down-Left
+            {1, 1}    // Down-Right
+    };
+
     @Override
-    public boolean[][] possibleMoves() {
+    public boolean[][] possibleMoves(boolean captureMatters) {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
-
         Position currentKingPosition = getPosition();
-
-        int[][] directions = {
-                {0, -1}, // Up
-                {0, 1},  // Down
-                {-1, 0}, // Left
-                {1, 0},  // Right
-                {-1, -1}, // Up-Left
-                {1, -1},  // Up-Right
-                {-1, 1},  // Down-Left
-                {1, 1}    // Down-Right
-        };
 
         // Check and return a boolean value the positions for each element in the matrix "directions"
         for (int[] direction : directions) {
@@ -39,7 +38,7 @@ public class King extends ChessPiece {
                     currentKingPosition.getColumn() + direction[1]);
 
             if (getBoard().positionExists(kingPosition) && !getBoard().isThereAPieceAt(kingPosition)
-                    || checkPossibleCapture(kingPosition)) {
+                    || checkCapture(kingPosition)) {
                 possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
             }
         }
@@ -58,12 +57,11 @@ public class King extends ChessPiece {
 
                 if (match.validateCheckPosition(position)) {
                     if (piece instanceof Pawn) {
-                        aux = ((Pawn) piece).offensiveMoves();
+                        aux = piece.possibleMoves(false);
                     } else {
-                        aux = piece.possibleMoves();
+                        aux = piece.possibleMoves(true);
                     }
                     result = mergePossibilities(aux, source);
-
                 }
             }
         }

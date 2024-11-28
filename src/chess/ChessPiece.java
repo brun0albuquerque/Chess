@@ -26,7 +26,7 @@ public abstract class ChessPiece extends Piece {
     }
 
     // Check if there is any piece in position and if there is, isKingInCheck the color of the piece
-    public boolean checkPossibleCapture(Position position) {
+    public boolean checkCapture(Position position) {
         ChessPiece piece = (ChessPiece) getBoard().getPieceOn(position);
         return piece != null && piece.getColor() != getColor();
     }

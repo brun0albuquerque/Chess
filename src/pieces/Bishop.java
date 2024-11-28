@@ -11,34 +11,50 @@ public class Bishop extends ChessPiece {
         super(board, chessColor);
     }
 
-    @Override
-    public boolean[][] possibleMoves() {
-        boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
+    int[][] directions = {
+            {-1, -1}, // Up-Left
+            {1, 1}, // Down-Right
+            {-1, 1}, // Down-Left
+            {1, -1}, // Up-Right
+    };
 
+    @Override
+    public boolean[][] possibleMoves(boolean captureMatters) {
+        boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
         Position currentBishopPosition = getPosition();
 
-        // All the diagonal directions
-        checkBishopDirection(currentBishopPosition, possibilities, -1, -1); // Up-Left
-        checkBishopDirection(currentBishopPosition, possibilities, 1, 1); // Down-Right
-        checkBishopDirection(currentBishopPosition, possibilities, -1, 1); // Down-Left
-        checkBishopDirection(currentBishopPosition, possibilities, 1, -1); // Up-Right
-
+        for (int[] direction : directions) {
+            if (captureMatters) checkBishopDirection(currentBishopPosition, possibilities, direction);
+            else checkDirectionWithoutCapture(currentBishopPosition, possibilities, direction);
+        }
         return possibilities;
     }
 
-    private void checkBishopDirection(Position bishop, boolean[][] matrix, int x, int y) {
-        Position position = new Position(bishop.getRow() + x, bishop.getColumn() + y);
+    private void checkBishopDirection(Position bishop, boolean[][] possibilities, int[] arr) {
+        Position position = new Position(bishop.getRow() + arr[0], bishop.getColumn() + arr[1]);
 
-        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position)
-                || checkPossibleCapture(position)) {
-
-            matrix[position.getRow()][position.getColumn()] = true;
+        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || checkCapture(position)) {
+            possibilities[position.getRow()][position.getColumn()] = true;
 
             // If the piece can be captured, break the loop
-            if (checkPossibleCapture(position)) break;
+            if (checkCapture(position)) break;
 
             // Increment the value of the row and column until reach a piece or to the end of the board
-            position.setPosition(position.getRow() + x, position.getColumn() + y);
+            position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
+        }
+    }
+
+    private void checkDirectionWithoutCapture(Position bishop, boolean[][] matrix, int[] arr) {
+        Position position = new Position(bishop.getRow() + arr[0], bishop.getColumn() + arr[1]);
+
+        while (getBoard().positionExists(position)) {
+            matrix[position.getRow()][position.getColumn()] = true;
+
+            // If there is a piece at the position, breaks the loop
+            if (getBoard().isThereAPieceAt(position)) break;
+
+            // Increment the value of the row and column until reach a piece or to the end of the board
+            position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
         }
     }
 }

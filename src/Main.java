@@ -1,9 +1,10 @@
+import application.ChessInterface;
 import chess.ChessMatch;
 import controller.MouseActions;
-import application.ChessInterface;
 import controller.Movements;
 
 import javax.swing.*;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,17 +14,15 @@ public class Main {
             MouseActions actions = new MouseActions(movements, match);
             ChessInterface chessInterface = new ChessInterface(actions, match);
         } catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(null, "Null pointer: " + e.getMessage(),
+            JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()),
                     "Error", JOptionPane.ERROR_MESSAGE, null);
+            System.out.printf(Arrays.toString(e.getStackTrace()));
             System.exit(1);
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(null, "Illegal argument: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE, null);
-        } catch (IllegalStateException e) {
-            JOptionPane.showMessageDialog(null, "Illegal state: " + e.getMessage(),
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()),
                     "Error", JOptionPane.ERROR_MESSAGE, null);
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(),
+            JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()),
                     "Error", JOptionPane.ERROR_MESSAGE, null);
             System.exit(1);
         }

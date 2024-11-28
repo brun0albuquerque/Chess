@@ -8,9 +8,9 @@ import pieces.*;
 public class ChessMatch {
     private int turn;
     private boolean checkMate;
+    private final Board board;
     private ChessColor playerColor;
     private ChessPiece enPassantVulnerable;
-    private final Board board;
 
     public ChessMatch() {
         this.board = new Board(Sizes.getBOARD_SIZE(), Sizes.getBOARD_SIZE());

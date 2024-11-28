@@ -11,34 +11,54 @@ public class Rook extends ChessPiece {
         super(board, chessColor);
     }
 
-    @Override
-    public boolean[][] possibleMoves() {
-        boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
+    int[][] directions = {
+            {0, -1}, // Up
+            {0, 1}, // Down
+            {-1, 0}, // Left
+            {1, 0}, // Right
+    };
 
+    @Override
+    public boolean[][] possibleMoves(boolean captureMatters) {
+        boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
         Position currentRookPosition = getPosition();
 
         // All the sides directions
-        checkRookDirection(currentRookPosition, possibilities, 0, -1); // Up
-        checkRookDirection(currentRookPosition, possibilities, 0, 1); // Down
-        checkRookDirection(currentRookPosition, possibilities, -1, 0); // Left
-        checkRookDirection(currentRookPosition, possibilities, 1, 0); // Right
-
+        for (int[] direction : directions) {
+            if (captureMatters) {
+                checkRookDirection(currentRookPosition, possibilities, direction);
+            } else {
+                checkRookWithoutCapture(currentRookPosition, possibilities, direction);
+            }
+        }
         return possibilities;
     }
 
-    private void checkRookDirection(Position rook, boolean[][] matrix, int x, int y) {
-        Position position = new Position(rook.getRow() + x, rook.getColumn() + y);
+    private void checkRookDirection(Position rook, boolean[][] matrix, int[] arr) {
+        Position position = new Position(rook.getRow() + arr[0], rook.getColumn() + arr[1]);
 
-        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position)
-                || checkPossibleCapture(position)) {
-
+        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || checkCapture(position)) {
             matrix[position.getRow()][position.getColumn()] = true;
 
             // If the piece can be captured, breaks the loop
-            if (checkPossibleCapture(position)) break;
+            if (checkCapture(position)) break;
 
             // Increment the value of the row and column until reach a piece or to the end of the board
-            position.setPosition(position.getRow() + x, position.getColumn() + y);
+            position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
+        }
+    }
+
+    private void checkRookWithoutCapture(Position rook, boolean[][] matrix, int[] arr) {
+        Position position = new Position(rook.getRow() + arr[0], rook.getColumn() + arr[1]);
+
+        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || checkCapture(position)) {
+            matrix[position.getRow()][position.getColumn()] = true;
+
+            // If there is a piece at the position, breaks the loop
+            if (getBoard().isThereAPieceAt(position)) break;
+
+            // Increment the value of the row and column until reach a piece or to the end of the board
+            position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
         }
     }
 }

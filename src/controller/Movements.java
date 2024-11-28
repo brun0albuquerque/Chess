@@ -39,9 +39,9 @@ public class Movements {
         Piece piece = match.getBoard().getPieceOn(source);
 
         if (piece instanceof King) {
-            possibilities = ((King) piece).possibleMoves(piece.possibleMoves());
+            possibilities = ((King) piece).possibleMoves(piece.possibleMoves(true));
         } else {
-            possibilities = match.getBoard().getPieceOn(source).possibleMoves();
+            possibilities = match.getBoard().getPieceOn(source).possibleMoves(true);
         }
         return possibilities[target.getRow()][target.getColumn()];
     }
