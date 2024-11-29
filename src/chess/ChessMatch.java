@@ -7,7 +7,6 @@ import pieces.*;
 
 public class ChessMatch {
     private int turn;
-    private boolean checkMate;
     private final Board board;
     private ChessColor playerColor;
     private ChessPiece enPassantVulnerable;
@@ -55,7 +54,7 @@ public class ChessMatch {
     }
 
     /* Validate the position to make sure it has a piece from the opposite color to the player. */
-    public boolean validateCheckPosition(Position position) {
+    public boolean validateOpponentPiecePosition(Position position) {
         if (!board.isThereAPieceAt(position) || validateSourcePosition(position)) return false;
         return board.isThereAPieceAt(position) && !validatePieceColor(position);
     }

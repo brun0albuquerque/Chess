@@ -11,7 +11,7 @@ public class Board {
         /* Checks if rows and columns are positive. */
         if (rows != 8 || columns != 8) {
             JOptionPane.showMessageDialog(null, "Error board creation. The game can't start.",
-                    "Board error", JOptionPane.INFORMATION_MESSAGE, null);
+                    "Board error", JOptionPane.ERROR_MESSAGE, null);
             System.exit(1);
         }
         this.rows = rows;

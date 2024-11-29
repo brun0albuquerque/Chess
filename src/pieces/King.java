@@ -27,30 +27,60 @@ public class King extends ChessPiece {
             {1, 1}    // Down-Right
     };
 
+    public int[][] getDirections() {
+        return directions;
+    }
+
     @Override
     public boolean[][] possibleMoves(boolean captureMatters) {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
         Position currentKingPosition = getPosition();
 
-        // Check and return a boolean value the positions for each element in the matrix "directions"
-        for (int[] direction : directions) {
-            Position kingPosition = new Position(currentKingPosition.getRow() + direction[0],
-                    currentKingPosition.getColumn() + direction[1]);
+        /* Check and return a boolean value the positions for each element in the matrix "directions". */
+        if (captureMatters) {
+            for (int[] direction : directions) {
+                Position kingPosition = new Position(currentKingPosition.getRow() + direction[0],
+                        currentKingPosition.getColumn() + direction[1]);
 
-            if (getBoard().positionExists(kingPosition) && !getBoard().isThereAPieceAt(kingPosition)
-                    || checkCapture(kingPosition)) {
-                possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
+                if (getBoard().positionExists(kingPosition) && !getBoard().isThereAPieceAt(kingPosition)
+                        || checkCapture(kingPosition)) {
+                    possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
+                }
+            }
+        } else {
+            for (int[] direction : directions) {
+                Position kingPosition = new Position(currentKingPosition.getRow() + direction[0],
+                        currentKingPosition.getColumn() + direction[1]);
+
+                if (getBoard().positionExists(kingPosition)) {
+                    possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
+                }
             }
         }
         return possibilities;
     }
 
-    // Validate every king move and only permit the safe houses
+    /* Calculate all the possible moves for the king and the opponent pieces. This method differs from the Piece one
+     * by its return. This method will check each position the king can move, leaving as true only the ones it can't be
+     * in check. */
     public boolean[][] possibleMoves() {
-        /* The source matrix receive all possible moves for the king on the board. */
+
+        /*
+         * The source matrix receive all possible moves for the king on the board.
+         *
+         * Possible moves will always receive true as parameter, because source need to have the possible moves
+         * of the piece considering the movements and the captures.
+         *
+         * Possible moves will only receive false as parameter when you need the possible movements of a piece
+         * until it encounters another piece on the board, regardless of the piece's color. It will be used only with
+         * the king and the pawn, because the pawn can only capture on the diagonal so you need to exclude the
+         * front side movement, and for the king because the king cannot be in check, it will not always be able
+         * to move to any square. This will prevent some cases such as the king capturing a piece adjacent to the
+         * opponent's king, leaving the king in check.
+         * */
         boolean[][] source = possibleMoves(true);
 
-        /* Result instance, which is the matrix to be returned by the method. */
+        /* Result is the matrix will be returned by the method. */
         boolean[][] result = new boolean[8][8];
 
         /* Iterate through every position on the board. */
@@ -60,29 +90,39 @@ public class King extends ChessPiece {
                 Piece piece = match.getBoard().getPieceOn(position);
                 boolean[][] aux;
 
-                /* Do the merge of the source and auxiliary matrices if the position has an enemy piece. */
-                if (match.validateCheckPosition(position)) {
+                /* Do the merge of the source and auxiliary matrices if the position has an opponent piece. */
+                if (match.validateOpponentPiecePosition(position)) {
 
                     /* The auxiliary matrix receive the piece possible movements. If the piece is a pawn,
-                    only consider the capture positions (diagonal). */
+                     * only consider the capture positions (diagonal). Otherwise, if the piece is a king, calculate all
+                     * possible moves ignoring the king rules. */
                     if (piece instanceof Pawn) aux = piece.possibleMoves(false);
+                    else if (piece instanceof King) aux = piece.possibleMoves(false);
                     else aux = piece.possibleMoves(true);
 
                     /* Result receive the merge of the two matrices. */
-                    result = mergePossibilities(aux, source);
+                    result = mergePossibilities(aux, source, false);
                 }
             }
         }
         return result;
     }
 
-    /* Merge two matrices values. This method is used allow the king to move to safe squares, by setting
-    false to all positions an enemy piece can move to. */
-    private boolean[][] mergePossibilities(boolean[][] source, boolean[][] result) {
+    /**
+     * Merge two matrices values. This method is used allow the king to move to safe squares, by setting false to all
+     * positions an opponent piece can move to.
+     *
+     * @param source is the matrix which will be analyzed if the given position in the loop is true.
+     * @param result is a matrix which will receive false if the loop position if the same position in source is true.
+     * @param value is the value result will receive.
+     * @return result after iterating through source.
+     */
+    public boolean[][] mergePossibilities(boolean[][] source, boolean[][] result, boolean value) {
         for (int a = 0; a < source.length; a++) {
             for (int b = 0; b < source.length; b++) {
+
                 /* If a position at the source is true, the result is marked as false at the same position in result. */
-                if (source[a][b]) result[a][b] = false;
+                if (source[a][b]) result[a][b] = value;
             }
         }
         return result;
