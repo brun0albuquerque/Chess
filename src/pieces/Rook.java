@@ -11,7 +11,7 @@ public class Rook extends ChessPiece {
         super(board, chessColor);
     }
 
-    int[][] directions = {
+    private final int[][] directions = {
             {0, -1}, // Up
             {0, 1}, // Down
             {-1, 0}, // Left
@@ -23,7 +23,7 @@ public class Rook extends ChessPiece {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
         Position currentRookPosition = getPosition();
 
-        // All the sides directions
+        /* All the sides directions. */
         for (int[] direction : directions) {
             if (captureMatters) {
                 checkRookDirection(currentRookPosition, possibilities, direction);
@@ -40,10 +40,10 @@ public class Rook extends ChessPiece {
         while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || checkCapture(position)) {
             matrix[position.getRow()][position.getColumn()] = true;
 
-            // If the piece can be captured, breaks the loop
+            /* If the piece can be captured, breaks the loop. */
             if (checkCapture(position)) break;
 
-            // Increment the value of the row and column until reach a piece or to the end of the board
+            /* Increment the value of the row and column until reach a piece or to the end of the board. */
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
         }
     }
@@ -54,10 +54,10 @@ public class Rook extends ChessPiece {
         while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || checkCapture(position)) {
             matrix[position.getRow()][position.getColumn()] = true;
 
-            // If there is a piece at the position, breaks the loop
+            /* If there is a piece at the position, breaks the loop. */
             if (getBoard().isThereAPieceAt(position)) break;
 
-            // Increment the value of the row and column until reach a piece or to the end of the board
+            /* Increment the value of the row and column until reach a piece or to the end of the board. */
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
         }
     }

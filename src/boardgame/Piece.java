@@ -26,7 +26,7 @@ public abstract class Piece {
         this.position = position;
     }
 
-    /* This method must return all possibilities of movements for a piece on the board. There is two uses for this
+    /* This method must return all possibilities of movements for a piece on the board. There are two uses for this
     method: all movements checking the empty squares and the capture of an enemy piece or the empty squares and all
     pieces positions on the board, doesn't matter weather is its color.  The second one will be used to check if
     the king is in check. */

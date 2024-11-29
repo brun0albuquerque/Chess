@@ -69,7 +69,7 @@ public class Interface extends JPanel {
                     } catch (NullPointerException n) {
 
                         /*
-                         * A null pointer exception can happen sometimes when the player clicks on empty squares
+                         * A null pointer exception can sometimes happen when the player clicks on empty squares
                          * multiple times and then clicks on a piece. When it happens, the coordinates will be
                          * cleaned, making them null again, preventing the game crash.
                          */
@@ -137,8 +137,8 @@ public class Interface extends JPanel {
 
             /*
              * Since the chess board has a different system of coordinates from the computer, the columns
-             * needs to be inverted, as with all the game coordinates which has the actual columns in the
-             * rows position and vice versa. This loop will paint the square another color to show the
+             * need to be inverted, as with all the game coordinates that have the actual columns in the
+             * row position and vice versa. This loop will paint the square another color to show the
              * player where the piece can move to.
              */
             for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {

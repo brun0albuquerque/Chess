@@ -11,7 +11,7 @@ public class Bishop extends ChessPiece {
         super(board, chessColor);
     }
 
-    int[][] directions = {
+    private final int[][] directions = {
             {-1, -1}, // Up-Left
             {1, 1}, // Down-Right
             {-1, 1}, // Down-Left

@@ -11,7 +11,7 @@ public class Knight extends ChessPiece {
         super(board, chessColor);
     }
 
-    int[][] directions = {
+    private final int[][] directions = {
             {-1, -2}, // Up-Left
             {1, -2}, // Up-Right
             {2, -1}, // Up-Right

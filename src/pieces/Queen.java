@@ -11,7 +11,7 @@ public class Queen extends ChessPiece {
         super(board, chessColor);
     }
 
-    int[][] directions = {
+    private final int[][] directions = {
             {0, -1}, // Up
             {0, 1}, // Down
             {-1, 0}, // Left
@@ -28,7 +28,7 @@ public class Queen extends ChessPiece {
         Position queenPosition = getPosition();
 
 
-        // Iterate through all directions
+        /* Iterate through all directions. */
         for (int[] direction : directions) {
             if (captureMatters) {
                 checkQueenDirection(queenPosition, possibilities, direction);
@@ -43,10 +43,10 @@ public class Queen extends ChessPiece {
         Position position = new Position(queen.getRow() + arr[0], queen.getColumn() + arr[1]);
 
         while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || checkCapture(position)) {
-            // If the piece can be captured, breaks the loop
+            /* If the piece can be captured, breaks the loop. */
             matrix[position.getRow()][position.getColumn()] = true;
 
-            // Increment the value of the row and column until reach a piece or to the end of the board
+            /* Increment the value of the row and column until reach a piece or to the end of the board. */
             if (checkCapture(position)) break;
 
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
@@ -57,10 +57,10 @@ public class Queen extends ChessPiece {
         Position position = new Position(queen.getRow() + arr[0], queen.getColumn() + arr[1]);
 
         while (getBoard().positionExists(position)) {
-            // If the piece can be captured, breaks the loop
+            /* If the piece can be captured, breaks the loop. */
             matrix[position.getRow()][position.getColumn()] = true;
 
-            // If there is a piece at the position, breaks the loop
+            /* If there is a piece at the position, breaks the loop. */
             if (getBoard().isThereAPieceAt(position)) break;
 
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);

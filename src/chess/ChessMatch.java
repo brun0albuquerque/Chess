@@ -47,7 +47,7 @@ public class ChessMatch {
         return board.isThereAPieceAt(position) && validatePieceColor(position);
     }
 
-    /* Validates if there is a piece on the target position and if it's not the same color as the player. */
+    /* Validates if there is a piece on the target position and if it's different color from the player. */
     public boolean validateTargetPosition(Position position) {
         if (board.isThereAPieceAt(position) && validatePieceColor(position)) return false;
         return !board.isThereAPieceAt(position) || board.isThereAPieceAt(position) && !validatePieceColor(position);
@@ -64,7 +64,24 @@ public class ChessMatch {
         return playerColor == ((ChessPiece) board.getPieceOn(position)).getColor();
     }
 
-    /* Changes the player turn. */
+    /* Validate if the castle move is possible. */
+    public boolean validateCastleMove(Position kingPosition, Position rookPosition) {
+        King king = (King) board.getPieceOn(kingPosition);
+        Rook rook = (Rook) board.getPieceOn(rookPosition);
+
+        /* Checks if the king or the rook are not null and if they have not yet moved.
+         * Since the king is the class that will call this method, it can't be null. */
+        if (rook == null || king.getMoveCount() != 0 || rook.getMoveCount() != 0) return false;
+
+        int step = (rookPosition.getRow() > kingPosition.getRow()) ? 1 : -1;
+
+        for (int row = kingPosition.getRow() + step; row != rookPosition.getRow(); row += step) {
+            if (board.getPieceOn(new Position(row, kingPosition.getColumn())) != null) return false;
+        }
+        return true;
+    }
+
+    /* Changes the player turns. */
     public void nextTurn() {
         turn++;
         playerColor = invertColor(playerColor);
@@ -75,7 +92,7 @@ public class ChessMatch {
         return chessColor == ChessColor.WHITE ? ChessColor.BLACK : ChessColor.WHITE;
     }
 
-    /* Load the pieces when game starts. */
+    /* Load the pieces when the game starts. */
     private void loadInitialPieces() {
         board.placePiece(new Position(0, 7), new Rook(board, ChessColor.WHITE));
         board.placePiece(new Position(1, 7), new Knight(board, ChessColor.WHITE));

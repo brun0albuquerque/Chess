@@ -59,7 +59,7 @@ public class Movements {
 
     /* Checks weather the pawn can be promoted or not, by checking its position. Pawns always be promoted to Queens. */
     public boolean checkPawnPromotion(Position position) {
-        ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(position); /* Get the piece from the board. */
+        ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(position);
 
         if (piece instanceof Pawn && piece.getPosition().getColumn() == 0
                 || piece instanceof Pawn && piece.getPosition().getColumn() == 7) {

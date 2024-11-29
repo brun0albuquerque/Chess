@@ -55,7 +55,7 @@ public class Board {
     }
 
     /* Check if the position is valid and if there is a piece on the board position, if it has a piece,
-    then remove the piece from the board position . */
+    then remove the piece from the board position. */
     public void removePiece(Position position) {
         if (getPieceOn(position) == null) {
             return;

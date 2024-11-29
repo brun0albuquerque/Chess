@@ -42,7 +42,7 @@ public class PieceDrawer extends JPanel {
 
     /* Do the change of a pawn icon to a queen icon when the pawn is promoted. */
     public void graphicPawnPromotion(int aX, int aY, ChessColor color) {
-        /* Checks the color of the piece because the icons files are different. */
+        /* Checks the color of the piece because the icon files are different. */
         if (color == ChessColor.WHITE) {
             ImageIcon whiteQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/white_queen.png")));
             removePieceIcon(aX, aY);
