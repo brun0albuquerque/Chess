@@ -68,9 +68,11 @@ public class Interface extends JPanel {
                         }
                     } catch (NullPointerException n) {
 
-                        /* A null pointer exception can happen sometimes when the player clicks on empty squares
-                        multiple times and then clicks on a piece. When it happens, the coordinates will be cleaned,
-                        making them null again, preventing the game crash. */
+                        /*
+                         * A null pointer exception can happen sometimes when the player clicks on empty squares
+                         * multiple times and then clicks on a piece. When it happens, the coordinates will be
+                         * cleaned, making them null again, preventing the game crash.
+                         */
                         mouseActions.cleanAllCoordinates();
                     } finally {
 
@@ -104,10 +106,12 @@ public class Interface extends JPanel {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
                 g.setColor(isWhite(row, col) ? Colors.LIGHT_BLUE : Colors.BLUE);
 
-                /* This method will create the squares on the panel. The x and y values are for the left and right,
-                the value I added is so the border can be seen. You add one more to the sides and one less to the
-                width and height, so you have a slightly smaller tile and a "border" appearing around the tile.
-                The size of the small tile had to be changed to be larger as the value added to x and y. */
+                /*
+                 * This method will create the squares on the panel. The x and y values are for the left and right,
+                 * the value I added is so the border can be seen. You add one more to the sides and one less to the
+                 * width and height, so you have a slightly smaller tile and a "border" appearing around the tile.
+                 * The size of the small tile had to be changed to be larger as the value added to x and y.
+                 */
                 g.fillRect(1 + col * Sizes.getSmallTileSize(), 1 + row * Sizes.getSmallTileSize(),
                         Sizes.getSmallTileSize() - 1, Sizes.getSmallTileSize() - 1);
             }
@@ -131,9 +135,12 @@ public class Interface extends JPanel {
                 possibilities = piece.possibleMoves(true);
             }
 
-            /* Since the chess board has a different system of coordinates from the computer, the columns needs to
-            be inverted, as with all the game coordinates which has the actual columns in the rows position and
-            vice versa. This loop will paint the square another color to show the player where the piece can move to. */
+            /*
+             * Since the chess board has a different system of coordinates from the computer, the columns
+             * needs to be inverted, as with all the game coordinates which has the actual columns in the
+             * rows position and vice versa. This loop will paint the square another color to show the
+             * player where the piece can move to.
+             */
             for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
                 for (int col = Sizes.getBOARD_SIZE() - 1; col >= 0; col--) {
                     if (possibilities[col][row]) {

@@ -2,6 +2,7 @@ package chess;
 
 import application.Sizes;
 import boardgame.Board;
+import boardgame.Piece;
 import boardgame.Position;
 import pieces.*;
 
@@ -55,7 +56,7 @@ public class ChessMatch {
     }
 
     /* Validate the position to make sure it has a piece from the opposite color to the player. */
-    public boolean validateCheckPosition(Position position) {
+    public boolean validateOpponentPiecePosition(Position position) {
         if (!board.isThereAPieceAt(position) || validateSourcePosition(position)) return false;
         return board.isThereAPieceAt(position) && !validatePieceColor(position);
     }
@@ -63,6 +64,24 @@ public class ChessMatch {
     /* Compare the color of the player and the piece. */
     public boolean validatePieceColor(Position position) {
         return playerColor == ((ChessPiece) board.getPieceOn(position)).getColor();
+    }
+
+    /* Iterates through the board to find the king and return its position. */
+    public Position findKingPosition(ChessColor color) {
+        Board board = getBoard();
+
+        for (int row = 0; row < board.getRows(); row++) {
+            for (int col = 0; col < board.getColumns(); col++) {
+                Position position = new Position(row, col);
+                Piece piece = board.getPieceOn(position);
+
+                /* Only returns the king position if it's the same color as the player. */
+                if (piece instanceof King && ((King) piece).getColor() == color) {
+                    return position;
+                }
+            }
+        }
+        return null;
     }
 
     /* Changes the player turn. */

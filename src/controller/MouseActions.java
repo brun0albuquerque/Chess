@@ -23,7 +23,7 @@ public class MouseActions {
         return movements;
     }
 
-    /* Handle the player interactions on the board. */
+    /* Handles the player interactions on the board. */
     protected void handlePieceSelection(int x, int y) {
         Position position = new Position(x, y);
         ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPieceOn(position);
@@ -54,7 +54,7 @@ public class MouseActions {
         return aX == null || aY == null || bX == null || bY == null;
     }
 
-    /* Set all coordinates null. */
+    /* Sets all coordinates null. */
     protected void cleanAllCoordinates() {
         aX = null;
         aY = null;
