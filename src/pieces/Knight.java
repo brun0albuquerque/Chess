@@ -38,9 +38,8 @@ public class Knight extends ChessPiece {
                     possibilities[newKnightPosition.getRow()][newKnightPosition.getColumn()] = true;
                 }
             } else {
-                if (getBoard().positionExists(newKnightPosition)) {
+                if (getBoard().positionExists(newKnightPosition))
                     possibilities[newKnightPosition.getRow()][newKnightPosition.getColumn()] = true;
-                }
             }
         }
         return possibilities;

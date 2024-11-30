@@ -9,7 +9,7 @@ public class ChessMatch {
     private int turn;
     private final Board board;
     private ChessColor playerColor;
-    private ChessPiece enPassantVulnerable;
+    public static boolean castling;
 
     public ChessMatch() {
         this.board = new Board(Sizes.getBOARD_SIZE(), Sizes.getBOARD_SIZE());
@@ -33,6 +33,7 @@ public class ChessMatch {
     /* Get the position of all pieces on the board. */
     public ChessPiece[][] getPieces() {
         ChessPiece[][] matrix = new ChessPiece[board.getRows()][board.getColumns()];
+
         for (int a = 0; a < board.getRows(); a++) {
             for (int b = 0; b < board.getColumns(); b++) {
                 Position position = new Position(a, b);
@@ -42,21 +43,37 @@ public class ChessMatch {
         return matrix;
     }
 
-    /* Validates if there is a piece at the position and if it's the same color as the player. */
+    /* Validate if there is a piece at the position and if it's the same color as the player. */
     public boolean validateSourcePosition(Position position) {
         return board.isThereAPieceAt(position) && validatePieceColor(position);
     }
 
-    /* Validates if there is a piece on the target position and if it's different color from the player. */
+    /* Validate if there is a piece on the target position and if it's different color from the player. */
     public boolean validateTargetPosition(Position position) {
-        if (board.isThereAPieceAt(position) && validatePieceColor(position)) return false;
+        if (board.isThereAPieceAt(position) && validatePieceColor(position))
+            return false;
         return !board.isThereAPieceAt(position) || board.isThereAPieceAt(position) && !validatePieceColor(position);
     }
 
     /* Validate the position to make sure it has a piece from the opposite color to the player. */
     public boolean validateOpponentPiecePosition(Position position) {
-        if (!board.isThereAPieceAt(position) || validateSourcePosition(position)) return false;
+        if (!board.isThereAPieceAt(position) || validateSourcePosition(position))
+            return false;
         return board.isThereAPieceAt(position) && !validatePieceColor(position);
+    }
+
+    /* Checks if the first selected piece is an instance of King and the second is an instance of Rook. */
+    public boolean validateCastlingPieces(Position source, Position target) {
+        return (board.isThereAPieceAt(source) && board.getPieceOn(source) instanceof King
+                && board.isThereAPieceAt(target) && board.getPieceOn(target) instanceof Rook)
+                && !((ChessPiece) board.getPieceOn(source)).pieceMoved()
+                && !((ChessPiece) board.getPieceOn(target)).pieceMoved();
+    }
+
+    /* Validates the pawn position and return true if it can be promoted. */
+    public boolean validatePawnPromotion(Position position, ChessPiece piece) {
+        return piece instanceof Pawn && piece.getPosition().getColumn() == 0
+                || piece instanceof Pawn && piece.getPosition().getColumn() == 7;
     }
 
     /* Compare the color of the player and the piece. */
@@ -64,19 +81,37 @@ public class ChessMatch {
         return playerColor == ((ChessPiece) board.getPieceOn(position)).getColor();
     }
 
-    /* Validate if the castle move is possible. */
-    public boolean validateCastleMove(Position kingPosition, Position rookPosition) {
+    /* Promotes a pawn to a queen. */
+    public void makePawnPromotion(Position position, ChessPiece piece) {
+        board.removePiece(position);
+        board.placePiece(position, new Queen(board, piece.getColor()));
+    }
+
+    /* Checks if the castling move is possible. */
+    public boolean validateCastlingMove(Position kingPosition, Position rookPosition) {
+        /* Validate if one of king or rook positions is null to prevent null pointer exception. */
+        if (kingPosition == null || rookPosition == null)
+            return false;
+
+        /* If king position has an instance of King, and if the rook position has an instance of Rook.
+        It prevents a class cast exception. */
+        if (!validateCastlingPieces(kingPosition, rookPosition))
+            return false;
+
         King king = (King) board.getPieceOn(kingPosition);
         Rook rook = (Rook) board.getPieceOn(rookPosition);
 
-        /* Checks if the king or the rook are not null and if they have not yet moved.
-         * Since the king is the class that will call this method, it can't be null. */
-        if (rook == null || king.getMoveCount() != 0 || rook.getMoveCount() != 0) return false;
+        /* Checks if the king or the rook are not null and if they have not yet moved. */
+        if (king == null || rook == null || king.pieceMoved() || rook.pieceMoved() && validatePieceColor(rook.getPosition()))
+            return false;
 
+        /* Get the rook position based on the king position. */
         int step = (rookPosition.getRow() > kingPosition.getRow()) ? 1 : -1;
 
+        /* Check if there is another piece between the king and the rook. */
         for (int row = kingPosition.getRow() + step; row != rookPosition.getRow(); row += step) {
-            if (board.getPieceOn(new Position(row, kingPosition.getColumn())) != null) return false;
+            if (board.getPieceOn(new Position(row, kingPosition.getColumn())) != null)
+                return false;
         }
         return true;
     }

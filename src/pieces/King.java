@@ -56,11 +56,10 @@ public class King extends ChessPiece {
                 }
             }
 
-            /* Checks if it can make the castle move. */
+            /* Marks as true the castling move position. */
             for (Position position : rookPositions) {
-                if (match.validateCastleMove(currentKingPosition, position)) {
+                if (match.validateCastlingMove(currentKingPosition, position))
                     possibilities[position.getRow()][position.getColumn()] = true;
-                }
             }
 
         } else {
@@ -70,9 +69,8 @@ public class King extends ChessPiece {
                 Position kingPosition = new Position(currentKingPosition.getRow() + direction[0],
                         currentKingPosition.getColumn() + direction[1]);
 
-                if (getBoard().positionExists(kingPosition)) {
+                if (getBoard().positionExists(kingPosition))
                     possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
-                }
             }
         }
         return possibilities;
@@ -116,11 +114,16 @@ public class King extends ChessPiece {
                     /* The auxiliary matrix receives the piece possible movements. If the piece is a pawn,
                      * only consider the capture positions (diagonal). Otherwise, if the piece is a king, calculate all
                      * possible moves ignoring the king rules. */
-                    if (piece instanceof Pawn) aux = piece.possibleMoves(false);
-                    else if (piece instanceof King) aux = piece.possibleMoves(false);
-                    else aux = piece.possibleMoves(true);
+                    if (piece instanceof Pawn)
+                        aux = piece.possibleMoves(false);
 
-                    /* Result receive the merge of the two matrices. */
+                    else if (piece instanceof King)
+                        aux = piece.possibleMoves(false);
+
+                    else
+                        aux = piece.possibleMoves(true);
+
+                    /* Result receives the merge of the two matrices. */
                     result = mergePossibilities(aux, source, false);
                 }
             }
@@ -143,7 +146,8 @@ public class King extends ChessPiece {
             for (int b = 0; b < source.length; b++) {
 
                 /* If a position at the source is true, the result is marked as false at the same position in result. */
-                if (source[a][b]) result[a][b] = value;
+                if (source[a][b])
+                    result[a][b] = value;
             }
         }
         return result;

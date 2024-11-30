@@ -33,21 +33,24 @@ public class PieceDrawer extends JPanel {
     /* Make the moves of the piece icons on the board. */
     public void iconMove(int aX, int aY, int bX, int bY) {
         ImageIcon icon = getPieceIcon(aX, aY);
-        if (icon == null) {
+
+        if (icon == null)
             return;
-        }
+
         removePieceIcon(aX, aY);
         placePieceIcon(bX, bY, icon);
     }
 
     /* Do the change of a pawn icon to a queen icon when the pawn is promoted. */
     public void graphicPawnPromotion(int aX, int aY, ChessColor color) {
+
         /* Checks the color of the piece because the icon files are different. */
         if (color == ChessColor.WHITE) {
             ImageIcon whiteQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/white_queen.png")));
             removePieceIcon(aX, aY);
             placePieceIcon(aX, aY, whiteQueen);
-        } else {
+        }
+        else {
             ImageIcon blackQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/black_queen.png")));
             removePieceIcon(aX, aY);
             placePieceIcon(aX, aY, blackQueen);
@@ -56,7 +59,7 @@ public class PieceDrawer extends JPanel {
 
     /* Load all pieces icons to the board. */
     public void placePiecesOnBoard(Graphics g) {
-        /* If there is any problem with the pieces icons, then the game cannot be initiated, so it will close. */
+        /* If there is any problem with the piece icons, then the game cannot be initiated, so it will close. */
         if (piecesIcons == null) {
             JOptionPane.showMessageDialog(null, "Game files could not be loaded.",
                     "Error", JOptionPane.ERROR_MESSAGE, null);

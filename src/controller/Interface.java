@@ -47,40 +47,54 @@ public class Interface extends JPanel {
                 /* Set the values of the coordinates in MouseActions. */
                 mouseActions.handlePieceSelection(row, col);
 
-                /* Repaint the panel to highlight the possible moves for the selected piece. */
-                if (MouseActions.aX != null && MouseActions.aY != null) repaint();
+                /* When the player clicks on the board, repaint the board to highlight the moves. */
+                if (MouseActions.aX != null && MouseActions.aY != null)
+                    repaint();
 
-                if (!mouseActions.isAllCoordinatesNull()) {
-                    try {
-                        /* Do the logic move on the board, validates the move and checks if the king is in check. */
+                if (mouseActions.isAllCoordinatesNull())
+                    return;
+
+                try {
+                    int kingRow = (MouseActions.aX > MouseActions.bX) ? MouseActions.aX - 2 : MouseActions.aX + 2;
+                    int rookRow = (MouseActions.aX > MouseActions.bX) ? MouseActions.bX + 2 : MouseActions.bX - 3;
+
+                    if (match.validateCastlingPieces(new Position(kingRow, MouseActions.aY),
+                            (new Position(rookRow, MouseActions.bY)))) {
+
                         mouseActions.logicMove(match);
-
-                        /* Do the icon move only, change the icon position on the interface (panel). */
+                        drawer.iconMove(MouseActions.aX, MouseActions.aY, kingRow, MouseActions.aY);
+                        drawer.iconMove(MouseActions.bX, MouseActions.bY, rookRow, MouseActions.bY);
+                    } else {
+                        mouseActions.logicMove(match);
                         drawer.iconMove(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
-
-                        /* Get the piece position after its movement. */
-                        Position position = new Position(MouseActions.bX, MouseActions.bY);
-                        ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(position);
-
-                        /* Checks for pawn promotion, if true then the pawn is promoted to queen. */
-                        if (mouseActions.getMovements().checkPawnPromotion(position)) {
-                            drawer.graphicPawnPromotion(MouseActions.bX, MouseActions.bY, piece.getColor());
-                        }
-                    } catch (NullPointerException n) {
-
-                        /*
-                         * A null pointer exception can sometimes happen when the player clicks on empty squares
-                         * multiple times and then clicks on a piece. When it happens, the coordinates will be
-                         * cleaned, making them null again, preventing the game crash.
-                         */
-                        mouseActions.cleanAllCoordinates();
-                    } finally {
-
-                        /* Always repaint the interface and clean the coordinates after a move to remove the selected piece
-                        highlights from the board and clean the coordinates. */
-                        repaint();
-                        mouseActions.cleanAllCoordinates();
                     }
+
+                    Position position = new Position(MouseActions.bX, MouseActions.bY);
+                    ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(position);
+
+                    /* Checks for pawn promotion, if true, then the pawn is promoted to queen. */
+                    if (match.validatePawnPromotion(position, piece)) {
+                        match.makePawnPromotion(position, piece);
+                        drawer.graphicPawnPromotion(MouseActions.bX, MouseActions.bY, piece.getColor());
+                    }
+                } catch (NullPointerException n) {
+
+                    /*
+                     * A null pointer exception can sometimes happen when the player clicks on empty squares
+                     * multiple times and then clicks on a piece.
+                     *
+                     * When it happens, the coordinates will be cleaned, making them null again,
+                     * preventing the game crash.
+                     */
+                    mouseActions.cleanAllCoordinates();
+                } finally {
+
+                    /*
+                    * Always repaint the interface and clean the coordinates after a move to remove the
+                    * selected piece highlights from the board and clean the coordinates.
+                    * */
+                    repaint();
+                    mouseActions.cleanAllCoordinates();
                 }
             }
         });
@@ -129,11 +143,10 @@ public class Interface extends JPanel {
 
             /* If the selected piece is the king, then check the safe possible moves. If not, then only get the
             possible moves for the piece. */
-            if (piece instanceof King) {
+            if (piece instanceof King)
                 possibilities = ((King) piece).possibleMoves();
-            } else {
+            else
                 possibilities = piece.possibleMoves(true);
-            }
 
             /*
              * Since the chess board has a different system of coordinates from the computer, the columns

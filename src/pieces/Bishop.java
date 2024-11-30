@@ -24,8 +24,10 @@ public class Bishop extends ChessPiece {
         Position currentBishopPosition = getPosition();
 
         for (int[] direction : directions) {
-            if (captureMatters) checkBishopDirection(currentBishopPosition, possibilities, direction);
-            else checkDirectionWithoutCapture(currentBishopPosition, possibilities, direction);
+            if (captureMatters)
+                checkBishopDirection(currentBishopPosition, possibilities, direction);
+            else
+                checkDirectionWithoutCapture(currentBishopPosition, possibilities, direction);
         }
         return possibilities;
     }
@@ -37,7 +39,8 @@ public class Bishop extends ChessPiece {
             possibilities[position.getRow()][position.getColumn()] = true;
 
             // If the piece can be captured, break the loop
-            if (checkCapture(position)) break;
+            if (checkCapture(position))
+                break;
 
             // Increment the value of the row and column until reach a piece or to the end of the board
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
@@ -51,7 +54,8 @@ public class Bishop extends ChessPiece {
             matrix[position.getRow()][position.getColumn()] = true;
 
             // If there is a piece at the position, breaks the loop
-            if (getBoard().isThereAPieceAt(position)) break;
+            if (getBoard().isThereAPieceAt(position))
+                break;
 
             // Increment the value of the row and column until reach a piece or to the end of the board
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);

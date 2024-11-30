@@ -25,6 +25,10 @@ public abstract class ChessPiece extends Piece {
         this.moveCount = moveCount + 1;
     }
 
+    public boolean pieceMoved() {
+        return getMoveCount() != 0;
+    }
+
     /* Check if there is any piece at the position and the color of the piece. */
     public boolean checkCapture(Position position) {
         ChessPiece piece = (ChessPiece) getBoard().getPieceOn(position);

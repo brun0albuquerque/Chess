@@ -27,7 +27,6 @@ public class Pawn extends ChessPiece {
         Position rightDiagonalBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn() + 1);
 
         if (captureMatters) {
-
             if (getColor() == ChessColor.WHITE) {
 
                 // One house move
@@ -38,7 +37,7 @@ public class Pawn extends ChessPiece {
                 // Two houses move
                 if (getBoard().positionExists(oneStepWhite) && !getBoard().isThereAPieceAt(oneStepWhite)
                         && getBoard().positionExists(twoStepsWhite) && !getBoard().isThereAPieceAt(twoStepsWhite)
-                        && getMoveCount() == 0) {
+                        && !pieceMoved()) {
                     possibilities[twoStepsWhite.getRow()][twoStepsWhite.getColumn()] = true;
                 }
 
@@ -64,7 +63,7 @@ public class Pawn extends ChessPiece {
                 // Two houses move
                 if (getBoard().positionExists(oneStepBlack) && !getBoard().isThereAPieceAt(oneStepBlack)
                         && getBoard().positionExists(twoStepsBlack) && !getBoard().isThereAPieceAt(twoStepsBlack)
-                        && getMoveCount() == 0) {
+                        && !pieceMoved()) {
                     possibilities[twoStepsBlack.getRow()][twoStepsBlack.getColumn()] = true;
                 }
 

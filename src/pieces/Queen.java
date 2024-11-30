@@ -27,14 +27,12 @@ public class Queen extends ChessPiece {
         boolean[][] possibilities = new boolean[getBoard().getColumns()][getBoard().getRows()];
         Position queenPosition = getPosition();
 
-
         /* Iterate through all directions. */
         for (int[] direction : directions) {
-            if (captureMatters) {
+            if (captureMatters)
                 checkQueenDirection(queenPosition, possibilities, direction);
-            } else {
+            else
                 checkDirectionWithoutCapture(queenPosition, possibilities, direction);
-            }
         }
         return possibilities;
     }
@@ -47,7 +45,8 @@ public class Queen extends ChessPiece {
             matrix[position.getRow()][position.getColumn()] = true;
 
             /* Increment the value of the row and column until reach a piece or to the end of the board. */
-            if (checkCapture(position)) break;
+            if (checkCapture(position))
+                break;
 
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
         }
@@ -61,7 +60,8 @@ public class Queen extends ChessPiece {
             matrix[position.getRow()][position.getColumn()] = true;
 
             /* If there is a piece at the position, breaks the loop. */
-            if (getBoard().isThereAPieceAt(position)) break;
+            if (getBoard().isThereAPieceAt(position))
+                break;
 
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
         }

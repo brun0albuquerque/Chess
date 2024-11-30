@@ -25,11 +25,10 @@ public class Rook extends ChessPiece {
 
         /* All the sides directions. */
         for (int[] direction : directions) {
-            if (captureMatters) {
+            if (captureMatters)
                 checkRookDirection(currentRookPosition, possibilities, direction);
-            } else {
+            else
                 checkRookWithoutCapture(currentRookPosition, possibilities, direction);
-            }
         }
         return possibilities;
     }
@@ -41,7 +40,8 @@ public class Rook extends ChessPiece {
             matrix[position.getRow()][position.getColumn()] = true;
 
             /* If the piece can be captured, breaks the loop. */
-            if (checkCapture(position)) break;
+            if (checkCapture(position))
+                break;
 
             /* Increment the value of the row and column until reach a piece or to the end of the board. */
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
@@ -55,7 +55,8 @@ public class Rook extends ChessPiece {
             matrix[position.getRow()][position.getColumn()] = true;
 
             /* If there is a piece at the position, breaks the loop. */
-            if (getBoard().isThereAPieceAt(position)) break;
+            if (getBoard().isThereAPieceAt(position))
+                break;
 
             /* Increment the value of the row and column until reach a piece or to the end of the board. */
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);

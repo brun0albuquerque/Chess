@@ -29,8 +29,15 @@ public class MouseActions {
         ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPieceOn(position);
 
         if (isAllCoordinatesNull() && selectedPiece != null && match.validatePieceColor(position)) {
+
+            if (aX != null && aY != null && match.validateCastlingPieces(new Position(MouseActions.aX, MouseActions.aY), position)) {
+                bX = x;
+                bY = y;
+                return;
+            }
             aX = x;
             aY = y;
+
         } else if (aX != null && aY != null) {
             bX = x;
             bY = y;
@@ -39,13 +46,27 @@ public class MouseActions {
 
     /* Perform the logic move on the board. */
     protected void logicMove(ChessMatch match) {
-        if (match.getPieces()[aX][aY] == null) return;
+        if (match.getPieces()[aX][aY] == null)
+            return;
 
         Position source = new Position(aX, aY);
         Position target = new Position(bX, bY);
 
         if (match.validateSourcePosition(source) && match.validateTargetPosition(target)) {
-            if (!movements.pieceMove(source, target)) cleanAllCoordinates();
+
+            /* Validate if the move can be done checking the target position on the board.
+             * If the piece is the king, it only allows the move to safe squares. */
+            if (!movements.validateMovePosition(source, target))
+                cleanAllCoordinates();
+
+                /* If the movement isn't an especial move, make a simple move. */
+            else
+                movements.pieceMove(source, target);
+        } else if (match.validateCastlingPieces(source, target)) {
+
+            /* Validate the castling move before make the move. */
+            if (match.validateCastlingMove(source, target))
+                movements.castlingMove(source, target);
         }
     }
 
