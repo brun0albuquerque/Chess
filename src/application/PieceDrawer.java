@@ -1,6 +1,7 @@
 package application;
 
 import chess.ChessColor;
+import controller.PlayerAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +32,7 @@ public class PieceDrawer extends JPanel {
     }
 
     /* Make the moves of the piece icons on the board. */
-    public void iconMove(int aX, int aY, int bX, int bY) {
+    public void executeIconMove(int aX, int aY, int bX, int bY) {
         ImageIcon icon = getPieceIcon(aX, aY);
 
         if (icon == null)
@@ -39,6 +40,11 @@ public class PieceDrawer extends JPanel {
 
         removePieceIcon(aX, aY);
         placePieceIcon(bX, bY, icon);
+    }
+
+    public void executeCastlingGraphicMove(int aX, int aY, int bX, int bY, int kingRow, int rookRow) {
+        executeIconMove(aX, aY, kingRow, aY);
+        executeIconMove(bX, bY, rookRow, bY);
     }
 
     /* Do the change of a pawn icon to a queen icon when the pawn is promoted. */
@@ -71,10 +77,10 @@ public class PieceDrawer extends JPanel {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
                 if (piecesIcons[row][col] != null) {
                     Image image = piecesIcons[row][col].getImage();
-                    Image resizedImage = image.getScaledInstance(Sizes.getSmallPieceSize() - 1,
-                            Sizes.getSmallPieceSize() - 1, Image.SCALE_SMOOTH);
+                    Image resizedImage = image.getScaledInstance(Sizes.getPieceSize() - 1,
+                            Sizes.getPieceSize() - 1, Image.SCALE_SMOOTH);
                     ImageIcon newImage = new ImageIcon(resizedImage);
-                    newImage.paintIcon(this, g, row * Sizes.getSmallTileSize(), col * Sizes.getSmallTileSize());
+                    newImage.paintIcon(this, g, row * Sizes.getTileSize(), col * Sizes.getTileSize());
                 }
             }
         }

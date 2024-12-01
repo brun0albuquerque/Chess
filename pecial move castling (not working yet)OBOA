@@ -1,0 +1,203 @@
+[33mcommit 4224df2d9d5dfc53d31d334316c51bd6785318b2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmovement[m[33m, [m[1;31morigin/movement[m[33m, [m[1;32mmovements[m[33m)[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Sat Nov 30 03:14:45 2024 -0300
+
+    special move castling (does not work yet)
+
+[33mcommit 7649af0c032ccb24da830ffdf600a1bf90cf3bd4[m[33m ([m[1;31morigin/movements[m[33m)[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Fri Nov 29 15:20:34 2024 -0300
+
+    castle move validation
+
+[33mcommit 3a1b20fa44ccde762148cbf6fee003e96e82c5e1[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Fri Nov 29 03:18:57 2024 -0300
+
+    update on comments and documentation
+
+[33mcommit fa0c7504434ab07933513a15ccecb7a44cd87719[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Thu Nov 28 14:28:14 2024 -0300
+
+    improved explanations in comments
+
+[33mcommit 4b2e0b0fa63609f00281862fccab2e2993528966[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Wed Nov 27 21:00:02 2024 -0300
+
+    king now captures only if not in check
+
+[33mcommit 9f44993e3c1735e5de5b36a065e0d4d99c4630e7[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Wed Nov 27 17:21:52 2024 -0300
+
+    king can only move to safe squares
+
+[33mcommit 5f1deda4c37b50eb11c51f88b9685b89465147ba[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 19:36:05 2024 -0300
+
+    interface tiles update
+
+[33mcommit 026f16a0640069ce24ae700ec64c4a1d95ffb955[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 18:59:55 2024 -0300
+
+    pawn promotion implemented
+
+[33mcommit 5863b03407cee96fd06afee411f5ce9e143c510c[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 16:39:11 2024 -0300
+
+    king movements completed
+
+[33mcommit 215577d2f639af11a62cebe2ece0027a21a1efd3[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 16:35:52 2024 -0300
+
+    queen movements completed
+
+[33mcommit ae070aca22ff3160ad76c3f57c252185318fd5f9[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 16:29:52 2024 -0300
+
+    knight movements completed
+
+[33mcommit ceb942635ee9beaf8b189534435f641f8dfb0d13[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 15:48:22 2024 -0300
+
+    bishop movements completed
+
+[33mcommit 1be13e85e9c1829cc02ebe2c652556c6ae52cb94[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 15:13:44 2024 -0300
+
+    rook movements completed
+
+[33mcommit 6698f7a001707518bdf4c01a4ec003297a4b1579[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 14:43:38 2024 -0300
+
+    pawn moves completed and all matrix inversions removed
+
+[33mcommit 92577a19cf59ddb94e600d17ef4049207ed0195b[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 02:14:22 2024 -0300
+
+    movements highlights implementation
+
+[33mcommit a57add1f7f126511f168acbb94fe6f8abf94b6ab[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 02:13:06 2024 -0300
+
+    improvements and adjustments
+
+[33mcommit 894299f8e303c76bf3936208e78a71120b9ace9a[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Nov 25 00:33:59 2024 -0300
+
+    pawn update
+
+[33mcommit 30c1950bd685aa996bbb107a135142fa5a1aada2[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Wed Nov 20 20:09:11 2024 -0300
+
+    change of turn adjust
+
+[33mcommit 622f16130e6d16d22b647540fc362ee1a48e0e34[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Tue Nov 19 17:24:47 2024 -0300
+
+    update and improvement at pieces moves
+
+[33mcommit 1e6696f9842e2af8459c8592eab91676060b7d15[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Sun Nov 17 22:00:19 2024 -0300
+
+    changes in the code structure and bugs from moviments fixed
+
+[33mcommit ea00e3dfc364b2b27bb22111f1e2a38ce508ad40[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Oct 21 18:25:05 2024 -0300
+
+    implementation of pieces moviments (still need adjustments)
+
+[33mcommit 8348607a294539489d31a77c86f181047922b5bc[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Sun Sep 15 14:07:35 2024 -0300
+
+    fix king position
+
+[33mcommit cf95348de0e65559eb61637d7477d28f805702ee[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Sun Sep 15 14:06:06 2024 -0300
+
+    error messages using pop-up windows
+
+[33mcommit d736e987517da792f3140a12a074df42bdf15285[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Sat Sep 14 03:13:33 2024 -0300
+
+    creation of interface sizes enum
+
+[33mcommit e826e61cba0482460745f8f8ba776264c148bb99[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Sat Sep 14 02:41:34 2024 -0300
+
+    implementation of pieces incomplete movements (graphically)
+
+[33mcommit 78d1c24a2fdf2e492e4254fd5734ea1b68bed131[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Thu Sep 12 16:40:38 2024 -0300
+
+    implementation of pieces moves on interface
+
+[33mcommit 2b903f6ddca2c6377955a9df9ff09e6e37206e7e[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Thu Sep 12 12:32:28 2024 -0300
+
+    implementation of new board colors
+
+[33mcommit 8f3bea16f57a83d375bae9e6b7904577a8a7ab8e[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Wed Sep 11 00:26:00 2024 -0300
+
+    update pieces logic
+
+[33mcommit d10ed648fc8097be06c5288b35231e1a92549b64[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Sep 9 16:37:14 2024 -0300
+
+    board panel and images finished
+
+[33mcommit 6fdf009045325bdc0fb874e95efcf41f07be36c4[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Sep 9 16:20:13 2024 -0300
+
+    set the class sizes
+
+[33mcommit 810088486490f6cdc2b90d4dee24388edce369c6[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Mon Sep 9 11:46:06 2024 -0300
+
+    update application package
+
+[33mcommit 07289c5016caa6289a68fa820cbacb70cc6adb8f[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Fri Sep 6 18:44:51 2024 -0300
+
+    configuring graphic interface
+
+[33mcommit d941e77172388aa0767e225ac79ebb7c0ebcdf8c[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Thu Sep 5 23:25:38 2024 -0300
+
+    graphic interface implementation
+
+[33mcommit f83964df0a03652dabf56afbf221fa51d7213025[m
+Author: Bruno <albuquerquebruno2020@gmail.com>
+Date:   Wed Sep 4 14:55:30 2024 -0300
+
+    first commit

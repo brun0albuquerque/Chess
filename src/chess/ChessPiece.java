@@ -6,7 +6,7 @@ import boardgame.Position;
 
 public abstract class ChessPiece extends Piece {
     private final ChessColor color;
-    private int moveCount;
+    private int moveCounter;
 
     public ChessPiece(Board board, ChessColor color) {
         super(board);
@@ -17,16 +17,20 @@ public abstract class ChessPiece extends Piece {
         return color;
     }
 
-    public int getMoveCount() {
-        return moveCount;
+    public int getMoveCounter() {
+        return moveCounter;
+    }
+
+    public void setMoveCounter(int moveCounter) {
+        this.moveCounter = moveCounter;
     }
 
     public void addMoveCount() {
-        this.moveCount = moveCount + 1;
+        this.moveCounter = moveCounter + 1;
     }
 
     public boolean pieceMoved() {
-        return getMoveCount() != 0;
+        return getMoveCounter() > 0;
     }
 
     /* Check if there is any piece at the position and the color of the piece. */

@@ -14,6 +14,7 @@ public class King extends ChessPiece {
     public King(Board board, ChessColor chessColor, ChessMatch match) {
         super(board, chessColor);
         this.match = match;
+        setMoveCounter(-1);
     }
 
     /* Every king move. */
@@ -151,5 +152,9 @@ public class King extends ChessPiece {
             }
         }
         return result;
+    }
+
+    public boolean hasKingMoved() {
+        return getMoveCounter() == 0;
     }
 }

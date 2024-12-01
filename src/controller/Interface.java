@@ -8,6 +8,7 @@ import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
 import pieces.King;
+import pieces.Rook;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,13 +20,13 @@ public class Interface extends JPanel {
     private final PieceDrawer drawer;
     private final ChessMatch match;
 
-    public Interface(MouseActions mouseActions, PieceDrawer drawer, ChessMatch match) {
+    public Interface(PlayerAction playerAction, PieceDrawer drawer, ChessMatch match) {
         super();
         this.drawer = drawer;
         this.match = match;
 
         /* Set the game window size. */
-        setPreferredSize(new Dimension(Sizes.getSmallDimension(), Sizes.getSmallDimension()));
+        setPreferredSize(new Dimension(Sizes.getDimension(), Sizes.getDimension()));
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -37,46 +38,64 @@ public class Interface extends JPanel {
                 int y = e.getY();
 
                 /* Divide the coordinate by the size of the tile to get the square of the clicked area. */
-                int row = x / Sizes.getSmallTileSize();
-                int col = y / Sizes.getSmallTileSize();
+                int row = x / Sizes.getTileSize();
+                int col = y / Sizes.getTileSize();
 
                 /* Make sure the row or column values are not less than 0 or greater than 7. */
                 row = Math.max(0, Math.min(Sizes.getBOARD_SIZE() - 1, row));
                 col = Math.max(0, Math.min(Sizes.getBOARD_SIZE() - 1, col));
 
                 /* Set the values of the coordinates in MouseActions. */
-                mouseActions.handlePieceSelection(row, col);
+                playerAction.handlePieceSelection(row, col);
 
                 /* When the player clicks on the board, repaint the board to highlight the moves. */
-                if (MouseActions.aX != null && MouseActions.aY != null)
+                if (PlayerAction.aX != null && PlayerAction.aY != null)
                     repaint();
 
-                if (mouseActions.isAllCoordinatesNull())
+                if (playerAction.isAllCoordinatesNull())
                     return;
 
                 try {
-                    int kingRow = (MouseActions.aX > MouseActions.bX) ? MouseActions.aX - 2 : MouseActions.aX + 2;
-                    int rookRow = (MouseActions.aX > MouseActions.bX) ? MouseActions.bX + 2 : MouseActions.bX - 3;
+                    int kingRow = (PlayerAction.aX > PlayerAction.bX) ? PlayerAction.aX - 2 : PlayerAction.aX + 2;
+                    int rookRow = (PlayerAction.aX > PlayerAction.bX) ? PlayerAction.bX + 2 : PlayerAction.bX - 3;
 
-                    if (match.validateCastlingPieces(new Position(kingRow, MouseActions.aY),
-                            (new Position(rookRow, MouseActions.bY)))) {
+                    Position source = new Position(PlayerAction.aX, PlayerAction.aY);
+                    Position target = new Position(PlayerAction.bX, PlayerAction.bY);
+                    Position kingRowPosition = new Position(kingRow, PlayerAction.aY);
+                    Position rookRowPosition = new Position(rookRow, PlayerAction.bY);
 
-                        mouseActions.logicMove(match);
-                        drawer.iconMove(MouseActions.aX, MouseActions.aY, kingRow, MouseActions.aY);
-                        drawer.iconMove(MouseActions.bX, MouseActions.bY, rookRow, MouseActions.bY);
+                    if (playerAction.validateLogicMove(match))
+                        playerAction.executeMove(source, target);
+
+                    if (match.validateCastlingMove(kingRowPosition, rookRowPosition)
+                            && match.validateCastlingPieces(kingRowPosition, rookRowPosition)) {
+
+                        drawer.executeCastlingGraphicMove(
+                                PlayerAction.aX, PlayerAction.aY, PlayerAction.bX,
+                                PlayerAction.bY, kingRow, rookRow
+                        );
+
+                        /*
+                        * Add the movement counter to one for both pieces after the move, because the validate
+                        * method can only make the castle move with the movement counter equal to zero.
+                        * So add the movement counter after the graphical move to make sure the piece icon also moves.
+                        * */
+                        King king = (King) match.getBoard().getPieceOn(kingRowPosition);
+                        Rook rook = (Rook) match.getBoard().getPieceOn(rookRowPosition);
+                        king.addMoveCount();
+                        rook.addMoveCount();
                     } else {
-                        mouseActions.logicMove(match);
-                        drawer.iconMove(MouseActions.aX, MouseActions.aY, MouseActions.bX, MouseActions.bY);
+                        drawer.executeIconMove(PlayerAction.aX, PlayerAction.aY, PlayerAction.bX, PlayerAction.bY);
                     }
 
-                    Position position = new Position(MouseActions.bX, MouseActions.bY);
-                    ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(position);
+                    ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(target);
 
                     /* Checks for pawn promotion, if true, then the pawn is promoted to queen. */
-                    if (match.validatePawnPromotion(position, piece)) {
-                        match.makePawnPromotion(position, piece);
-                        drawer.graphicPawnPromotion(MouseActions.bX, MouseActions.bY, piece.getColor());
+                    if (match.validatePawnPromotion(target, piece)) {
+                        match.makePawnPromotion(target, piece);
+                        drawer.graphicPawnPromotion(PlayerAction.bX, PlayerAction.bY, piece.getColor());
                     }
+
                 } catch (NullPointerException n) {
 
                     /*
@@ -86,15 +105,15 @@ public class Interface extends JPanel {
                      * When it happens, the coordinates will be cleaned, making them null again,
                      * preventing the game crash.
                      */
-                    mouseActions.cleanAllCoordinates();
+                    playerAction.cleanAllCoordinates();
                 } finally {
 
                     /*
-                    * Always repaint the interface and clean the coordinates after a move to remove the
-                    * selected piece highlights from the board and clean the coordinates.
-                    * */
+                     * Always repaint the interface and clean the coordinates after a move to remove the
+                     * selected piece highlights from the board and clean the coordinates.
+                     * */
                     repaint();
-                    mouseActions.cleanAllCoordinates();
+                    playerAction.cleanAllCoordinates();
                 }
             }
         });
@@ -126,14 +145,14 @@ public class Interface extends JPanel {
                  * width and height, so you have a slightly smaller tile and a "border" appearing around the tile.
                  * The size of the small tile had to be changed to be larger as the value added to x and y.
                  */
-                g.fillRect(1 + col * Sizes.getSmallTileSize(), 1 + row * Sizes.getSmallTileSize(),
-                        Sizes.getSmallTileSize() - 1, Sizes.getSmallTileSize() - 1);
+                g.fillRect(1 + col * Sizes.getTileSize(), 1 + row * Sizes.getTileSize(),
+                        Sizes.getTileSize() - 1, Sizes.getTileSize() - 1);
             }
         }
 
         /* Get the position of the selected piece. */
-        Integer selectedRow = MouseActions.aX;
-        Integer selectedCol = MouseActions.aY;
+        Integer selectedRow = PlayerAction.aX;
+        Integer selectedCol = PlayerAction.aY;
 
         /* If there is a piece on the position, then it will highlight the piece possible movements. */
         if (selectedRow != null && selectedCol != null) {
@@ -158,8 +177,8 @@ public class Interface extends JPanel {
                 for (int col = Sizes.getBOARD_SIZE() - 1; col >= 0; col--) {
                     if (possibilities[col][row]) {
                         g.setColor(Colors.YELLOW);
-                        g.fillRect(1 + col * Sizes.getSmallTileSize(), 1 + row * Sizes.getSmallTileSize(),
-                                Sizes.getSmallTileSize() - 1, Sizes.getSmallTileSize() - 1);
+                        g.fillRect(1 + col * Sizes.getTileSize(), 1 + row * Sizes.getTileSize(),
+                                Sizes.getTileSize() - 1, Sizes.getTileSize() - 1);
                     }
                 }
             }

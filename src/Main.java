@@ -1,7 +1,6 @@
 import application.ChessInterface;
 import chess.ChessMatch;
-import controller.MouseActions;
-import controller.Movements;
+import controller.PlayerAction;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -10,9 +9,8 @@ public class Main {
     public static void main(String[] args) {
         try {
             ChessMatch match = new ChessMatch();
-            Movements movements = new Movements(match);
-            MouseActions actions = new MouseActions(movements, match);
-            ChessInterface chessInterface = new ChessInterface(actions, match);
+            PlayerAction action = new PlayerAction(match);
+            ChessInterface anInterface = new ChessInterface(action, match);
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()),
                     "Error", JOptionPane.ERROR_MESSAGE, null);
