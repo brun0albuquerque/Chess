@@ -158,34 +158,6 @@ public class InterfaceController extends JPanel {
             }
         }
 
-        for (int row = 0; row < FrameSizes.getBOARD_SIZE(); row++) {
-            for (int col = 0; col < FrameSizes.getBOARD_SIZE(); col++) {
-                Position position = new Position(row, col);
-                ChessPiece piece = (ChessPiece) match.getBoard().getPiece(position);
-
-                if (piece != null && !piece.getColor().equals(match.getPlayerColor())) {
-                    boolean[][] opponentMoves = new boolean[8][8];
-                    if (piece instanceof Pawn) {
-                        boolean[][] aux = piece.possibleMoves(true);
-                        Utils.mergePossibilities(aux, opponentMoves, true);
-                    } else {
-                        opponentMoves = piece.possibleMoves(true);
-                    }
-
-                    for (int opponentRow = 0; opponentRow < FrameSizes.getBOARD_SIZE(); opponentRow++) {
-                        for (int opponentCol = 0; opponentCol < FrameSizes.getBOARD_SIZE(); opponentCol++) {
-                            if (opponentMoves[opponentCol][opponentRow]) {
-                                g.setColor(Color.ORANGE);
-                                g.fillRect(1 + opponentCol * FrameSizes.getTileSize(), 1 + opponentRow * FrameSizes.getTileSize(),
-                                        FrameSizes.getTileSize() - 1, FrameSizes.getTileSize() - 1);
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         /* Get the position of the selected piece. */
         Integer selectedRow = GameController.aX;
         Integer selectedCol = GameController.aY;
