@@ -69,6 +69,8 @@ public class InputController {
     protected boolean validateLogicMove() {
         playerHasLegalMoves = playerHasAnyLegalMove();
         match.isKingInCheck(source, target);
+        match.isCheckmate();
+        match.isStalemate();
 
         if (ChessMatch.kingCheck) {
             System.out.println("Test.");

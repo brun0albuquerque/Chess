@@ -144,7 +144,7 @@ public class InterfaceController extends JPanel {
         from the classical chess board. The size of the tiles is calculated based on the frame (screen) size. */
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
-                g.setColor(isWhite(row, col) ? Colors.WHITE : Colors.BLACK);
+                g.setColor(isWhite(row, col) ? Colors.BLACK : Colors.WHITE);
 
                 /*
                  * This method will create the squares on the panel. The x and y values are for the left and right,

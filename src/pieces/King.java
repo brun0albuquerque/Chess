@@ -90,7 +90,6 @@ public class King extends ChessPiece {
      * <p>
      * Possible moves will only receive <code>false</code> as parameter when you need the possible movements of a piece
      * until it encounters another piece on the board, regardless of the piece's color.
-     * It will be used only with the king and the pawn.
      *<p>
      * The pawn can only capture on the diagonal, so you need to exclude the front side movement, and for
      * the king because the king cannot be in check, it will not always be able to move to any square.
@@ -115,13 +114,10 @@ public class King extends ChessPiece {
 
                     /* The auxiliary matrix receives the piece possible movements. If the piece is a pawn,
                      * only consider the capture positions (diagonal). Otherwise, if the piece is a king, calculate all
-                     * possible moves ignoring the king rules. */
-                    aux = switch (piece) {
-                        case Pawn pawn -> piece.possibleMoves(false);
-                        case King king -> piece.possibleMoves(false);
-                        case Queen queen -> piece.possibleMoves(false);
-                        default -> piece.possibleMoves(true);
-                    };
+                     * possible moves ignoring the king rules. For other pieces, ignore the squares filled with allied
+                     * pieces.
+                     */
+                    aux = piece.possibleMoves(false);
 
                     /* Result receives the merge of the two matrices. */
                     result = mergePossibilities(aux, source, false);
