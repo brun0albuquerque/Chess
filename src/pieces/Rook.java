@@ -19,13 +19,13 @@ public class Rook extends ChessPiece {
     };
 
     @Override
-    public boolean[][] possibleMoves(boolean captureMatters) {
+    public boolean[][] possibleMoves(boolean captureAllowed) {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
         Position currentRookPosition = getPosition();
 
         /* All the sides directions. */
         for (int[] direction : directions) {
-            if (captureMatters)
+            if (captureAllowed)
                 checkRookDirection(currentRookPosition, possibilities, direction);
             else
                 checkRookWithoutCapture(currentRookPosition, possibilities, direction);

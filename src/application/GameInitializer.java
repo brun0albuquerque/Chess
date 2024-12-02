@@ -8,9 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class Initializer extends JFrame {
+public class GameInitializer extends JFrame {
 
-    public Initializer(GameController action, ChessMatch match) throws HeadlessException {
+    public GameInitializer(GameController action, ChessMatch match) throws HeadlessException {
         super("Chess");
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,13 +20,13 @@ public class Initializer extends JFrame {
         setIconImage(icon.getImage());
 
         /* Load the pieces images files. */
-        Loader loader = new Loader(new ImageIcon[Sizes.getBOARD_SIZE()][Sizes.getBOARD_SIZE()]);
+        PiecesLoader piecesLoader = new PiecesLoader(new ImageIcon[FrameSizes.getBOARD_SIZE()][FrameSizes.getBOARD_SIZE()]);
 
         /* Pass the pieces images to the drawer. */
-        Drawer drawer = new Drawer(loader.getPiecesIcons());
+        GameDrawer gameDrawer = new GameDrawer(piecesLoader.getPiecesIcons());
 
         /* Make the connection between the user and the board. */
-        InterfaceController anInterfaceController = new InterfaceController(action, drawer, match);
+        InterfaceController anInterfaceController = new InterfaceController(action, gameDrawer, match);
         getContentPane().add(anInterfaceController);
 
         /* Size the window based on its content. */

@@ -1,6 +1,6 @@
 package application;
 
-public enum Sizes {
+public enum FrameSizes {
     SIZE(66, 66);
 
     private static final int BOARD_SIZE = 8;
@@ -8,7 +8,7 @@ public enum Sizes {
     private final int tileSize;
     private final int pieceSize;
 
-    Sizes(int tileSize, int pieceSize) {
+    FrameSizes(int tileSize, int pieceSize) {
         this.tileSize = tileSize;
         this.pieceSize = pieceSize;
     }

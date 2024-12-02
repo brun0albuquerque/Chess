@@ -4,11 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class Loader extends JFrame {
+public class PiecesLoader extends JFrame {
 
     private final ImageIcon[][] piecesIcons;
 
-    public Loader(ImageIcon[][] piecesIcons) throws HeadlessException {
+    public PiecesLoader(ImageIcon[][] piecesIcons) throws HeadlessException {
         super();
         this.piecesIcons = piecesIcons;
         loadInitialPiecesIcons();

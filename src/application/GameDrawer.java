@@ -6,11 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class Drawer extends JPanel {
+public class GameDrawer extends JPanel {
 
     private final ImageIcon[][] piecesIcons;
 
-    public Drawer(ImageIcon[][] piecesIcons) {
+    public GameDrawer(ImageIcon[][] piecesIcons) {
         this.piecesIcons = piecesIcons;
     }
 
@@ -71,14 +71,14 @@ public class Drawer extends JPanel {
         }
 
         /* Resizes every icon to the size of the tile. */
-        for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
-            for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
+        for (int row = 0; row < FrameSizes.getBOARD_SIZE(); row++) {
+            for (int col = 0; col < FrameSizes.getBOARD_SIZE(); col++) {
                 if (piecesIcons[row][col] != null) {
                     Image image = piecesIcons[row][col].getImage();
-                    Image resizedImage = image.getScaledInstance(Sizes.getPieceSize() - 1,
-                            Sizes.getPieceSize() - 1, Image.SCALE_SMOOTH);
+                    Image resizedImage = image.getScaledInstance(FrameSizes.getPieceSize() - 1,
+                            FrameSizes.getPieceSize() - 1, Image.SCALE_SMOOTH);
                     ImageIcon newImage = new ImageIcon(resizedImage);
-                    newImage.paintIcon(this, g, row * Sizes.getTileSize(), col * Sizes.getTileSize());
+                    newImage.paintIcon(this, g, row * FrameSizes.getTileSize(), col * FrameSizes.getTileSize());
                 }
             }
         }

@@ -19,20 +19,20 @@ public class Bishop extends ChessPiece {
     };
 
     @Override
-    public boolean[][] possibleMoves(boolean captureMatters) {
+    public boolean[][] possibleMoves(boolean captureAllowed) {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
         Position currentBishopPosition = getPosition();
 
         for (int[] direction : directions) {
-            if (captureMatters)
-                checkBishopDirection(currentBishopPosition, possibilities, direction);
+            if (captureAllowed)
+                bishopPossibleMoves(currentBishopPosition, possibilities, direction);
             else
-                checkDirectionWithoutCapture(currentBishopPosition, possibilities, direction);
+                possibleMovesWithoutCapture(currentBishopPosition, possibilities, direction);
         }
         return possibilities;
     }
 
-    private void checkBishopDirection(Position bishop, boolean[][] possibilities, int[] arr) {
+    private void bishopPossibleMoves(Position bishop, boolean[][] possibilities, int[] arr) {
         Position position = new Position(bishop.getRow() + arr[0], bishop.getColumn() + arr[1]);
 
         while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || validatePieceCapture(position)) {
@@ -47,7 +47,7 @@ public class Bishop extends ChessPiece {
         }
     }
 
-    private void checkDirectionWithoutCapture(Position bishop, boolean[][] matrix, int[] arr) {
+    private void possibleMovesWithoutCapture(Position bishop, boolean[][] matrix, int[] arr) {
         Position position = new Position(bishop.getRow() + arr[0], bishop.getColumn() + arr[1]);
 
         while (getBoard().positionExists(position)) {

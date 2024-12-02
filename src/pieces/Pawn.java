@@ -13,7 +13,7 @@ public class Pawn extends ChessPiece {
     }
 
     @Override
-    public boolean[][] possibleMoves(boolean captureMatters) {
+    public boolean[][] possibleMoves(boolean captureAllowed) {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
 
         Position oneStepWhite = new Position(getPosition().getRow(), getPosition().getColumn() - 1);
@@ -26,7 +26,7 @@ public class Pawn extends ChessPiece {
         Position leftDiagonalBlack = new Position(getPosition().getRow() + 1, getPosition().getColumn() + 1);
         Position rightDiagonalBlack = new Position(getPosition().getRow() - 1, getPosition().getColumn() + 1);
 
-        if (captureMatters) {
+        if (captureAllowed) {
             if (getColor() == ChessColor.WHITE) {
 
                 // One house move

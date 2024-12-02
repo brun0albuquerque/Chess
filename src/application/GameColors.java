@@ -2,7 +2,7 @@ package application;
 
 import java.awt.*;
 
-public enum Colors {;
+public enum GameColors {;
     private static final Color BROWN = new Color(139, 69, 19, 220);
     private static final Color LIGHT_BROWN = new Color(215, 195, 155);
     private static final Color SHINY_BLUE = new Color (190, 255, 255, 255);

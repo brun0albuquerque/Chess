@@ -1,5 +1,6 @@
 package pieces;
 
+import utils.Utils;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -14,10 +15,8 @@ public class King extends ChessPiece {
     public King(Board board, ChessColor chessColor, ChessMatch match) {
         super(board, chessColor);
         this.match = match;
-        setMoveCounter(-1);
     }
 
-    /* Every king move. */
     private final int[][] directions = {
             {0, -1}, // Up
             {0, 1},  // Down
@@ -33,13 +32,8 @@ public class King extends ChessPiece {
         return directions;
     }
 
-    public boolean hasKingMoved() {
-        return getMoveCounter() == 0;
-    }
-
-
     @Override
-    public boolean[][] possibleMoves(boolean captureMatters) {
+    public boolean[][] possibleMoves(boolean captureAllowed) {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
         Position currentKingPosition = getPosition();
 
@@ -49,7 +43,7 @@ public class King extends ChessPiece {
                 new Position(this.getPosition().getRow() - 3, this.getPosition().getColumn())
         };
 
-        if (captureMatters) {
+        if (captureAllowed) {
 
             /* Checks if it can move to any position in the matrix "directions". */
             for (int[] direction : directions) {
@@ -106,7 +100,7 @@ public class King extends ChessPiece {
         for (int a = 0; a < source.length; a++) {
             for (int b = 0; b < source.length; b++) {
                 Position position = new Position(a, b);
-                Piece piece = match.getBoard().getPieceOn(position);
+                Piece piece = match.getBoard().getPiece(position);
                 boolean[][] aux;
 
                 /* Do the merge of the source and auxiliary matrices if the position has an opponent piece. */
@@ -120,30 +114,8 @@ public class King extends ChessPiece {
                     aux = piece.possibleMoves(false);
 
                     /* Result receives the merge of the two matrices. */
-                    result = mergePossibilities(aux, source, false);
+                    result = Utils.mergePossibilities(aux, source, false);
                 }
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Merge two matrices values.
-     * This method is used to allow the king to move to safe squares, by setting false to all
-     * positions an opponent piece can move to.
-     *
-     * @param source is the matrix which will be analyzed if the given position in the loop is true.
-     * @param result is a matrix which will receive false if the loop position if the same position in source is true.
-     * @param value is the value result will receive.
-     * @return result after iterating through a source.
-     */
-    public boolean[][] mergePossibilities(boolean[][] source, boolean[][] result, boolean value) {
-        for (int a = 0; a < source.length; a++) {
-            for (int b = 0; b < source.length; b++) {
-
-                /* If a position at the source is true, the result is marked as false at the same position in result. */
-                if (source[a][b])
-                    result[a][b] = value;
             }
         }
         return result;

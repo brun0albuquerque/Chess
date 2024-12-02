@@ -26,15 +26,20 @@ public abstract class Piece {
         this.position = position;
     }
 
-    /*
-    * This method must return all possibilities of movements for a piece on the board. There are two uses for
-    * this method: all movements checking the empty squares and the capture of an enemy piece or the empty squares
-    * and all pieces positions on the board, doesn't matter weather is its color.
-    * The second one will be used to check if the king is in check.
-    * */
-    public abstract boolean[][] possibleMoves(boolean captureMatters);
+    /**
+     * This method must return all possibilities of movements for a piece on the board. There are two uses for
+     * this method: all movements checking the empty squares and the capture of an enemy piece or the empty squares
+     * and all pieces positions on the board, doesn't matter weather is its color.
+     * The second one will be used to check if the king is in check.
+     * @param captureAllowed  is a boolean value to define whether the possible moves need to consider the possibility
+     *                        to capture an opponent's piece.
+     * @return return the matrix of possibilities after the merge.
+     */
+    public abstract boolean[][] possibleMoves(boolean captureAllowed);
 
-    /* Check if there is any move for the piece to make on the board. */
+    /**
+     * Check if there is any move for the piece to make on the board.
+     */
     public boolean hasAnyValidMove() {
         boolean[][] aux = possibleMoves(true);
         for (boolean[] rows : aux) {

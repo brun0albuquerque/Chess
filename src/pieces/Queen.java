@@ -23,13 +23,13 @@ public class Queen extends ChessPiece {
     };
 
     @Override
-    public boolean[][] possibleMoves(boolean captureMatters) {
+    public boolean[][] possibleMoves(boolean captureAllowed) {
         boolean[][] possibilities = new boolean[getBoard().getColumns()][getBoard().getRows()];
         Position queenPosition = getPosition();
 
         /* Iterate through all directions. */
         for (int[] direction : directions) {
-            if (captureMatters)
+            if (captureAllowed)
                 checkQueenDirection(queenPosition, possibilities, direction);
             else
                 checkDirectionWithoutCapture(queenPosition, possibilities, direction);

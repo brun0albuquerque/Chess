@@ -5,7 +5,7 @@ import boardgame.Position;
 import chess.ChessColor;
 import chess.ChessPiece;
 
-public class Knight extends ChessPiece {
+public class Knight extends ChessPiece{
 
     public Knight(Board board, ChessColor chessColor) {
         super(board, chessColor);
@@ -23,25 +23,34 @@ public class Knight extends ChessPiece {
     };
 
     @Override
-    public boolean[][] possibleMoves(boolean captureMatters) {
+    public boolean[][] possibleMoves(boolean captureAllowed) {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
         Position currentKnightPosition = getPosition();
 
         for (int[] direction : directions) {
-            Position newKnightPosition = new Position(currentKnightPosition.getRow() + direction[0],
+            Position newKnightPosition = new Position(
+                    currentKnightPosition.getRow() + direction[0],
                     currentKnightPosition.getColumn() + direction[1]
             );
 
-            if (captureMatters) {
-                if (getBoard().positionExists(newKnightPosition) && !getBoard().isThereAPieceAt(newKnightPosition)
-                        || validatePieceCapture(newKnightPosition)) {
-                    possibilities[newKnightPosition.getRow()][newKnightPosition.getColumn()] = true;
-                }
+            if (captureAllowed) {
+                knightPossibleMoves(newKnightPosition, possibilities);
             } else {
-                if (getBoard().positionExists(newKnightPosition))
-                    possibilities[newKnightPosition.getRow()][newKnightPosition.getColumn()] = true;
+                possibleMovesWithoutCapture(newKnightPosition, possibilities);
             }
         }
         return possibilities;
+    }
+
+    private void knightPossibleMoves(Position position, boolean[][] possibilities) {
+        if (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position)
+                || validatePieceCapture(position)) {
+            possibilities[position.getRow()][position.getColumn()] = true;
+        }
+    }
+
+    private void possibleMovesWithoutCapture(Position position, boolean[][] possibilities) {
+        if (getBoard().positionExists(position))
+            possibilities[position.getRow()][position.getColumn()] = true;
     }
 }

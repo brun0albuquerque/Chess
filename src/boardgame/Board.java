@@ -38,15 +38,19 @@ public class Board {
         this.boardPieces = boardPieces;
     }
 
-    /* Get the piece position if the position is valid. */
-    public Piece getPieceOn(Position position) {
+    /**
+     * Get the piece position if the position is valid.
+     */
+    public Piece getPiece(Position position) {
         if (!positionExists(position))
             return null;
 
         return boardPieces[position.getRow()][position.getColumn()];
     }
 
-    /* Check if there is a piece on the board position and if not, place a piece in the matrix position. */
+    /**
+     * Check if there is a piece on the board position and if not, place a piece in the matrix position.
+     */
     public void placePiece(Position position, Piece piece) {
         if (isThereAPieceAt(position))
             return;
@@ -55,39 +59,47 @@ public class Board {
         piece.setPosition(position);
     }
 
-    /* Check if the position is valid and if there is a piece on the board position, if it has a piece,
-    then remove the piece from the board position. */
+    /**
+     * Check if the position is valid and if there is a piece on the board position, if it has a piece,
+     * then remove the piece from the board position.
+     */
     public void removePiece(Position position) {
-        if (getPieceOn(position) == null)
+        if (getPiece(position) == null)
             return;
 
-        Piece piece = getPieceOn(position);
+        Piece piece = getPiece(position);
         piece.setPosition(null);
         boardPieces[position.getRow()][position.getColumn()] = null;
     }
 
-    /* Check if the position is positive and less than the board size. */
+    /**
+     * Check if the position is positive and less than the board size.
+     */
     public boolean positionExists(Position position) {
         return position.getRow() >= 0 && position.getRow() < this.rows
                 && position.getColumn() >= 0 && position.getColumn() < this.columns;
     }
 
-    /* Check if there is a piece on the board position. */
+    /**
+     * Check if there is a piece on the board position.
+     */
     public boolean isThereAPieceAt(Position position) {
         if (!positionExists(position))
             return false;
 
-        return getPieceOn(position) != null;
+        return getPiece(position) != null;
     }
 
-    /* Search the king on the board and returns its position. */
+    /**
+     * Search the king on the board and returns its position.
+     */
     public Position findKingOnBoard(ChessColor color) {
         Board board = this;
 
         for (int row = 0; row < board.getRows(); row++) {
             for (int col = 0; col < board.getColumns(); col++) {
                 Position position = new Position(row, col);
-                Piece piece = board.getPieceOn(position);
+                Piece piece = board.getPiece(position);
 
                 /* Only returns the king position if it's the same color as the player. */
                 if (piece instanceof King && ((King) piece).getColor() == color) {

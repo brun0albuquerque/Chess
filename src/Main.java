@@ -1,6 +1,6 @@
-import application.Initializer;
+import application.GameInitializer;
 import chess.ChessMatch;
-import controller.InputController;
+import controller.GameController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +16,8 @@ public class Main {
             }
 
             ChessMatch match = new ChessMatch();
-            InputController action = new InputController(match);
-            Initializer anInterface = new Initializer(action, match);
+            GameController action = new GameController(match);
+            GameInitializer anInterface = new GameInitializer(action, match);
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()),
                     "Error", JOptionPane.ERROR_MESSAGE, null);

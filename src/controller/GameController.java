@@ -4,11 +4,10 @@ import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
-import pieces.Bishop;
 import pieces.King;
 import pieces.Rook;
 
-public class InputController {
+public class GameController {
 
     private final ChessMatch match;
 
@@ -22,41 +21,47 @@ public class InputController {
 
     public static boolean playerHasLegalMoves;
 
-    public InputController(ChessMatch match) {
+    public GameController(ChessMatch match) {
         this.match = match;
     }
 
-    /* Handles the player interactions on the board. */
+    /**
+     * Handles the player interactions on the board.
+     */
     protected void handlePieceSelection(int x, int y) {
         Position position = new Position(x, y);
-        ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPieceOn(position);
+        ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPiece(position);
 
         if (isAllCoordinatesNull() && selectedPiece != null && match.validatePieceColor(position)) {
 
             if (aX != null && aY != null && match.validateCastlingPieces(
-                    new Position(InputController.aX, InputController.aY), position)) {
+                    new Position(GameController.aX, GameController.aY), position)) {
                 bX = x;
                 bY = y;
-                target = new Position(InputController.bX, InputController.bY);
+                target = new Position(GameController.bX, GameController.bY);
                 return;
             }
             aX = x;
             aY = y;
-            source = new Position(InputController.aX, InputController.aY);
+            source = new Position(GameController.aX, GameController.aY);
 
         } else if (aX != null && aY != null) {
             bX = x;
             bY = y;
-            target = new Position(InputController.bX, InputController.bY);
+            target = new Position(GameController.bX, GameController.bY);
         }
     }
 
-    /* Checks if any coordinate is null. */
+    /**
+     * Checks if any coordinate is null.
+     */
     protected boolean isAllCoordinatesNull() {
         return aX == null || aY == null || bX == null || bY == null || source == null || target == null;
     }
 
-    /* Sets all coordinates null. */
+    /**
+     * Sets all coordinates null.
+     */
     protected void cleanAllCoordinates() {
         source = null;
         target = null;
@@ -66,7 +71,9 @@ public class InputController {
         bY = null;
     }
 
-    /* This method validates if a move can be performed in the game. */
+    /**
+     * This method validates if a move can be performed in the game.
+     */
     protected boolean validateLogicMove() {
         playerHasLegalMoves = playerHasAnyLegalMove();
         match.isKingInCheck(source, target);
@@ -90,6 +97,9 @@ public class InputController {
         return true;
     }
 
+    /**
+     * Perform one of the three possible moves: a normal move, a castling move or en passant.
+     */
     protected void performChessMove() {
         /* Validate the castling move before perform the move. */
         if (match.validateCastlingPieces(source, target) && match.validateCastlingMove(source, target)) {
@@ -101,7 +111,7 @@ public class InputController {
         match.performPieceMove(source, target);
     }
 
-    /*
+    /**
      * Validates weather the selected position matches any true position of possibilities.
      * It will calculate all possibilities for each piece on the board.
      * If the piece it's the king, then only permit safe moves by calling a method from class King.
@@ -110,7 +120,7 @@ public class InputController {
      */
     private boolean validateMoveExecution(Position source, Position target) {
         boolean[][] possibilities;
-        Piece piece = match.getBoard().getPieceOn(source);
+        Piece piece = match.getBoard().getPiece(source);
 
         if (piece instanceof King)
             possibilities = ((King) piece).possibleMoves();
@@ -120,10 +130,12 @@ public class InputController {
         return possibilities[target.getRow()][target.getColumn()];
     }
 
-    /* Perform the castling move. */
+    /**
+     * Perform the castling move.
+     */
     private void performCastlingMove(Position kingPosition, Position rookPosition) {
-        King king = (King) match.getBoard().getPieceOn(kingPosition);
-        Rook rook = (Rook) match.getBoard().getPieceOn(rookPosition);
+        King king = (King) match.getBoard().getPiece(kingPosition);
+        Rook rook = (Rook) match.getBoard().getPiece(rookPosition);
 
         match.getBoard().removePiece(kingPosition);
         match.getBoard().removePiece(rookPosition);
@@ -140,11 +152,13 @@ public class InputController {
         match.nextTurn();
     }
 
-    /* Returns true if the player has any valid move to perform. */
+    /**
+     * Returns true if the player has any valid move to perform.
+     */
     public boolean playerHasAnyLegalMove() {
         for (int row = 0; row < match.getBoard().getRows(); row++) {
             for (int col = 0; col < match.getBoard().getRows(); col++) {
-                ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(new Position(row, col));
+                ChessPiece piece = (ChessPiece) match.getBoard().getPiece(new Position(row, col));
 
                 if (piece.hasAnyValidMove())
                     return true;

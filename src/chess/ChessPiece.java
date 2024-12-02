@@ -33,9 +33,11 @@ public abstract class ChessPiece extends Piece {
         return getMoveCounter() > 0;
     }
 
-    /* Check if there is any piece at the position and the color of the piece. */
+    /**
+     * Check if there is any piece at the position and the color of the piece.
+     */
     public boolean validatePieceCapture(Position position) {
-        ChessPiece piece = (ChessPiece) getBoard().getPieceOn(position);
+        ChessPiece piece = (ChessPiece) getBoard().getPiece(position);
         return piece != null && piece.getColor() != getColor();
     }
 }
