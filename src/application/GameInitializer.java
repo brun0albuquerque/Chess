@@ -2,7 +2,7 @@ package application;
 
 import chess.ChessMatch;
 import controller.InterfaceController;
-import controller.InputController;
+import controller.GameController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class Initializer extends JFrame {
 
-    public Initializer(InputController action, ChessMatch match) throws HeadlessException {
+    public Initializer(GameController action, ChessMatch match) throws HeadlessException {
         super("Chess");
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

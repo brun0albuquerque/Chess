@@ -4,6 +4,7 @@ import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
+import pieces.Bishop;
 import pieces.King;
 import pieces.Rook;
 
@@ -73,11 +74,9 @@ public class InputController {
         match.isStalemate();
 
         if (ChessMatch.kingCheck) {
-            System.out.println("Test.");
             cleanAllCoordinates();
             return false;
         }
-        System.out.println("Test.");
 
         if (!match.validateSourcePosition(source) && !match.validateTargetPosition(target))
             return false;
