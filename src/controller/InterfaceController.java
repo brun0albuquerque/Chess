@@ -1,7 +1,7 @@
 package controller;
 
 import application.Colors;
-import application.PieceDrawer;
+import application.Drawer;
 import application.Sizes;
 import boardgame.Piece;
 import boardgame.Position;
@@ -15,14 +15,14 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import static controller.PlayerAction.target;
+import static controller.InputController.target;
 
-public class Interface extends JPanel {
+public class InterfaceController extends JPanel {
 
-    private final PieceDrawer drawer;
+    private final Drawer drawer;
     private final ChessMatch match;
 
-    public Interface(PlayerAction playerAction, PieceDrawer drawer, ChessMatch match) {
+    public InterfaceController(InputController inputController, Drawer drawer, ChessMatch match) {
         super();
         this.drawer = drawer;
         this.match = match;
@@ -48,13 +48,13 @@ public class Interface extends JPanel {
                 col = Math.max(0, Math.min(Sizes.getBOARD_SIZE() - 1, col));
 
                 /* Set the values of the coordinates in MouseActions. */
-                playerAction.handlePieceSelection(row, col);
+                inputController.handlePieceSelection(row, col);
 
                 /* When the player clicks on the board, repaint the board to highlight the moves. */
-                if (PlayerAction.aX != null && PlayerAction.aY != null)
+                if (InputController.aX != null && InputController.aY != null)
                     repaint();
 
-                if (playerAction.isAllCoordinatesNull())
+                if (inputController.isAllCoordinatesNull())
                     return;
 
                 try {
@@ -66,21 +66,21 @@ public class Interface extends JPanel {
                      * I could create a method that performed a double movement of the icons, but this way the code is
                      * better and more readable.
                      */
-                    if (playerAction.validateLogicMove())
-                        playerAction.executeMove();
+                    if (inputController.validateLogicMove())
+                        inputController.performChessMove();
 
-                    int kingRow = (PlayerAction.aX > PlayerAction.bX) ? PlayerAction.aX - 2 : PlayerAction.aX + 2;
-                    int rookRow = (PlayerAction.aX > PlayerAction.bX) ? PlayerAction.bX + 2 : PlayerAction.bX - 3;
+                    int kingRow = (InputController.aX > InputController.bX) ? InputController.aX - 2 : InputController.aX + 2;
+                    int rookRow = (InputController.aX > InputController.bX) ? InputController.bX + 2 : InputController.bX - 3;
 
-                    Position kingRowPosition = new Position(kingRow, PlayerAction.aY);
-                    Position rookRowPosition = new Position(rookRow, PlayerAction.bY);
+                    Position kingRowPosition = new Position(kingRow, InputController.aY);
+                    Position rookRowPosition = new Position(rookRow, InputController.bY);
 
                     if (match.validateCastlingMove(kingRowPosition, rookRowPosition)
                             && match.validateCastlingPieces(kingRowPosition, rookRowPosition)) {
 
                         drawer.executeCastlingGraphicMove(
-                                PlayerAction.aX, PlayerAction.aY, PlayerAction.bX,
-                                PlayerAction.bY, kingRow, rookRow
+                                InputController.aX, InputController.aY, InputController.bX,
+                                InputController.bY, kingRow, rookRow
                         );
 
                         /*
@@ -93,15 +93,15 @@ public class Interface extends JPanel {
                         king.addMoveCount();
                         rook.addMoveCount();
                     } else {
-                        drawer.executeIconMove(PlayerAction.aX, PlayerAction.aY, PlayerAction.bX, PlayerAction.bY);
+                        drawer.executeIconMove(InputController.aX, InputController.aY, InputController.bX, InputController.bY);
                     }
 
                     ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(target);
 
-                    /* Checks for pawn promotion, if true, then the pawn is promoted to queen. */
-                    if (match.validatePawnPromotion(target, piece)) {
+                    /* Checks for pawn promotion. */
+                    if (match.validatePawnPromotion(piece)) {
                         match.performPawnPromotion(target, piece);
-                        drawer.graphicPawnPromotion(PlayerAction.bX, PlayerAction.bY, piece.getColor());
+                        drawer.graphicPawnPromotion(InputController.bX, InputController.bY, piece.getColor());
                     }
                 } catch (NullPointerException n) {
 
@@ -112,7 +112,7 @@ public class Interface extends JPanel {
                      * When it happens, the coordinates will be cleaned, making them null again,
                      * preventing the game crash.
                      */
-                    playerAction.cleanAllCoordinates();
+                    inputController.cleanAllCoordinates();
                 } finally {
 
                     /*
@@ -120,7 +120,7 @@ public class Interface extends JPanel {
                      * selected piece highlights from the board and clean the coordinates.
                      */
                     repaint();
-                    playerAction.cleanAllCoordinates();
+                    inputController.cleanAllCoordinates();
                 }
             }
         });
@@ -158,8 +158,8 @@ public class Interface extends JPanel {
         }
 
         /* Get the position of the selected piece. */
-        Integer selectedRow = PlayerAction.aX;
-        Integer selectedCol = PlayerAction.aY;
+        Integer selectedRow = InputController.aX;
+        Integer selectedCol = InputController.aY;
 
         /* If there is a piece on the position, then it will highlight the piece possible movements. */
         if (selectedRow != null && selectedCol != null) {
@@ -177,8 +177,9 @@ public class Interface extends JPanel {
             } catch (NullPointerException e) {
                 possibilities = new boolean[8][8];
             }
+
             /*
-             * Since the chess board has a different system of coordinates from the computer, the columns
+             * Since the chess board has a different system of coordinates from a computer matrix, the columns
              * need to be inverted, as with all the game coordinates that have the actual columns in the
              * row position and vice versa. This loop will paint the square another color to show the
              * player where the piece can move to.

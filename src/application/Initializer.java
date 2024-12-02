@@ -1,16 +1,16 @@
 package application;
 
 import chess.ChessMatch;
-import controller.Interface;
-import controller.PlayerAction;
+import controller.InterfaceController;
+import controller.InputController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class ChessInterface extends JFrame {
+public class Initializer extends JFrame {
 
-    public ChessInterface(PlayerAction action, ChessMatch match) {
+    public Initializer(InputController action, ChessMatch match) throws HeadlessException {
         super("Chess");
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -20,14 +20,14 @@ public class ChessInterface extends JFrame {
         setIconImage(icon.getImage());
 
         /* Load the pieces images files. */
-        PieceLoader loader = new PieceLoader(new ImageIcon[Sizes.getBOARD_SIZE()][Sizes.getBOARD_SIZE()]);
+        Loader loader = new Loader(new ImageIcon[Sizes.getBOARD_SIZE()][Sizes.getBOARD_SIZE()]);
 
         /* Pass the pieces images to the drawer. */
-        PieceDrawer drawer = new PieceDrawer(loader.getPiecesIcons());
+        Drawer drawer = new Drawer(loader.getPiecesIcons());
 
-        /* Do the connection between the user and the board. */
-        Interface anInterface = new Interface(action, drawer, match);
-        getContentPane().add(anInterface);
+        /* Make the connection between the user and the board. */
+        InterfaceController anInterfaceController = new InterfaceController(action, drawer, match);
+        getContentPane().add(anInterfaceController);
 
         /* Size the window based on its content. */
         pack();

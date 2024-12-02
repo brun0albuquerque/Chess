@@ -1,17 +1,16 @@
 package application;
 
 import chess.ChessColor;
-import controller.PlayerAction;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class PieceDrawer extends JPanel {
+public class Drawer extends JPanel {
 
     private final ImageIcon[][] piecesIcons;
 
-    public PieceDrawer(ImageIcon[][] piecesIcons) {
+    public Drawer(ImageIcon[][] piecesIcons) {
         this.piecesIcons = piecesIcons;
     }
 
@@ -55,8 +54,7 @@ public class PieceDrawer extends JPanel {
             ImageIcon whiteQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/white_queen.png")));
             removePieceIcon(aX, aY);
             placePieceIcon(aX, aY, whiteQueen);
-        }
-        else {
+        } else {
             ImageIcon blackQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/black_queen.png")));
             removePieceIcon(aX, aY);
             placePieceIcon(aX, aY, blackQueen);

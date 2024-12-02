@@ -33,6 +33,11 @@ public class King extends ChessPiece {
         return directions;
     }
 
+    public boolean hasKingMoved() {
+        return getMoveCounter() == 0;
+    }
+
+
     @Override
     public boolean[][] possibleMoves(boolean captureMatters) {
         boolean[][] possibilities = new boolean[getBoard().getRows()][getBoard().getColumns()];
@@ -77,26 +82,22 @@ public class King extends ChessPiece {
         return possibilities;
     }
 
-    /* Calculate all the possible moves for the king and the opponent pieces. This method differs from the Piece one
-     * by its return. This method will check each position the king can move, leaving as true only the ones it can't be
-     * in check. */
+    /**
+     * The source matrix receives all possible moves for the king on the board.
+     * <p>
+     * Possible moves will always receive true as parameter, because <code>source</code> needs to have the possible moves
+     * of the piece considering the movements and the captures.
+     * <p>
+     * Possible moves will only receive <code>false</code> as parameter when you need the possible movements of a piece
+     * until it encounters another piece on the board, regardless of the piece's color.
+     * It will be used only with the king and the pawn.
+     *<p>
+     * The pawn can only capture on the diagonal, so you need to exclude the front side movement, and for
+     * the king because the king cannot be in check, it will not always be able to move to any square.
+     * This will prevent some cases such as the king capturing a piece adjacent to the opponent's king,
+     * leaving the king in check.
+     */
     public boolean[][] possibleMoves() {
-
-        /*
-         * The source matrix receives all possible moves for the king on the board.
-         *
-         * Possible moves will always receive true as parameter, because source needs to have the possible moves
-         * of the piece considering the movements and the captures.
-         *
-         * Possible moves will only receive false as parameter when you need the possible movements of a piece
-         * until it encounters another piece on the board, regardless of the piece's color. It will be used only with
-         * the king and the pawn.
-         *
-         * The pawn can only capture on the diagonal, so you need to exclude the front side movement, and for
-         * the king because the king cannot be in check, it will not always be able to move to any square.
-         * This will prevent some cases such as the king capturing a piece adjacent to the opponent's king,
-         * leaving the king in check.
-         * */
         boolean[][] source = possibleMoves(true);
 
         /* The result is the matrix will be returned by the method. */
@@ -115,14 +116,12 @@ public class King extends ChessPiece {
                     /* The auxiliary matrix receives the piece possible movements. If the piece is a pawn,
                      * only consider the capture positions (diagonal). Otherwise, if the piece is a king, calculate all
                      * possible moves ignoring the king rules. */
-                    if (piece instanceof Pawn)
-                        aux = piece.possibleMoves(false);
-
-                    else if (piece instanceof King)
-                        aux = piece.possibleMoves(false);
-
-                    else
-                        aux = piece.possibleMoves(true);
+                    aux = switch (piece) {
+                        case Pawn pawn -> piece.possibleMoves(false);
+                        case King king -> piece.possibleMoves(false);
+                        case Queen queen -> piece.possibleMoves(false);
+                        default -> piece.possibleMoves(true);
+                    };
 
                     /* Result receives the merge of the two matrices. */
                     result = mergePossibilities(aux, source, false);
@@ -152,9 +151,5 @@ public class King extends ChessPiece {
             }
         }
         return result;
-    }
-
-    public boolean hasKingMoved() {
-        return getMoveCounter() == 0;
     }
 }

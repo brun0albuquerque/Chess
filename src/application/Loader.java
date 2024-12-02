@@ -4,11 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-public class PieceLoader extends JFrame {
+public class Loader extends JFrame {
 
     private final ImageIcon[][] piecesIcons;
 
-    public PieceLoader(ImageIcon[][] piecesIcons) throws HeadlessException {
+    public Loader(ImageIcon[][] piecesIcons) throws HeadlessException {
         super();
         this.piecesIcons = piecesIcons;
         loadInitialPiecesIcons();
@@ -20,7 +20,7 @@ public class PieceLoader extends JFrame {
 
     public void loadInitialPiecesIcons() {
 
-        // Load the piecesImages image files
+        /* Load the piecesImages image files. */
         ImageIcon whitePawn = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/white_pawn.png")));
         ImageIcon whiteRook = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/white_rook.png")));
         ImageIcon whiteBishop = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/white_bishop.png")));
@@ -35,7 +35,7 @@ public class PieceLoader extends JFrame {
         ImageIcon blackQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/black_queen.png")));
         ImageIcon blackKnight = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/black_knight.png")));
 
-        // Place white piecesImages
+        /* Place white pieces images. */
         for (int a = 0; a < 8; a++) {
             piecesIcons[a][6] = whitePawn;
         }
@@ -48,7 +48,7 @@ public class PieceLoader extends JFrame {
         piecesIcons[6][7] = whiteKnight;
         piecesIcons[7][7] = whiteRook;
 
-        // Place black piecesImages
+        /* Black pieces images. */
         for (int a = 0; a < 8; a++) {
             piecesIcons[a][1] = blackPawn;
         }
