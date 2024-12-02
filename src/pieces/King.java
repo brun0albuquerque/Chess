@@ -52,7 +52,7 @@ public class King extends ChessPiece {
                         currentKingPosition.getColumn() + direction[1]);
 
                 if (getBoard().positionExists(kingPosition) && !getBoard().isThereAPieceAt(kingPosition)
-                        || checkCapture(kingPosition)) {
+                        || validatePieceCapture(kingPosition)) {
                     possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
                 }
             }

@@ -34,7 +34,7 @@ public class Knight extends ChessPiece {
 
             if (captureMatters) {
                 if (getBoard().positionExists(newKnightPosition) && !getBoard().isThereAPieceAt(newKnightPosition)
-                        || checkCapture(newKnightPosition)) {
+                        || validatePieceCapture(newKnightPosition)) {
                     possibilities[newKnightPosition.getRow()][newKnightPosition.getColumn()] = true;
                 }
             } else {

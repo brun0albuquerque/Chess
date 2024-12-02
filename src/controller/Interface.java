@@ -15,6 +15,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static controller.PlayerAction.target;
+
 public class Interface extends JPanel {
 
     private final PieceDrawer drawer;
@@ -56,16 +58,22 @@ public class Interface extends JPanel {
                     return;
 
                 try {
+                    /*
+                     * It performs normal movements and special movements, without the need to make a distinction in
+                     * this Interface class.
+                     * However, it is different for the graphical interface, since castling moves two pieces at the
+                     * same time, to do the same for the piece icons, it is necessary to call the method more than once.
+                     * I could create a method that performed a double movement of the icons, but this way the code is
+                     * better and more readable.
+                     */
+                    if (playerAction.validateLogicMove())
+                        playerAction.executeMove();
+
                     int kingRow = (PlayerAction.aX > PlayerAction.bX) ? PlayerAction.aX - 2 : PlayerAction.aX + 2;
                     int rookRow = (PlayerAction.aX > PlayerAction.bX) ? PlayerAction.bX + 2 : PlayerAction.bX - 3;
 
-                    Position source = new Position(PlayerAction.aX, PlayerAction.aY);
-                    Position target = new Position(PlayerAction.bX, PlayerAction.bY);
                     Position kingRowPosition = new Position(kingRow, PlayerAction.aY);
                     Position rookRowPosition = new Position(rookRow, PlayerAction.bY);
-
-                    if (playerAction.validateLogicMove(match))
-                        playerAction.executeMove(source, target);
 
                     if (match.validateCastlingMove(kingRowPosition, rookRowPosition)
                             && match.validateCastlingPieces(kingRowPosition, rookRowPosition)) {
@@ -76,11 +84,11 @@ public class Interface extends JPanel {
                         );
 
                         /*
-                        * Add the movement counter to one for both pieces after the move, because the validate
-                        * method can only make the castle move with the movement counter equal to zero.
-                        * So add the movement counter after the graphical move to make sure the piece icon also moves.
-                        * */
-                        King king = (King) match.getBoard().getPieceOn(kingRowPosition);
+                         * Add the movement counter to one for both pieces after the move, because the validate
+                         * method can only perform the castle move with the movement counter equal to zero.
+                         * So add the movement counter after the graphical move to make sure the piece icon also moves.
+                         */
+                        King king = (King) match.getBoard().getPieceOn(match.getBoard().findKingOnBoard(match.getPlayerColor()));
                         Rook rook = (Rook) match.getBoard().getPieceOn(rookRowPosition);
                         king.addMoveCount();
                         rook.addMoveCount();
@@ -92,10 +100,9 @@ public class Interface extends JPanel {
 
                     /* Checks for pawn promotion, if true, then the pawn is promoted to queen. */
                     if (match.validatePawnPromotion(target, piece)) {
-                        match.makePawnPromotion(target, piece);
+                        match.performPawnPromotion(target, piece);
                         drawer.graphicPawnPromotion(PlayerAction.bX, PlayerAction.bY, piece.getColor());
                     }
-
                 } catch (NullPointerException n) {
 
                     /*
@@ -111,7 +118,7 @@ public class Interface extends JPanel {
                     /*
                      * Always repaint the interface and clean the coordinates after a move to remove the
                      * selected piece highlights from the board and clean the coordinates.
-                     * */
+                     */
                     repaint();
                     playerAction.cleanAllCoordinates();
                 }
@@ -162,11 +169,14 @@ public class Interface extends JPanel {
 
             /* If the selected piece is the king, then check the safe possible moves. If not, then only get the
             possible moves for the piece. */
-            if (piece instanceof King)
-                possibilities = ((King) piece).possibleMoves();
-            else
-                possibilities = piece.possibleMoves(true);
-
+            try {
+                if (piece instanceof King)
+                    possibilities = ((King) piece).possibleMoves();
+                else
+                    possibilities = piece.possibleMoves(true);
+            } catch (NullPointerException e) {
+                possibilities = new boolean[8][8];
+            }
             /*
              * Since the chess board has a different system of coordinates from the computer, the columns
              * need to be inverted, as with all the game coordinates that have the actual columns in the

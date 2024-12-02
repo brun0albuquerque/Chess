@@ -7,6 +7,8 @@ import chess.ChessPiece;
 import pieces.King;
 import pieces.Rook;
 
+import javax.swing.*;
+
 public class PlayerAction {
 
     private final ChessMatch match;
@@ -15,6 +17,10 @@ public class PlayerAction {
     protected static Integer aY = null;
     protected static Integer bX = null;
     protected static Integer bY = null;
+
+    protected static Position source = null;
+    protected static Position target = null;
+
 
     public PlayerAction(ChessMatch match) {
         this.match = match;
@@ -31,24 +37,29 @@ public class PlayerAction {
                     new Position(PlayerAction.aX, PlayerAction.aY), position)) {
                 bX = x;
                 bY = y;
+                target = new Position(PlayerAction.bX, PlayerAction.bY);
                 return;
             }
             aX = x;
             aY = y;
+            source = new Position(PlayerAction.aX, PlayerAction.aY);
 
         } else if (aX != null && aY != null) {
             bX = x;
             bY = y;
+            target = new Position(PlayerAction.bX, PlayerAction.bY);
         }
     }
 
     /* Checks if any coordinate is null. */
     protected boolean isAllCoordinatesNull() {
-        return aX == null || aY == null || bX == null || bY == null;
+        return aX == null || aY == null || bX == null || bY == null || source == null || target == null;
     }
 
     /* Sets all coordinates null. */
     protected void cleanAllCoordinates() {
+        source = null;
+        target = null;
         aX = null;
         aY = null;
         bX = null;
@@ -56,12 +67,21 @@ public class PlayerAction {
     }
 
     /* Perform the logic move on the board. */
-    protected boolean validateLogicMove(ChessMatch match) {
-        if (match.getPieces()[aX][aY] == null)
-            return false;
+    protected boolean validateLogicMove() {
+        ChessMatch.kingCheck = match.isKingInCheck(source, target);
 
-        Position source = new Position(aX, aY);
-        Position target = new Position(bX, bY);
+        King king = (King) match.getBoard().getPieceOn(match.getBoard().findKingOnBoard(match.getPlayerColor()));
+        if (ChessMatch.kingCheck && !king.hasAnyValidMove() && !playerHasAnyValidMove()) {
+            JOptionPane.showMessageDialog(null, "Checkmate. Game over.",
+                    "Chess", JOptionPane.INFORMATION_MESSAGE, null);
+            System.exit(0);
+        } else if (!ChessMatch.kingCheck && !king.hasAnyValidMove() && !playerHasAnyValidMove()) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "The " + match.getPlayerColor().toString() + " pieces has no valid moves, it's a draw.",
+                    "Chess",JOptionPane.INFORMATION_MESSAGE,null);
+            System.exit(0);
+        }
 
         if (!match.validateSourcePosition(source) && !match.validateTargetPosition(target))
             return false;
@@ -72,22 +92,22 @@ public class PlayerAction {
             cleanAllCoordinates();
             return false;
         }
-        return true;
+        return !ChessMatch.kingCheck;
     }
 
-    protected void executeMove(Position source, Position target) {
-        /* Validate the castling move before make the move. */
+    protected void executeMove() {
+        /* Validate the castling move before perform the move. */
         if (match.validateCastlingPieces(source, target) && match.validateCastlingMove(source, target)) {
             executeCastlingMove(source, target);
             return;
         }
 
-        /* If the movement isn't an especial move, make a normal move. */
-        executePieceMove(source, target);
+        /* If the movement isn't an especial move, perform a normal move. */
+        executePieceMove();
     }
 
     /* Changes the position of a piece and make the capture of an opponent piece. */
-    protected void executePieceMove(Position source, Position target) {
+    protected void executePieceMove() {
         ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(source); /* Get the piece from the board. */
 
         /* Remove both source and target pieces from the board. */
@@ -123,7 +143,7 @@ public class PlayerAction {
         return possibilities[target.getRow()][target.getColumn()];
     }
 
-    /* Make the castling especial move. */
+    /* Perform the castling especial move. */
     private void executeCastlingMove(Position kingPosition, Position rookPosition) {
         King king = (King) match.getBoard().getPieceOn(kingPosition);
         Rook rook = (Rook) match.getBoard().getPieceOn(rookPosition);
@@ -132,8 +152,8 @@ public class PlayerAction {
         match.getBoard().removePiece(kingPosition);
         match.getBoard().removePiece(rookPosition);
 
-        /* When the king's position is higher than the rook's position (further away), make the long castling,
-        otherwise make the short castling. */
+        /* When the king's position is higher than the rook's position (further away), perform the long castling,
+        otherwise perform the short castling. */
         int kingRow = (kingPosition.getRow() > rookPosition.getRow()) ? kingPosition.getRow() - 2 : kingPosition.getRow() + 2;
         int rookRow = (kingPosition.getRow() > rookPosition.getRow()) ? rookPosition.getRow() + 2 : rookPosition.getRow() - 3;
         Position kingAfterCastling = new Position(kingRow, kingPosition.getColumn());
@@ -145,5 +165,18 @@ public class PlayerAction {
 
         /* Change to the next turn. */
         match.nextTurn();
+    }
+
+    /* Returns true if the player has any valid move to perform. */
+    public boolean playerHasAnyValidMove() {
+        for (int row = 0; row < match.getBoard().getRows(); row++) {
+            for (int col = 0; col < match.getBoard().getRows(); col++) {
+                ChessPiece piece = (ChessPiece) match.getBoard().getPieceOn(new Position(row, col));
+
+                if (piece.hasAnyValidMove())
+                    return true;
+            }
+        }
+        return false;
     }
 }

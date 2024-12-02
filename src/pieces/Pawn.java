@@ -43,13 +43,13 @@ public class Pawn extends ChessPiece {
 
                 // Capturing a piece on the left diagonal
                 if (getBoard().positionExists(leftDiagonalWhite) && getBoard().isThereAPieceAt(leftDiagonalWhite)
-                        && checkCapture(leftDiagonalWhite)) {
+                        && validatePieceCapture(leftDiagonalWhite)) {
                     possibilities[leftDiagonalWhite.getRow()][leftDiagonalWhite.getColumn()] = true;
                 }
 
                 // Capturing a piece on the right diagonal
                 if (getBoard().positionExists(rightDiagonalWhite) && getBoard().isThereAPieceAt(rightDiagonalWhite)
-                        && checkCapture(rightDiagonalWhite)) {
+                        && validatePieceCapture(rightDiagonalWhite)) {
                     possibilities[rightDiagonalWhite.getRow()][rightDiagonalWhite.getColumn()] = true;
                 }
             }
@@ -69,13 +69,13 @@ public class Pawn extends ChessPiece {
 
                 // Capturing a piece on the left diagonal
                 if (getBoard().positionExists(leftDiagonalBlack) && getBoard().isThereAPieceAt(leftDiagonalBlack)
-                        && checkCapture(leftDiagonalBlack)) {
+                        && validatePieceCapture(leftDiagonalBlack)) {
                     possibilities[leftDiagonalBlack.getRow()][leftDiagonalBlack.getColumn()] = true;
                 }
 
                 // Capturing a piece on the right diagonal
                 if (getBoard().positionExists(rightDiagonalBlack) && getBoard().isThereAPieceAt(rightDiagonalBlack)
-                        && checkCapture(rightDiagonalBlack)) {
+                        && validatePieceCapture(rightDiagonalBlack)) {
                     possibilities[rightDiagonalBlack.getRow()][rightDiagonalBlack.getColumn()] = true;
                 }
             }

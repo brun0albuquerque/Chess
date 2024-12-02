@@ -40,12 +40,12 @@ public class Queen extends ChessPiece {
     private void checkQueenDirection(Position queen, boolean[][] matrix, int[] arr) {
         Position position = new Position(queen.getRow() + arr[0], queen.getColumn() + arr[1]);
 
-        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || checkCapture(position)) {
+        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || validatePieceCapture(position)) {
             /* If the piece can be captured, breaks the loop. */
             matrix[position.getRow()][position.getColumn()] = true;
 
             /* Increment the value of the row and column until reach a piece or to the end of the board. */
-            if (checkCapture(position))
+            if (validatePieceCapture(position))
                 break;
 
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);

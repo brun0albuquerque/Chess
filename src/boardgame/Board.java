@@ -1,5 +1,8 @@
 package boardgame;
 
+import chess.ChessColor;
+import pieces.King;
+
 import javax.swing.*;
 
 public class Board {
@@ -75,5 +78,23 @@ public class Board {
             return false;
 
         return getPieceOn(position) != null;
+    }
+
+    /* Search the king on the board and returns its position. */
+    public Position findKingOnBoard(ChessColor color) {
+        Board board = this;
+
+        for (int row = 0; row < board.getRows(); row++) {
+            for (int col = 0; col < board.getColumns(); col++) {
+                Position position = new Position(row, col);
+                Piece piece = board.getPieceOn(position);
+
+                /* Only returns the king position if it's the same color as the player. */
+                if (piece instanceof King && ((King) piece).getColor() == color) {
+                    return position;
+                }
+            }
+        }
+        return null;
     }
 }

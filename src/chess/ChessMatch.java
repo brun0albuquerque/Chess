@@ -2,14 +2,18 @@ package chess;
 
 import application.Sizes;
 import boardgame.Board;
+import boardgame.Piece;
 import boardgame.Position;
 import pieces.*;
+
+import javax.swing.*;
 
 public class ChessMatch {
     private int turn;
     private final Board board;
     private ChessColor playerColor;
-    public static boolean castling;
+
+    public static boolean kingCheck;
 
     public ChessMatch() {
         this.board = new Board(Sizes.getBOARD_SIZE(), Sizes.getBOARD_SIZE());
@@ -30,7 +34,6 @@ public class ChessMatch {
         return playerColor;
     }
 
-    /* Get the position of all pieces on the board. */
     public ChessPiece[][] getPieces() {
         ChessPiece[][] matrix = new ChessPiece[board.getRows()][board.getColumns()];
 
@@ -82,7 +85,7 @@ public class ChessMatch {
     }
 
     /* Promotes a pawn to a queen. */
-    public void makePawnPromotion(Position position, ChessPiece piece) {
+    public void performPawnPromotion(Position position, ChessPiece piece) {
         board.removePiece(position);
         board.placePiece(position, new Queen(board, piece.getColor()));
     }
@@ -154,5 +157,62 @@ public class ChessMatch {
         for (int a = 0; a <= 7; a++) {
             board.placePiece(new Position(a, 1), new Pawn(board, ChessColor.BLACK, this));
         }
+    }
+
+    /*  Checks if the king is in check, if it's checkmate or draw. */
+    public boolean isKingInCheck(Position source, Position target) {
+        Piece sourcePiece = board.getPieceOn(source);
+        Piece targetPiece = board.getPieceOn(target);
+        Position kingPosition = board.findKingOnBoard(getPlayerColor());
+
+        if (kingPosition == null)
+            throw new IllegalStateException();
+
+        /* Check if the king is threatened before the move. */
+        if (!validatePossibleCheck(kingPosition)) {
+            return false;
+        }
+
+        /* Move the piece to target position. */
+        board.removePiece(source);
+        board.removePiece(target);
+        board.placePiece(target, sourcePiece);
+
+        /* If the moved piece is the king, it's necessary to update the king position. */
+        kingPosition = sourcePiece instanceof King ? target : kingPosition;
+
+        /* Iterates through the board to get the opponent piece's possible moves. */
+        boolean check = validatePossibleCheck(kingPosition);
+
+        if (check) {
+            JOptionPane.showMessageDialog(null, "King is in check.",
+                    "Chess", JOptionPane.INFORMATION_MESSAGE, null);
+        }
+
+        /* Undo the selected piece move. */
+        board.removePiece(target);
+        board.placePiece(source, sourcePiece);
+        board.placePiece(target, targetPiece);
+
+        return check;
+    }
+
+    /* Validate each opponent's pieces until it find any possible move that threatens the king's position. */
+    private boolean validatePossibleCheck(Position kingPosition) {
+        for (int row = 0; row < board.getRows(); row++) {
+            for (int col = 0; col < board.getColumns(); col++) {
+                Position position = new Position(row, col);
+
+                /* If it's an opponent's piece, possibilities receive their possible moves. */
+                if (this.validateOpponentPiecePosition(position)) {
+                    boolean[][] possibilities = board.getPieceOn(position).possibleMoves(false);
+
+                    /* If any piece movement matches the king's position, it returns true. */
+                    if (possibilities[kingPosition.getRow()][kingPosition.getColumn()])
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 }
