@@ -144,7 +144,7 @@ public class Interface extends JPanel {
         from the classical chess board. The size of the tiles is calculated based on the frame (screen) size. */
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
-                g.setColor(isWhite(row, col) ? Colors.LIGHT_BLUE : Colors.BLUE);
+                g.setColor(isWhite(row, col) ? Colors.WHITE : Colors.BLACK);
 
                 /*
                  * This method will create the squares on the panel. The x and y values are for the left and right,
@@ -186,7 +186,7 @@ public class Interface extends JPanel {
             for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
                 for (int col = Sizes.getBOARD_SIZE() - 1; col >= 0; col--) {
                     if (possibilities[col][row]) {
-                        g.setColor(Colors.YELLOW);
+                        g.setColor(Colors.HIGHLIGHTS);
                         g.fillRect(1 + col * Sizes.getTileSize(), 1 + row * Sizes.getTileSize(),
                                 Sizes.getTileSize() - 1, Sizes.getTileSize() - 1);
                     }
