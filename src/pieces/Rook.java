@@ -33,11 +33,11 @@ public class Rook extends ChessPiece {
         return possibilities;
     }
 
-    private void checkRookDirection(Position rook, boolean[][] matrix, int[] arr) {
+    private void checkRookDirection(Position rook, boolean[][] possibilities, int[] arr) {
         Position position = new Position(rook.getRow() + arr[0], rook.getColumn() + arr[1]);
 
         while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || validatePieceCapture(position)) {
-            matrix[position.getRow()][position.getColumn()] = true;
+            possibilities[position.getRow()][position.getColumn()] = true;
 
             /* If the piece can be captured, breaks the loop. */
             if (validatePieceCapture(position))
@@ -48,11 +48,11 @@ public class Rook extends ChessPiece {
         }
     }
 
-    private void checkRookWithoutCapture(Position rook, boolean[][] matrix, int[] arr) {
+    private void checkRookWithoutCapture(Position rook, boolean[][] possibilities, int[] arr) {
         Position position = new Position(rook.getRow() + arr[0], rook.getColumn() + arr[1]);
 
         while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || validatePieceCapture(position)) {
-            matrix[position.getRow()][position.getColumn()] = true;
+            possibilities[position.getRow()][position.getColumn()] = true;
 
             // If there is a piece at the position, breaks the loop
             if (getBoard().isThereAPieceAt(position))

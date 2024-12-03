@@ -1,6 +1,7 @@
 package utils;
 
 import application.FrameSizes;
+import boardgame.Piece;
 
 public class Utils {
 
@@ -19,9 +20,9 @@ public class Utils {
      * This method is used to allow the king to move to safe squares, by setting false to all
      * positions an opponent piece can move to.
      * @param source is the matrix which will be analyzed if the given position in the loop is true.
-     * @param result is a matrix which will receive false if the loop position if the same position in source is true.
+     * @param result is the matrix that receives the value parameter if each position is true in source.
      * @param value is the value result will receive.
-     * @return result after iterating through source and finish the merge.
+     * @return a matrix with the result of the merge.
      */
     public static boolean[][] mergePossibilities(boolean[][] source, boolean[][] result, boolean value) {
         for (int a = 0; a < source.length; a++) {
@@ -33,5 +34,16 @@ public class Utils {
             }
         }
         return result;
+    }
+
+    public static int matrixCounter(Piece[][] matrix) {
+        int counter = 0;
+
+        for (Piece[] arr : matrix) {
+            for (Piece piece : arr) {
+                counter++;
+            }
+        }
+        return counter;
     }
 }

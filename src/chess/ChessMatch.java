@@ -6,8 +6,10 @@ import boardgame.Piece;
 import boardgame.Position;
 import controller.GameController;
 import pieces.*;
+import utils.Utils;
 
 import javax.swing.*;
+import java.util.Arrays;
 
 public class ChessMatch {
     private int turn;
@@ -156,18 +158,20 @@ public class ChessMatch {
      * Return false no piece is threatening the king's position.
      * */
     public boolean validatePossibleCheck(Position position) {
+        Position opponentPosition = null;
+        boolean[][] possibilities = new boolean[8][8];
+
         for (int row = 0; row < board.getRows(); row++) {
             for (int col = 0; col < board.getColumns(); col++) {
-                Position opponentPosition = new Position(row, col);
+                opponentPosition = new Position(row, col);
 
                 /* If it's an opponent's piece, possibilities receive their possible moves. */
                 if (validateOpponentPiecePosition(opponentPosition)) {
-                    boolean[][] possibilities = board.getPiece(opponentPosition).possibleMoves(false);
+                    possibilities = board.getPiece(opponentPosition).possibleMoves(false);
 
                     /* If any piece movement matches the king's position, it returns true. */
-                    if (possibilities[position.getRow()][position.getColumn()]) {
+                    if (possibilities[position.getRow()][position.getColumn()])
                         return true;
-                    }
                 }
             }
         }
@@ -194,16 +198,6 @@ public class ChessMatch {
 
         /* Change to the next turn. */
         nextTurn();
-    }
-
-    public void undoPieceMove(Position source, Position target) {
-        Piece sourcePiece = board.getPiece(source);
-        Piece targetPiece = board.getPiece(target);
-
-        /* Undo the selected piece move. */
-        board.removePiece(target);
-        board.placePiece(source, sourcePiece);
-        board.placePiece(target, targetPiece);
     }
 
     /**
@@ -290,6 +284,12 @@ public class ChessMatch {
          * King and knight versus king;
          * King and bishop versus king and bishop with the bishops on the same color square.
          */
+
+
+        if (turn > 14 && Utils.matrixCounter(board.getBoardPieces()) <= 4) {
+            System.out.println(Arrays.deepToString(board.getBoardPieces()));
+        }
+
     }
 
     /**

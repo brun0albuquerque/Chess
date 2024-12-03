@@ -39,7 +39,7 @@ public class Board {
     }
 
     /**
-     * Get the piece position if the position is valid.
+     * Return the piece position if it is a valid position.
      */
     public Piece getPiece(Position position) {
         if (!positionExists(position))
@@ -49,7 +49,8 @@ public class Board {
     }
 
     /**
-     * Check if there is a piece on the board position and if not, place a piece in the matrix position.
+     * Check if there is a piece on the position and if not, place a piece in the matrix position and set the
+     * piece position.
      */
     public void placePiece(Position position, Piece piece) {
         if (isThereAPieceAt(position))
@@ -60,8 +61,8 @@ public class Board {
     }
 
     /**
-     * Check if the position is valid and if there is a piece on the board position, if it has a piece,
-     * then remove the piece from the board position.
+     * If there is a piece on the board position, remove the piece from the board position and set the piece position
+     * null.
      */
     public void removePiece(Position position) {
         if (getPiece(position) == null)
@@ -73,7 +74,7 @@ public class Board {
     }
 
     /**
-     * Check if the position is positive and less than the board size.
+     * Checks if the position is within the board limits.
      */
     public boolean positionExists(Position position) {
         return position.getRow() >= 0 && position.getRow() < this.rows
@@ -81,7 +82,7 @@ public class Board {
     }
 
     /**
-     * Check if there is a piece on the board position.
+     * Check if there is a piece on the position.
      */
     public boolean isThereAPieceAt(Position position) {
         if (!positionExists(position))
@@ -91,7 +92,7 @@ public class Board {
     }
 
     /**
-     * Search the king on the board and returns its position.
+     * Search the king instance on the board and returns its position.
      */
     public Position findKingOnBoard(ChessColor color) {
         Board board = this;

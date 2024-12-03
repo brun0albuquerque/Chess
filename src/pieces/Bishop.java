@@ -47,11 +47,11 @@ public class Bishop extends ChessPiece {
         }
     }
 
-    private void possibleMovesWithoutCapture(Position bishop, boolean[][] matrix, int[] arr) {
+    private void possibleMovesWithoutCapture(Position bishop, boolean[][] possibilities, int[] arr) {
         Position position = new Position(bishop.getRow() + arr[0], bishop.getColumn() + arr[1]);
 
         while (getBoard().positionExists(position)) {
-            matrix[position.getRow()][position.getColumn()] = true;
+            possibilities[position.getRow()][position.getColumn()] = true;
 
             // If there is a piece at the position, breaks the loop
             if (getBoard().isThereAPieceAt(position))

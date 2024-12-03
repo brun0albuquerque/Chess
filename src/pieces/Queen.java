@@ -37,12 +37,12 @@ public class Queen extends ChessPiece {
         return possibilities;
     }
 
-    private void checkQueenDirection(Position queen, boolean[][] matrix, int[] arr) {
+    private void checkQueenDirection(Position queen, boolean[][] possibilities, int[] arr) {
         Position position = new Position(queen.getRow() + arr[0], queen.getColumn() + arr[1]);
 
         while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || validatePieceCapture(position)) {
             /* If the piece can be captured, breaks the loop. */
-            matrix[position.getRow()][position.getColumn()] = true;
+            possibilities[position.getRow()][position.getColumn()] = true;
 
             /* Increment the value of the row and column until reach a piece or to the end of the board. */
             if (validatePieceCapture(position))
@@ -52,12 +52,12 @@ public class Queen extends ChessPiece {
         }
     }
 
-    private void checkDirectionWithoutCapture(Position queen, boolean[][] matrix, int[] arr) {
+    private void checkDirectionWithoutCapture(Position queen, boolean[][] possibilities, int[] arr) {
         Position position = new Position(queen.getRow() + arr[0], queen.getColumn() + arr[1]);
 
         while (getBoard().positionExists(position)) {
             /* If the piece can be captured, breaks the loop. */
-            matrix[position.getRow()][position.getColumn()] = true;
+            possibilities[position.getRow()][position.getColumn()] = true;
 
             /* If there is a piece at the position, breaks the loop. */
             if (getBoard().isThereAPieceAt(position))

@@ -156,12 +156,18 @@ public class GameController {
      * Returns true if the player has any valid move to perform.
      */
     public boolean playerHasAnyLegalMove() {
+        Piece[][] boardPieces = match.getBoard().getBoardPieces();
+        ChessPiece piece;
+
         for (int row = 0; row < match.getBoard().getRows(); row++) {
             for (int col = 0; col < match.getBoard().getRows(); col++) {
-                ChessPiece piece = (ChessPiece) match.getBoard().getPiece(new Position(row, col));
 
-                if (piece.hasAnyValidMove())
-                    return true;
+                if (boardPieces[row][col] != null) {
+                    piece = (ChessPiece) match.getBoard().getPiece(new Position(row, col));
+
+                    if (piece.hasAnyValidMove())
+                        return true;
+                }
             }
         }
         return false;

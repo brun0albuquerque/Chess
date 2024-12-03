@@ -33,7 +33,7 @@ public abstract class Piece {
      * The second one will be used to check if the king is in check.
      * @param captureAllowed  is a boolean value to define whether the possible moves need to consider the possibility
      *                        to capture an opponent's piece.
-     * @return return the matrix of possibilities after the merge.
+     * @return a matrix with all the movement possibilities of a piece.
      */
     public abstract boolean[][] possibleMoves(boolean captureAllowed);
 
