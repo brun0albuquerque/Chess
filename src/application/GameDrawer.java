@@ -1,10 +1,12 @@
 package application;
 
 import chess.ChessColor;
+import util.Util;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
+import java.util.Optional;
 
 public class GameDrawer extends JPanel {
 
@@ -31,14 +33,22 @@ public class GameDrawer extends JPanel {
     }
 
     /* Perform the moves of the piece icons on the board. */
-    public void executeIconMove(int aX, int aY, int bX, int bY) {
-        ImageIcon icon = getPiecesIcons()[aX][aY];
+    public void executeIconMove(Integer aX, Integer aY, Integer bX, Integer bY) {
+        Optional<Integer> optionalAX = Optional.ofNullable(aX);
+        Optional<Integer> optionalAY = Optional.ofNullable(aY);
+        Optional<Integer> optionalBX = Optional.ofNullable(bX);
+        Optional<Integer> optionalBY = Optional.ofNullable(bY);
 
-        if (icon == null)
+        if (optionalAX.isEmpty() || optionalAY.isEmpty() || optionalBX.isEmpty() || optionalBY.isEmpty())
+            throw new IllegalArgumentException("The icon is null.");
+
+        ImageIcon icon = getPiecesIcons()[optionalAX.get()][optionalAY.get()];
+
+        if (Util.isObjectNull(icon))
             return;
 
-        removePieceIcon(aX, aY);
-        placePieceIcon(bX, bY, icon);
+        removePieceIcon(optionalAX.get(), optionalAY.get());
+        placePieceIcon(optionalBX.get(), optionalBY.get(), icon);
     }
 
     public void executeCastlingGraphicMove(int aX, int aY, int bX, int bY, int kingRow, int rookRow) {
@@ -66,22 +76,23 @@ public class GameDrawer extends JPanel {
 
     /* Load all pieces icons to the board. */
     public void placePiecesOnBoard(Graphics g) {
+
         /* If there is any problem with the piece icons, then the game cannot be initiated, so it will close. */
-        if (piecesIcons == null) {
+        if (Util.isObjectNull(piecesIcons)) {
             JOptionPane.showMessageDialog(null, "Game files could not be loaded.",
                     "Error", JOptionPane.ERROR_MESSAGE, null);
             System.exit(1);
         }
 
         /* Resizes every icon to the size of the tile. */
-        for (int row = 0; row < FrameSizes.getBOARD_SIZE(); row++) {
-            for (int col = 0; col < FrameSizes.getBOARD_SIZE(); col++) {
-                if (piecesIcons[row][col] != null) {
+        for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
+            for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
+                if (Util.isObjectNotNull(piecesIcons[row][col])) {
                     Image image = piecesIcons[row][col].getImage();
-                    Image resizedImage = image.getScaledInstance(FrameSizes.getPieceSize() - 1,
-                            FrameSizes.getPieceSize() - 1, Image.SCALE_SMOOTH);
+                    Image resizedImage = image.getScaledInstance(Sizes.getPieceSize() - 1,
+                            Sizes.getPieceSize() - 1, Image.SCALE_SMOOTH);
                     ImageIcon newImage = new ImageIcon(resizedImage);
-                    newImage.paintIcon(this, g, row * FrameSizes.getTileSize(), col * FrameSizes.getTileSize());
+                    newImage.paintIcon(this, g, row * Sizes.getTileSize(), col * Sizes.getTileSize());
                 }
             }
         }

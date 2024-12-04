@@ -1,6 +1,6 @@
 package chess;
 
-import application.FrameSizes;
+import application.Sizes;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -23,7 +23,7 @@ public class ChessMatch {
     public boolean checkmate;
 
     public ChessMatch() {
-        this.board = new Board(FrameSizes.getBOARD_SIZE(), FrameSizes.getBOARD_SIZE());
+        this.board = new Board(Sizes.getBOARD_SIZE(), Sizes.getBOARD_SIZE());
         this.playerColor = ChessColor.WHITE;
         this.turn = 0;
         loadInitialPieces();
@@ -104,7 +104,7 @@ public class ChessMatch {
      * they have not yet moved.
      */
     public boolean validateCastlingPieces(Position source, Position target) {
-        if (Util.isObjectNotNull(source) || Util.isObjectNotNull(target))
+        if (Util.isObjectNotNull(source) && Util.isObjectNotNull(target))
             return false;
 
         if (!board.isPositionEmpty(source) && !board.isPositionEmpty(target))
@@ -173,7 +173,7 @@ public class ChessMatch {
         for (int row = kingPosition.getRow() + step; row != rookPosition.getRow(); row += step) {
             Optional<Position> optionalPosition = Optional.of(new Position(row, kingPosition.getColumn()));
 
-            if (optionalPosition.isPresent() && Util.isObjectNull(board.getPiece(optionalPosition.get())))
+            if (Util.isObjectNull(board.getPiece(optionalPosition.get())))
                 return false;
         }
         return true;
@@ -420,7 +420,7 @@ public class ChessMatch {
         board.placePiece(new Position(6, 7), new Knight(board, ChessColor.WHITE));
         board.placePiece(new Position(7, 7), new Rook(board, ChessColor.WHITE));
 
-        for (int a = 0; a < FrameSizes.getBOARD_SIZE(); a++) {
+        for (int a = 0; a < Sizes.getBOARD_SIZE(); a++) {
             board.placePiece(new Position(a, 6), new Pawn(board, ChessColor.WHITE, this));
         }
 
@@ -433,7 +433,7 @@ public class ChessMatch {
         board.placePiece(new Position(6, 0), new Knight(board, ChessColor.BLACK));
         board.placePiece(new Position(7, 0), new Rook(board, ChessColor.BLACK));
 
-        for (int a = 0; a < FrameSizes.getBOARD_SIZE(); a++) {
+        for (int a = 0; a < Sizes.getBOARD_SIZE(); a++) {
             board.placePiece(new Position(a, 1), new Pawn(board, ChessColor.BLACK, this));
         }
     }

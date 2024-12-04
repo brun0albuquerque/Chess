@@ -1,6 +1,6 @@
 package controller;
 
-import application.FrameSizes;
+import application.Sizes;
 import application.GameColors;
 import application.GameDrawer;
 import boardgame.Piece;
@@ -22,18 +22,18 @@ import java.util.Optional;
 
 import static controller.GameController.target;
 
-public class InterfaceController extends JPanel {
+public class GameInterface extends JPanel {
 
     private final GameDrawer gameDrawer;
     private final ChessMatch match;
 
-    public InterfaceController(GameController gameController, GameDrawer gameDrawer, ChessMatch match) {
+    public GameInterface(ChessMatch match, GameDrawer gameDrawer, GameController gameController) {
         super();
         this.gameDrawer = gameDrawer;
         this.match = match;
 
         /* Set the game window size. */
-        setPreferredSize(new Dimension(FrameSizes.getDimension(), FrameSizes.getDimension()));
+        setPreferredSize(new Dimension(Sizes.getDimension(), Sizes.getDimension()));
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -45,8 +45,8 @@ public class InterfaceController extends JPanel {
                 int y = e.getY();
 
                 /* Divide the coordinate by the size of the tile to get the square of the clicked area. */
-                int row = x / FrameSizes.getTileSize();
-                int col = y / FrameSizes.getTileSize();
+                int row = x / Sizes.getTileSize();
+                int col = y / Sizes.getTileSize();
 
                 /* Make sure the row or column values are not less than 0 or greater than 7. */
                 row = Util.valueWithinLimits(row);
@@ -96,7 +96,7 @@ public class InterfaceController extends JPanel {
                         );
 
                         /*
-                         * Add the movement counter to one for both pieces after the move, because the validate
+                         * Add the movement counter for both pieces only after the move, because the validate
                          * method can only perform the castle move with the movement counter equal to zero.
                          * So add the movement counter after the graphical move to make sure the piece icon also moves.
                          */
@@ -175,8 +175,8 @@ public class InterfaceController extends JPanel {
 
         /* Divide the panel in a matrix of 8x8 squares, switching between two colors, representing the black and white
         from the classical chess board. The size of the tiles is calculated based on the frame (screen) size. */
-        for (int row = 0; row < FrameSizes.getBOARD_SIZE(); row++) {
-            for (int col = 0; col < FrameSizes.getBOARD_SIZE(); col++) {
+        for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
+            for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
                 g.setColor(Util.isEven(row + col) ? GameColors.BLACK : GameColors.WHITE);
 
                 /*
@@ -185,8 +185,8 @@ public class InterfaceController extends JPanel {
                  * width and height, so you have a slightly smaller tile and a "border" appearing around the tile.
                  * The size of the small tile had to be changed to be larger as the value added to x and y.
                  */
-                g.fillRect(1 + col * FrameSizes.getTileSize(), 1 + row * FrameSizes.getTileSize(),
-                        FrameSizes.getTileSize() - 1, FrameSizes.getTileSize() - 1);
+                g.fillRect(1 + col * Sizes.getTileSize(), 1 + row * Sizes.getTileSize(),
+                        Sizes.getTileSize() - 1, Sizes.getTileSize() - 1);
             }
         }
 
@@ -217,12 +217,12 @@ public class InterfaceController extends JPanel {
              * row position and vice versa. This loop will paint the square another color to show the
              * player where the piece can move to.
              */
-            for (int row = 0; row < FrameSizes.getBOARD_SIZE(); row++) {
-                for (int col = FrameSizes.getBOARD_SIZE() - 1; col >= 0; col--) {
+            for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
+                for (int col = Sizes.getBOARD_SIZE() - 1; col >= 0; col--) {
                     if (possibilities[col][row]) {
                         g.setColor(GameColors.HIGHLIGHTS);
-                        g.fillRect(1 + col * FrameSizes.getTileSize(), 1 + row * FrameSizes.getTileSize(),
-                                FrameSizes.getTileSize() - 1, FrameSizes.getTileSize() - 1);
+                        g.fillRect(1 + col * Sizes.getTileSize(), 1 + row * Sizes.getTileSize(),
+                                Sizes.getTileSize() - 1, Sizes.getTileSize() - 1);
                     }
                 }
             }

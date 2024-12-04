@@ -1,5 +1,6 @@
 package controller;
 
+import application.GameDrawer;
 import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessMatch;
@@ -12,6 +13,7 @@ import util.Util;
 public class GameController {
 
     private final ChessMatch match;
+    private final GameDrawer drawer;
 
     protected static Integer aX = null;
     protected static Integer aY = null;
@@ -23,8 +25,9 @@ public class GameController {
 
     public static boolean playerHasLegalMoves;
 
-    public GameController(ChessMatch match) {
+    public GameController(ChessMatch match, GameDrawer drawer) {
         this.match = match;
+        this.drawer = drawer;
     }
 
     /**
@@ -100,6 +103,10 @@ public class GameController {
             return false;
         }
         return true;
+    }
+
+    protected void gameActions() {
+
     }
 
     /**

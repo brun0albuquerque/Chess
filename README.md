@@ -1,6 +1,6 @@
 <br />
 <p align="center">
-  <img src="src/resources/chess_pieces.png" alt="Logo" width="150" height="150">
+  <img src="src/resources/chess_logo.png" alt="Logo" width="150" height="150">
 
 <h1 align="center">Chess</h1>
 

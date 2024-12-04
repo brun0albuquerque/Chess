@@ -1,12 +1,11 @@
 package util;
 
-import application.FrameSizes;
+import application.Sizes;
 import boardgame.Board;
 import boardgame.Piece;
 import chess.ChessMatch;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class Util {
 
@@ -21,7 +20,7 @@ public class Util {
      * @return an integer value bigger than 0 and smaller than the board size.
      */
     public static int valueWithinLimits(int value) {
-        return Math.max(0, Math.min(FrameSizes.getBOARD_SIZE() - 1, value));
+        return Math.max(0, Math.min(Sizes.getBOARD_SIZE() - 1, value));
     }
 
     /**
