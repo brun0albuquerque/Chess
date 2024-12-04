@@ -30,25 +30,25 @@ public class Pawn extends ChessPiece {
             if (getColor() == ChessColor.WHITE) {
 
                 // One house move
-                if (getBoard().positionExists(oneStepWhite) && !getBoard().isThereAPieceAt(oneStepWhite)) {
+                if (getBoard().positionExists(oneStepWhite) && !getBoard().isPositionOccupied(oneStepWhite)) {
                     possibilities[oneStepWhite.getRow()][oneStepWhite.getColumn()] = true;
                 }
 
                 // Two houses move
-                if (getBoard().positionExists(oneStepWhite) && !getBoard().isThereAPieceAt(oneStepWhite)
-                        && getBoard().positionExists(twoStepsWhite) && !getBoard().isThereAPieceAt(twoStepsWhite)
+                if (getBoard().positionExists(oneStepWhite) && !getBoard().isPositionOccupied(oneStepWhite)
+                        && getBoard().positionExists(twoStepsWhite) && !getBoard().isPositionOccupied(twoStepsWhite)
                         && !pieceMoved()) {
                     possibilities[twoStepsWhite.getRow()][twoStepsWhite.getColumn()] = true;
                 }
 
                 // Capturing a piece on the left diagonal
-                if (getBoard().positionExists(leftDiagonalWhite) && getBoard().isThereAPieceAt(leftDiagonalWhite)
+                if (getBoard().positionExists(leftDiagonalWhite) && getBoard().isPositionOccupied(leftDiagonalWhite)
                         && validatePieceCapture(leftDiagonalWhite)) {
                     possibilities[leftDiagonalWhite.getRow()][leftDiagonalWhite.getColumn()] = true;
                 }
 
                 // Capturing a piece on the right diagonal
-                if (getBoard().positionExists(rightDiagonalWhite) && getBoard().isThereAPieceAt(rightDiagonalWhite)
+                if (getBoard().positionExists(rightDiagonalWhite) && getBoard().isPositionOccupied(rightDiagonalWhite)
                         && validatePieceCapture(rightDiagonalWhite)) {
                     possibilities[rightDiagonalWhite.getRow()][rightDiagonalWhite.getColumn()] = true;
                 }
@@ -56,25 +56,25 @@ public class Pawn extends ChessPiece {
 
             if (getColor() == ChessColor.BLACK) {
                 // One house move
-                if (getBoard().positionExists(oneStepBlack) && !getBoard().isThereAPieceAt(oneStepBlack)) {
+                if (getBoard().positionExists(oneStepBlack) && !getBoard().isPositionOccupied(oneStepBlack)) {
                     possibilities[oneStepBlack.getRow()][oneStepBlack.getColumn()] = true;
                 }
 
                 // Two houses move
-                if (getBoard().positionExists(oneStepBlack) && !getBoard().isThereAPieceAt(oneStepBlack)
-                        && getBoard().positionExists(twoStepsBlack) && !getBoard().isThereAPieceAt(twoStepsBlack)
+                if (getBoard().positionExists(oneStepBlack) && !getBoard().isPositionOccupied(oneStepBlack)
+                        && getBoard().positionExists(twoStepsBlack) && !getBoard().isPositionOccupied(twoStepsBlack)
                         && !pieceMoved()) {
                     possibilities[twoStepsBlack.getRow()][twoStepsBlack.getColumn()] = true;
                 }
 
                 // Capturing a piece on the left diagonal
-                if (getBoard().positionExists(leftDiagonalBlack) && getBoard().isThereAPieceAt(leftDiagonalBlack)
+                if (getBoard().positionExists(leftDiagonalBlack) && getBoard().isPositionOccupied(leftDiagonalBlack)
                         && validatePieceCapture(leftDiagonalBlack)) {
                     possibilities[leftDiagonalBlack.getRow()][leftDiagonalBlack.getColumn()] = true;
                 }
 
                 // Capturing a piece on the right diagonal
-                if (getBoard().positionExists(rightDiagonalBlack) && getBoard().isThereAPieceAt(rightDiagonalBlack)
+                if (getBoard().positionExists(rightDiagonalBlack) && getBoard().isPositionOccupied(rightDiagonalBlack)
                         && validatePieceCapture(rightDiagonalBlack)) {
                     possibilities[rightDiagonalBlack.getRow()][rightDiagonalBlack.getColumn()] = true;
                 }

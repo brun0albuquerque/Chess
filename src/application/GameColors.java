@@ -15,7 +15,7 @@ public enum GameColors {;
     private static final Color LIGHT_BLUE = new Color(171, 202, 255);
     private static final Color HONEY_DREW = new Color(225, 255, 225, 255);
 
-    public static final Color WHITE = OCEAN_BLUE;
-    public static final Color BLACK = LIGHT_BLUE;
-    public static final Color HIGHLIGHTS = HONEY_DREW;
+    public static final Color WHITE = BROWN;
+    public static final Color BLACK = LIGHT_BROWN;
+    public static final Color HIGHLIGHTS = SHINY_BLUE;
 }

@@ -1,6 +1,6 @@
 package pieces;
 
-import utils.Utils;
+import utils.Util;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -50,7 +50,7 @@ public class King extends ChessPiece {
                 Position kingPosition = new Position(currentKingPosition.getRow() + direction[0],
                         currentKingPosition.getColumn() + direction[1]);
 
-                if (getBoard().positionExists(kingPosition) && !getBoard().isThereAPieceAt(kingPosition)
+                if (getBoard().positionExists(kingPosition) && !getBoard().isPositionOccupied(kingPosition)
                         || validatePieceCapture(kingPosition)) {
                     possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
                 }
@@ -114,7 +114,7 @@ public class King extends ChessPiece {
                     aux = piece.possibleMoves(false);
 
                     /* Result receives the merge of the two matrices. */
-                    result = Utils.mergePossibilities(aux, source, false);
+                    result = Util.mergePossibilities(aux, source, false);
                 }
             }
         }

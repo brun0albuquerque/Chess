@@ -1,21 +1,21 @@
 package controller;
 
+import application.FrameSizes;
 import application.GameColors;
 import application.GameDrawer;
-import application.FrameSizes;
 import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
 import pieces.King;
-import pieces.Pawn;
 import pieces.Rook;
-import utils.Utils;
+import utils.Util;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 import static controller.GameController.target;
 
@@ -46,11 +46,11 @@ public class InterfaceController extends JPanel {
                 int col = y / FrameSizes.getTileSize();
 
                 /* Make sure the row or column values are not less than 0 or greater than 7. */
-                row = Utils.valueWithinLimits(row);
-                col = Utils.valueWithinLimits(col);
+                row = Util.valueWithinLimits(row);
+                col = Util.valueWithinLimits(col);
 
                 /* Set the values of the coordinates in MouseActions. */
-                gameController.handlePieceSelection(row, col);
+                gameController.handleScreenSelection(row, col);
 
                 /* When the player clicks on the board, repaint the board to highlight the moves. */
                 if (GameController.aX != null && GameController.aY != null)
@@ -71,11 +71,17 @@ public class InterfaceController extends JPanel {
                     if (gameController.validateLogicMove())
                         gameController.performChessMove();
 
-                    int kingRow = (GameController.aX > GameController.bX) ? GameController.aX - 2 : GameController.aX + 2;
-                    int rookRow = (GameController.aX > GameController.bX) ? GameController.bX + 2 : GameController.bX - 3;
+                    int kingRow = -1;
+                    int rookRow = -1;
+                    Position kingRowPosition = null;
+                    Position rookRowPosition = null;
 
-                    Position kingRowPosition = new Position(kingRow, GameController.aY);
-                    Position rookRowPosition = new Position(rookRow, GameController.bY);
+                    if (GameController.aX != null && GameController.aY != null) {
+                        kingRow = (GameController.aX > GameController.bX) ? GameController.aX - 2 : GameController.aX + 2;
+                        rookRow = (GameController.aX > GameController.bX) ? GameController.bX + 2 : GameController.bX - 3;
+                        kingRowPosition = new Position(kingRow, GameController.aY);
+                        rookRowPosition = new Position(rookRow, GameController.bY);
+                    }
 
                     if (match.validateCastlingMove(kingRowPosition, rookRowPosition)
                             && match.validateCastlingPieces(kingRowPosition, rookRowPosition)) {
@@ -90,7 +96,7 @@ public class InterfaceController extends JPanel {
                          * method can only perform the castle move with the movement counter equal to zero.
                          * So add the movement counter after the graphical move to make sure the piece icon also moves.
                          */
-                        King king = (King) match.getBoard().getPiece(match.getBoard().findKingOnBoard(match.getPlayerColor()));
+                        King king = (King) match.getBoard().getPiece(match.getBoard().getKingPosition(match.getPlayerColor()));
                         Rook rook = (Rook) match.getBoard().getPiece(rookRowPosition);
                         king.addMoveCount();
                         rook.addMoveCount();
@@ -106,6 +112,8 @@ public class InterfaceController extends JPanel {
                         gameDrawer.graphicPawnPromotion(GameController.bX, GameController.bY, piece.getColor());
                     }
                 } catch (NullPointerException n) {
+
+                    System.out.println(Arrays.toString(n.getStackTrace()));
 
                     /*
                      * A null pointer exception can sometimes happen when the player clicks on empty squares
@@ -124,19 +132,38 @@ public class InterfaceController extends JPanel {
                     repaint();
                     gameController.cleanAllCoordinates();
                 }
+
+                if (ChessMatch.checkmate) {
+                    JOptionPane.showMessageDialog(null, "Checkmate. Game over.",
+                            "Chess", JOptionPane.INFORMATION_MESSAGE, null);
+                    System.exit(0);
+                }
+
+                if (ChessMatch.stalemate) {
+                    JOptionPane.showMessageDialog(null, "It's a stalemate. Game over.",
+                            "Chess", JOptionPane.INFORMATION_MESSAGE, null);
+                    System.exit(0);
+                }
+
+                /*
+                 *
+                 * playerHasLegalMoves = playerHasAnyLegalMove();
+                 * match.isKingInCheck(source, target);
+                 * ChessMatch.checkmate = match.isCheckmate();
+                 * ChessMatch.stalemate = match.isStalemate();
+                 *
+                 *
+                 *
+                 * */
             }
         });
-    }
-
-    private boolean isWhite(int a, int b) {
-        return (a + b) % 2 == 0;
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        /* The default background color of the panel is white, so I changed it to black because of the square edges.
+        /* By default, the background color of the panel is white, so I changed it to black because of the square edges.
         It looks better with a dark color. */
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, getWidth(), getHeight());
@@ -145,7 +172,7 @@ public class InterfaceController extends JPanel {
         from the classical chess board. The size of the tiles is calculated based on the frame (screen) size. */
         for (int row = 0; row < FrameSizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < FrameSizes.getBOARD_SIZE(); col++) {
-                g.setColor(isWhite(row, col) ? GameColors.BLACK : GameColors.WHITE);
+                g.setColor(Util.isEven(row + col) ? GameColors.BLACK : GameColors.WHITE);
 
                 /*
                  * This method will create the squares on the panel. The x and y values are for the left and right,

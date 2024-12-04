@@ -27,8 +27,10 @@ public class GameController {
 
     /**
      * Handles the player interactions on the board.
+     * @param x the row coordinate of the player interaction on the screen.
+     * @param y the column coordinate of the player interaction on the screen.
      */
-    protected void handlePieceSelection(int x, int y) {
+    protected void handleScreenSelection(int x, int y) {
         Position position = new Position(x, y);
         ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPiece(position);
 
@@ -53,7 +55,8 @@ public class GameController {
     }
 
     /**
-     * Checks if any coordinate is null.
+     * Checks if any coordinate is not null.
+     * @return true if all coordinates are null.
      */
     protected boolean isAllCoordinatesNull() {
         return aX == null || aY == null || bX == null || bY == null || source == null || target == null;
@@ -77,8 +80,8 @@ public class GameController {
     protected boolean validateLogicMove() {
         playerHasLegalMoves = playerHasAnyLegalMove();
         match.isKingInCheck(source, target);
-        match.isCheckmate();
-        match.isStalemate();
+        ChessMatch.checkmate = match.isCheckmate();
+        ChessMatch.stalemate = match.isStalemate();
 
         if (ChessMatch.kingCheck) {
             cleanAllCoordinates();
@@ -153,23 +156,25 @@ public class GameController {
     }
 
     /**
-     * Returns true if the player has any valid move to perform.
+     * Check if the player has any legal move to do in the game.
+     * @return true if the player has any valid move to perform, else false.
      */
     public boolean playerHasAnyLegalMove() {
         Piece[][] boardPieces = match.getBoard().getBoardPieces();
-        ChessPiece piece;
 
-        for (int row = 0; row < match.getBoard().getRows(); row++) {
-            for (int col = 0; col < match.getBoard().getRows(); col++) {
+        for (Piece[] boardRow : boardPieces) {
+            for (Piece piece : boardRow) {
 
-                if (boardPieces[row][col] != null) {
-                    piece = (ChessPiece) match.getBoard().getPiece(new Position(row, col));
-
-                    if (piece.hasAnyValidMove())
+                if (piece != null && ((ChessPiece) piece).getColor().equals(match.getPlayerColor())) {
+                    if (piece.hasAnyLegalMove())
                         return true;
                 }
             }
         }
         return false;
+    }
+
+    public boolean playerHasAnyMoveWithoutKingInCheck() {
+
     }
 }

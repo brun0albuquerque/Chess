@@ -40,7 +40,7 @@ public class Queen extends ChessPiece {
     private void checkQueenDirection(Position queen, boolean[][] possibilities, int[] arr) {
         Position position = new Position(queen.getRow() + arr[0], queen.getColumn() + arr[1]);
 
-        while (getBoard().positionExists(position) && !getBoard().isThereAPieceAt(position) || validatePieceCapture(position)) {
+        while (getBoard().positionExists(position) && !getBoard().isPositionOccupied(position) || validatePieceCapture(position)) {
             /* If the piece can be captured, breaks the loop. */
             possibilities[position.getRow()][position.getColumn()] = true;
 
@@ -60,7 +60,7 @@ public class Queen extends ChessPiece {
             possibilities[position.getRow()][position.getColumn()] = true;
 
             /* If there is a piece at the position, breaks the loop. */
-            if (getBoard().isThereAPieceAt(position))
+            if (getBoard().isPositionOccupied(position))
                 break;
 
             position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);

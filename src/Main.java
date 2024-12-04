@@ -18,11 +18,6 @@ public class Main {
             ChessMatch match = new ChessMatch();
             GameController action = new GameController(match);
             GameInitializer anInterface = new GameInitializer(action, match);
-        } catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()),
-                    "Error", JOptionPane.ERROR_MESSAGE, null);
-            System.out.printf(Arrays.toString(e.getStackTrace()));
-            System.exit(1);
         } catch (IllegalArgumentException | IllegalStateException | HeadlessException e) {
             JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()),
                     "Error", JOptionPane.ERROR_MESSAGE, null);

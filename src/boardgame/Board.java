@@ -8,7 +8,7 @@ import javax.swing.*;
 public class Board {
     private final int columns;
     private final int rows;
-    private Piece[][] boardPieces;
+    private final Piece[][] boardPieces;
 
     public Board(int rows, int columns) {
         /* Checks if rows and columns are positive. */
@@ -34,10 +34,6 @@ public class Board {
         return boardPieces;
     }
 
-    public void setBoardPieces(Piece[][] boardPieces) {
-        this.boardPieces = boardPieces;
-    }
-
     /**
      * Return the piece position if it is a valid position.
      */
@@ -51,9 +47,11 @@ public class Board {
     /**
      * Check if there is a piece on the position and if not, place a piece in the matrix position and set the
      * piece position.
+     * @param position the position to place the piece.
+     * @param piece the piece to be placed on the board.
      */
     public void placePiece(Position position, Piece piece) {
-        if (isThereAPieceAt(position))
+        if (isPositionOccupied(position))
             return;
 
         boardPieces[position.getRow()][position.getColumn()] = piece;
@@ -63,6 +61,7 @@ public class Board {
     /**
      * If there is a piece on the board position, remove the piece from the board position and set the piece position
      * null.
+     * @param position the position of the piece to be removed.
      */
     public void removePiece(Position position) {
         if (getPiece(position) == null)
@@ -75,6 +74,8 @@ public class Board {
 
     /**
      * Checks if the position is within the board limits.
+     * @param position is the position to be checked.
+     * @return true if the position is within the board bounds.
      */
     public boolean positionExists(Position position) {
         return position.getRow() >= 0 && position.getRow() < this.rows
@@ -83,8 +84,10 @@ public class Board {
 
     /**
      * Check if there is a piece on the position.
+     * @param position is the position to be checked.
+     * @return true if the position has a piece.
      */
-    public boolean isThereAPieceAt(Position position) {
+    public boolean isPositionOccupied(Position position) {
         if (!positionExists(position))
             return false;
 
@@ -93,18 +96,21 @@ public class Board {
 
     /**
      * Search the king instance on the board and returns its position.
+     * @param color the player's color.
+     * @return the king's position.
      */
-    public Position findKingOnBoard(ChessColor color) {
-        Board board = this;
+    public Position getKingPosition(ChessColor color) {
+        Position position;
 
-        for (int row = 0; row < board.getRows(); row++) {
-            for (int col = 0; col < board.getColumns(); col++) {
-                Position position = new Position(row, col);
-                Piece piece = board.getPiece(position);
+        for (Piece[] boardRow : boardPieces) {
+            for (Piece piece : boardRow) {
 
-                /* Only returns the king position if it's the same color as the player. */
-                if (piece instanceof King && ((King) piece).getColor() == color) {
-                    return position;
+                if (piece != null) {
+                    position = piece.getPosition();
+
+                    /* Only returns the king position if it's the same color as the player. */
+                    if (piece instanceof King && ((King) piece).getColor() == color)
+                        return position;
                 }
             }
         }

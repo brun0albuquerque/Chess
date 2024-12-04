@@ -1,5 +1,8 @@
 package boardgame;
 
+import chess.ChessColor;
+import utils.Util;
+
 public abstract class Piece {
     private final Board board;
     private Position position;
@@ -39,8 +42,9 @@ public abstract class Piece {
 
     /**
      * Check if there is any move for the piece to make on the board.
+     * @return true if the piece has any possible move, else false.
      */
-    public boolean hasAnyValidMove() {
+    public boolean hasAnyLegalMove() {
         boolean[][] aux = possibleMoves(true);
         for (boolean[] rows : aux) {
             for (boolean column : rows) {
@@ -50,5 +54,17 @@ public abstract class Piece {
             }
         }
         return false;
+    }
+
+    /**
+     * Check the color of the piece's square.
+     * @return the color of the square.
+     */
+    public ChessColor squareColor() {
+        if (Util.isEven(getPosition().getColumn()) && Util.isEven(getPosition().getRow())
+                || !Util.isEven(getPosition().getColumn()) && !Util.isEven(getPosition().getRow())) {
+            return ChessColor.WHITE;
+        }
+        return ChessColor.BLACK;
     }
 }

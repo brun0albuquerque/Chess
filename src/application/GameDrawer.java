@@ -32,7 +32,7 @@ public class GameDrawer extends JPanel {
 
     /* Perform the moves of the piece icons on the board. */
     public void executeIconMove(int aX, int aY, int bX, int bY) {
-        ImageIcon icon = getPieceIcon(aX, aY);
+        ImageIcon icon = getPiecesIcons()[aX][aY];
 
         if (icon == null)
             return;
@@ -42,6 +42,9 @@ public class GameDrawer extends JPanel {
     }
 
     public void executeCastlingGraphicMove(int aX, int aY, int bX, int bY, int kingRow, int rookRow) {
+        if (kingRow < 0 || rookRow < 0)
+            throw new IndexOutOfBoundsException("Invalid int value for graphic move.");
+
         executeIconMove(aX, aY, kingRow, aY);
         executeIconMove(bX, bY, rookRow, bY);
     }
