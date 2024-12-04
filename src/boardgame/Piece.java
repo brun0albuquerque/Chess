@@ -1,7 +1,7 @@
 package boardgame;
 
 import chess.ChessColor;
-import utils.Util;
+import util.Util;
 
 public abstract class Piece {
     private final Board board;

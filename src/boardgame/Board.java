@@ -2,13 +2,19 @@ package boardgame;
 
 import chess.ChessColor;
 import pieces.King;
+import util.Util;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Optional;
 
 public class Board {
-    private final int columns;
     private final int rows;
+    private final int columns;
     private final Piece[][] boardPieces;
+
+    private final ArrayList<Piece> activePieces;
+    private final ArrayList<Piece> capturedPieces;
 
     public Board(int rows, int columns) {
         /* Checks if rows and columns are positive. */
@@ -20,6 +26,8 @@ public class Board {
         this.rows = rows;
         this.columns = columns;
         this.boardPieces = new Piece[rows][columns];
+        this.activePieces = new ArrayList<>();
+        this.capturedPieces = new ArrayList<>();
     }
 
     public int getRows() {
@@ -32,6 +40,14 @@ public class Board {
 
     public Piece[][] getBoardPieces() {
         return boardPieces;
+    }
+
+    public ArrayList<Piece> getActivePieces() {
+        return activePieces;
+    }
+
+    public ArrayList<Piece> getCapturedPieces() {
+        return capturedPieces;
     }
 
     /**
@@ -51,11 +67,12 @@ public class Board {
      * @param piece the piece to be placed on the board.
      */
     public void placePiece(Position position, Piece piece) {
-        if (isPositionOccupied(position))
+        if (!isPositionEmpty(position))
             return;
 
         boardPieces[position.getRow()][position.getColumn()] = piece;
         piece.setPosition(position);
+        activePieces.add(piece);
     }
 
     /**
@@ -64,12 +81,14 @@ public class Board {
      * @param position the position of the piece to be removed.
      */
     public void removePiece(Position position) {
-        if (getPiece(position) == null)
+        if (Util.isObjectNull(getPiece(position)))
             return;
 
         Piece piece = getPiece(position);
         piece.setPosition(null);
         boardPieces[position.getRow()][position.getColumn()] = null;
+        activePieces.remove(piece);
+        capturedPieces.add(piece);
     }
 
     /**
@@ -87,33 +106,22 @@ public class Board {
      * @param position is the position to be checked.
      * @return true if the position has a piece.
      */
-    public boolean isPositionOccupied(Position position) {
+    public boolean isPositionEmpty(Position position) {
         if (!positionExists(position))
-            return false;
+            throw new IndexOutOfBoundsException("Position is not on the board.");
 
-        return getPiece(position) != null;
+        return Util.isObjectNull(getPiece(position));
     }
 
     /**
-     * Search the king instance on the board and returns its position.
+     * Get the king's position on the board.
      * @param color the player's color.
      * @return the king's position.
      */
     public Position getKingPosition(ChessColor color) {
-        Position position;
-
-        for (Piece[] boardRow : boardPieces) {
-            for (Piece piece : boardRow) {
-
-                if (piece != null) {
-                    position = piece.getPosition();
-
-                    /* Only returns the king position if it's the same color as the player. */
-                    if (piece instanceof King && ((King) piece).getColor() == color)
-                        return position;
-                }
-            }
-        }
-        return null;
+        Optional<Piece> optionalKing = (activePieces.stream()
+                .filter(piece -> piece instanceof King && ((King) piece).getColor().equals(color))
+                .findFirst());
+        return optionalKing.orElseThrow(() -> new NullPointerException("King position is null.")).getPosition();
     }
 }

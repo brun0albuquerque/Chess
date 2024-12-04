@@ -4,8 +4,10 @@ import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;
+import chess.KingNotFoundException;
 import pieces.King;
 import pieces.Rook;
+import util.Util;
 
 public class GameController {
 
@@ -34,7 +36,7 @@ public class GameController {
         Position position = new Position(x, y);
         ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPiece(position);
 
-        if (isAllCoordinatesNull() && selectedPiece != null && match.validatePieceColor(position)) {
+        if (isAllCoordinatesNull() && Util.isObjectNotNull(selectedPiece) && match.validatePieceColor(position)) {
 
             if (aX != null && aY != null && match.validateCastlingPieces(
                     new Position(GameController.aX, GameController.aY), position)) {
@@ -77,13 +79,13 @@ public class GameController {
     /**
      * This method validates if a move can be performed in the game.
      */
-    protected boolean validateLogicMove() {
+    protected boolean validateLogicMove() throws KingNotFoundException {
         playerHasLegalMoves = playerHasAnyLegalMove();
         match.isKingInCheck(source, target);
-        ChessMatch.checkmate = match.isCheckmate();
-        ChessMatch.stalemate = match.isStalemate();
+        match.checkmate = match.isCheckmate();
+        match.stalemate = match.isStalemate();
 
-        if (ChessMatch.kingCheck) {
+        if (match.kingCheck) {
             cleanAllCoordinates();
             return false;
         }
@@ -93,7 +95,7 @@ public class GameController {
 
         /* Validate if the move can be done checking the target position on the board.
          * If the piece is the king, it only allows the move to safe squares. */
-        if (!validateMoveExecution(source, target)) {
+        if (!match.validateMoveExecution(source, target)) {
             cleanAllCoordinates();
             return false;
         }
@@ -112,25 +114,6 @@ public class GameController {
 
         /* If the movement isn't an especial move, perform a normal move. */
         match.performPieceMove(source, target);
-    }
-
-    /**
-     * Validates weather the selected position matches any true position of possibilities.
-     * It will calculate all possibilities for each piece on the board.
-     * If the piece it's the king, then only permit safe moves by calling a method from class King.
-     * Returns true only if the selected square has a true value in the matrix.
-     * Any move can only be executed if this returns true.
-     */
-    private boolean validateMoveExecution(Position source, Position target) {
-        boolean[][] possibilities;
-        Piece piece = match.getBoard().getPiece(source);
-
-        if (piece instanceof King)
-            possibilities = ((King) piece).possibleMoves();
-        else
-            possibilities = piece.possibleMoves(true);
-
-        return possibilities[target.getRow()][target.getColumn()];
     }
 
     /**
@@ -165,16 +148,12 @@ public class GameController {
         for (Piece[] boardRow : boardPieces) {
             for (Piece piece : boardRow) {
 
-                if (piece != null && ((ChessPiece) piece).getColor().equals(match.getPlayerColor())) {
+                if (Util.isObjectNotNull(piece) && ((ChessPiece) piece).getColor().equals(match.getPlayerColor())) {
                     if (piece.hasAnyLegalMove())
                         return true;
                 }
             }
         }
         return false;
-    }
-
-    public boolean playerHasAnyMoveWithoutKingInCheck() {
-
     }
 }

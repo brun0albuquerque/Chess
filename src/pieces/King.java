@@ -1,6 +1,6 @@
 package pieces;
 
-import utils.Util;
+import util.Util;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -50,7 +50,7 @@ public class King extends ChessPiece {
                 Position kingPosition = new Position(currentKingPosition.getRow() + direction[0],
                         currentKingPosition.getColumn() + direction[1]);
 
-                if (getBoard().positionExists(kingPosition) && !getBoard().isPositionOccupied(kingPosition)
+                if (getBoard().positionExists(kingPosition) && getBoard().isPositionEmpty(kingPosition)
                         || validatePieceCapture(kingPosition)) {
                     possibilities[kingPosition.getRow()][kingPosition.getColumn()] = true;
                 }

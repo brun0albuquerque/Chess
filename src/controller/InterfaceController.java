@@ -5,17 +5,20 @@ import application.GameColors;
 import application.GameDrawer;
 import boardgame.Piece;
 import boardgame.Position;
+import chess.ChessColor;
 import chess.ChessMatch;
 import chess.ChessPiece;
+import chess.KingNotFoundException;
 import pieces.King;
 import pieces.Rook;
-import utils.Util;
+import util.Util;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static controller.GameController.target;
 
@@ -79,6 +82,7 @@ public class InterfaceController extends JPanel {
                     if (GameController.aX != null && GameController.aY != null) {
                         kingRow = (GameController.aX > GameController.bX) ? GameController.aX - 2 : GameController.aX + 2;
                         rookRow = (GameController.aX > GameController.bX) ? GameController.bX + 2 : GameController.bX - 3;
+
                         kingRowPosition = new Position(kingRow, GameController.aY);
                         rookRowPosition = new Position(rookRow, GameController.bY);
                     }
@@ -96,7 +100,13 @@ public class InterfaceController extends JPanel {
                          * method can only perform the castle move with the movement counter equal to zero.
                          * So add the movement counter after the graphical move to make sure the piece icon also moves.
                          */
-                        King king = (King) match.getBoard().getPiece(match.getBoard().getKingPosition(match.getPlayerColor()));
+                        ChessColor playerColor = match.getPlayerColor();
+                        Optional<Position> optionalKingPosition = Optional.ofNullable(match.getBoard().getKingPosition(playerColor));
+
+                        if (optionalKingPosition.isEmpty())
+                            throw new KingNotFoundException("King position is null");
+
+                        King king = (King) match.getBoard().getPiece(optionalKingPosition.get());
                         Rook rook = (Rook) match.getBoard().getPiece(rookRowPosition);
                         king.addMoveCount();
                         rook.addMoveCount();
@@ -111,9 +121,8 @@ public class InterfaceController extends JPanel {
                         match.performPawnPromotion(target, piece);
                         gameDrawer.graphicPawnPromotion(GameController.bX, GameController.bY, piece.getColor());
                     }
-                } catch (NullPointerException n) {
-
-                    System.out.println(Arrays.toString(n.getStackTrace()));
+                } catch (NullPointerException | KingNotFoundException exception) {
+                    System.out.println(Arrays.toString(exception.getStackTrace()));
 
                     /*
                      * A null pointer exception can sometimes happen when the player clicks on empty squares
@@ -133,28 +142,24 @@ public class InterfaceController extends JPanel {
                     gameController.cleanAllCoordinates();
                 }
 
-                if (ChessMatch.checkmate) {
+                if (match.checkmate) {
                     JOptionPane.showMessageDialog(null, "Checkmate. Game over.",
                             "Chess", JOptionPane.INFORMATION_MESSAGE, null);
                     System.exit(0);
                 }
 
-                if (ChessMatch.stalemate) {
+                if (match.stalemate) {
                     JOptionPane.showMessageDialog(null, "It's a stalemate. Game over.",
                             "Chess", JOptionPane.INFORMATION_MESSAGE, null);
                     System.exit(0);
                 }
 
                 /*
-                 *
                  * playerHasLegalMoves = playerHasAnyLegalMove();
                  * match.isKingInCheck(source, target);
                  * ChessMatch.checkmate = match.isCheckmate();
                  * ChessMatch.stalemate = match.isStalemate();
-                 *
-                 *
-                 *
-                 * */
+                 */
             }
         });
     }

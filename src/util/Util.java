@@ -1,12 +1,12 @@
-package utils;
+package util;
 
 import application.FrameSizes;
 import boardgame.Board;
 import boardgame.Piece;
-import boardgame.Position;
 import chess.ChessMatch;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class Util {
 
@@ -89,5 +89,23 @@ public class Util {
      */
     public static boolean isEven(int x) {
         return x % 2 == 0;
+    }
+
+    /**
+     * Checks if the object provided is null.
+     * @param object the object to be checked.
+     * @return true if the object is null.
+     */
+    public static boolean isObjectNull(Object object) {
+        return object == null;
+    }
+
+    /**
+     * Checks if the object provided is null.
+     * @param object the object to be checked.
+     * @return true if the object is not null.
+     */
+    public static boolean isObjectNotNull(Object object) {
+        return object != null;
     }
 }

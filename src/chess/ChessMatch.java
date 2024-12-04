@@ -6,19 +6,21 @@ import boardgame.Piece;
 import boardgame.Position;
 import controller.GameController;
 import pieces.*;
-import utils.Util;
+import util.Util;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Optional;
 
 public class ChessMatch {
     private int turn;
     private final Board board;
     private ChessColor playerColor;
+    private GameController controller;
 
-    public static boolean kingCheck;
-    public static boolean stalemate;
-    public static boolean checkmate;
+    public boolean kingCheck;
+    public boolean stalemate;
+    public boolean checkmate;
 
     public ChessMatch() {
         this.board = new Board(FrameSizes.getBOARD_SIZE(), FrameSizes.getBOARD_SIZE());
@@ -52,7 +54,7 @@ public class ChessMatch {
      * @param chessColor the player's color.
      */
     private ChessColor invertColor(ChessColor chessColor) {
-        return chessColor == ChessColor.WHITE ? ChessColor.BLACK : ChessColor.WHITE;
+        return chessColor.equals(ChessColor.WHITE) ? ChessColor.BLACK : ChessColor.WHITE;
     }
 
     /* Validation methods. Each method of validation will authenticate a condition from the game. */
@@ -63,7 +65,7 @@ public class ChessMatch {
      * @return true if the position is not empty, else true.
      */
     public boolean validateSourcePosition(Position position) {
-        return board.isPositionOccupied(position) && validatePieceColor(position);
+        return !board.isPositionEmpty(position) && validatePieceColor(position);
     }
 
     /**
@@ -72,9 +74,10 @@ public class ChessMatch {
      * @return true if the position is empty or the position has an opponent piece, else false.
      */
     public boolean validateTargetPosition(Position position) {
-        if (board.isPositionOccupied(position) && validatePieceColor(position))
+        if (!board.isPositionEmpty(position) && validatePieceColor(position))
             return false;
-        return !board.isPositionOccupied(position) || board.isPositionOccupied(position) && !validatePieceColor(position);
+
+        return board.isPositionEmpty(position) || !board.isPositionEmpty(position) && !validatePieceColor(position);
     }
 
     /**
@@ -85,9 +88,10 @@ public class ChessMatch {
      * @return true only if it has an opponent piece on the position.
      */
     public boolean validateOpponentPiecePosition(Position position) {
-        if (!board.isPositionOccupied(position) || validateSourcePosition(position))
+        if (board.isPositionEmpty(position) || validateSourcePosition(position))
             return false;
-        return board.isPositionOccupied(position) && !validatePieceColor(position);
+
+        return !board.isPositionEmpty(position) && !validatePieceColor(position);
     }
 
     /**
@@ -100,10 +104,10 @@ public class ChessMatch {
      * they have not yet moved.
      */
     public boolean validateCastlingPieces(Position source, Position target) {
-        if (source != null && target != null)
+        if (Util.isObjectNotNull(source) || Util.isObjectNotNull(target))
             return false;
 
-        if (board.isPositionOccupied(source) && board.isPositionOccupied(target))
+        if (!board.isPositionEmpty(source) && !board.isPositionEmpty(target))
             return false;
 
         if (board.getPiece(source) instanceof King && board.getPiece(target) instanceof Rook)
@@ -120,8 +124,8 @@ public class ChessMatch {
      * @return true if the piece is an instance of Pawn class and if they have reached the las row of the board.
      */
     public boolean validatePawnPromotion(ChessPiece piece) {
-        if (piece == null) {
-            throw new IllegalArgumentException("Piece is null.");
+        if (Util.isObjectNull(piece)) {
+            throw new NullPointerException("Piece is null.");
         }
 
         return piece instanceof Pawn && piece.getPosition().getColumn() == 0
@@ -134,7 +138,7 @@ public class ChessMatch {
      * @return true if the piece's color is the same as the player.
      * */
     public boolean validatePieceColor(Position position) {
-        return playerColor == ((ChessPiece) board.getPiece(position)).getColor();
+        return playerColor.equals(((ChessPiece) board.getPiece(position)).getColor());
     }
 
     /**
@@ -146,7 +150,7 @@ public class ChessMatch {
      * */
     public boolean validateCastlingMove(Position kingPosition, Position rookPosition) {
         /* Validate if one of king or rook positions is null to prevent null pointer exception. */
-        if (kingPosition == null || rookPosition == null)
+        if (Util.isObjectNull(kingPosition) || Util.isObjectNull(rookPosition))
             return false;
 
         /* If king position has an instance of King, and if the rook position has an instance of Rook.
@@ -157,15 +161,19 @@ public class ChessMatch {
         King king = (King) board.getPiece(kingPosition);
         Rook rook = (Rook) board.getPiece(rookPosition);
 
-        if (king == null || rook == null || king.pieceMoved() || rook.pieceMoved() && validatePieceColor(rook.getPosition()))
+        if (Util.isObjectNull(king) || Util.isObjectNull(rook) || king.pieceMoved() || rook.pieceMoved()
+                && validatePieceColor(rook.getPosition())) {
             return false;
+        }
 
         /* Get the rook position based on the king position to get the castling side. */
         int step = (rookPosition.getRow() > kingPosition.getRow()) ? 1 : -1;
 
         /* Check if there is another piece between the king and the rook. */
         for (int row = kingPosition.getRow() + step; row != rookPosition.getRow(); row += step) {
-            if (board.getPiece(new Position(row, kingPosition.getColumn())) != null)
+            Optional<Position> optionalPosition = Optional.of(new Position(row, kingPosition.getColumn()));
+
+            if (optionalPosition.isPresent() && Util.isObjectNull(board.getPiece(optionalPosition.get())))
                 return false;
         }
         return true;
@@ -185,7 +193,7 @@ public class ChessMatch {
         for (Piece[] boardRow : boardPieces) {
             for (Piece piece : boardRow) {
 
-                if (piece != null) {
+                if (Util.isObjectNotNull(piece)) {
                     opponentPosition = piece.getPosition();
 
                     /* If it's an opponent's piece, possibilities receive their possible moves. */
@@ -200,6 +208,25 @@ public class ChessMatch {
             }
         }
         return false;
+    }
+
+    /**
+     * Validates weather the selected position matches any true position of possibilities.
+     * It will calculate all possibilities for each piece on the board.
+     * If the piece it's the king, then only permit safe moves by calling a method from class King.
+     * Returns true only if the selected square has a true value in the matrix.
+     * Any move can only be executed if this returns true.
+     */
+    public boolean validateMoveExecution(Position source, Position target) {
+        boolean[][] possibilities;
+        Piece piece = board.getPiece(source);
+
+        if (piece instanceof King)
+            possibilities = ((King) piece).possibleMoves();
+        else
+            possibilities = piece.possibleMoves(true);
+
+        return possibilities[target.getRow()][target.getColumn()];
     }
 
     /* Movements and special moves methods. */
@@ -247,17 +274,18 @@ public class ChessMatch {
      * @param source the position of the first piece selected by the player.
      * @param target the position of the second piece selected by the player.
      */
-    public void isKingInCheck(Position source, Position target) {
+    public void isKingInCheck(Position source, Position target) throws KingNotFoundException {
         Piece sourcePiece = board.getPiece(source);
         Piece targetPiece = board.getPiece(target);
-        Position kingPosition = board.getKingPosition(getPlayerColor());
 
-        if (kingPosition == null)
-            throw new IllegalStateException();
+        Optional<Position> optionalKingPosition = Optional.ofNullable(board.getKingPosition(getPlayerColor()));
+
+        if (optionalKingPosition.isEmpty())
+            throw new KingNotFoundException("King position is null");
 
         /* Check if the king is threatened before the move. */
-        if (validatePossibleCheck(kingPosition))
-            ChessMatch.kingCheck = true;
+        if (validatePossibleCheck(optionalKingPosition.get()))
+            kingCheck = true;
         else
             return;
 
@@ -267,21 +295,21 @@ public class ChessMatch {
         board.placePiece(target, sourcePiece);
 
         /* If the moved piece is the king, it's necessary to update the king position. */
-        kingPosition = sourcePiece instanceof King ? target : kingPosition;
+        optionalKingPosition = Optional.of(sourcePiece instanceof King ? target : optionalKingPosition.get());
 
-        if (ChessMatch.kingCheck && !validatePossibleCheck(kingPosition)) {
-            ChessMatch.kingCheck = false;
+        if (kingCheck && !validatePossibleCheck(optionalKingPosition.get())) {
+            kingCheck = false;
         } else {
             JOptionPane.showMessageDialog(null, "King is in check.",
                     "Chess", JOptionPane.INFORMATION_MESSAGE, null);
-            ChessMatch.kingCheck = true;
+            kingCheck = true;
         }
 
         /* Undo the selected piece move. */
         board.removePiece(target);
         board.placePiece(source, sourcePiece);
 
-        if (targetPiece != null)
+        if (Util.isObjectNotNull(target))
             board.placePiece(target, targetPiece);
     }
 
@@ -290,10 +318,15 @@ public class ChessMatch {
      * then end the game with a checkmate.
      * @return true if the king is in check and the player has no legal moves.
      */
-    public boolean isCheckmate() {
-        King king = (King) board.getPiece(board.getKingPosition(getPlayerColor()));
+    public boolean isCheckmate() throws KingNotFoundException {
+        Optional<Position> optionalKingPosition = Optional.ofNullable(board.getKingPosition(getPlayerColor()));
 
-        if (ChessMatch.kingCheck && !king.hasAnyLegalMove() && !GameController.playerHasLegalMoves) {
+        if (optionalKingPosition.isEmpty())
+            throw new KingNotFoundException("King position is null");
+
+        King king = (King) board.getPiece(optionalKingPosition.get());
+
+        if (kingCheck && !king.hasAnyLegalMove() && !GameController.playerHasLegalMoves) {
             JOptionPane.showMessageDialog(null, "Checkmate. Game over.",
                     "Chess", JOptionPane.INFORMATION_MESSAGE, null);
             return true;
@@ -307,7 +340,7 @@ public class ChessMatch {
      * end the game with a stalemate, and the game automatically is a draw.
      * @return true if the game can't finish because of not enough material to perform a checkmate.
      */
-    public boolean isStalemate() {
+    public boolean isStalemate() throws KingNotFoundException {
         /*
          * All these conditions lead to a game with impossible checkmate, leading to a draw:
          * King versus king;
@@ -318,10 +351,15 @@ public class ChessMatch {
          * are needed, where captures will be made so that only 4 pieces remain on the board.
          */
 
-        King king = (King) board.getPiece(board.getKingPosition(getPlayerColor()));
+        Optional<Position> optionalKingPosition = Optional.ofNullable(board.getKingPosition(getPlayerColor()));
+
+        if (optionalKingPosition.isEmpty())
+            throw new KingNotFoundException("King position is null");
+
+        King king = (King) board.getPiece(optionalKingPosition.get());
 
         /* Returns true if the king can't move and the player has no legal moves, but the king is not in check. */
-        if (!ChessMatch.kingCheck && !king.hasAnyLegalMove() && !GameController.playerHasLegalMoves)
+        if (!kingCheck && !king.hasAnyLegalMove() && !GameController.playerHasLegalMoves)
             return true;
 
         if (turn < 29)
@@ -357,7 +395,7 @@ public class ChessMatch {
                     Bishop[] bishops = activePieces.stream().filter(piece -> piece instanceof Bishop).toArray(Bishop[]::new);
 
                     if (!bishops[0].getColor().equals(bishops[1].getColor())
-                            && bishops[0].squareColor() != bishops[1].squareColor()) {
+                            && !bishops[0].squareColor().equals(bishops[1].squareColor())) {
                         return true;
                     }
                 }

@@ -43,7 +43,7 @@ public class Knight extends ChessPiece{
     }
 
     private void knightPossibleMoves(Position position, boolean[][] possibilities) {
-        if (getBoard().positionExists(position) && !getBoard().isPositionOccupied(position)
+        if (getBoard().positionExists(position) && getBoard().isPositionEmpty(position)
                 || validatePieceCapture(position)) {
             possibilities[position.getRow()][position.getColumn()] = true;
         }
