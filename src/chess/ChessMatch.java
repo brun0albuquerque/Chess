@@ -312,6 +312,7 @@ public class ChessMatch {
      * the move that takes him out of check.
      * @param source the position of the first piece selected by the player.
      * @param target the position of the second piece selected by the player.
+     * @throws KingNotFoundException if {@code King}'s instance is not found.
      */
     public void isKingInCheck(Position source, Position target) throws KingNotFoundException {
         Piece sourcePiece = board.getPiece(source);
@@ -362,7 +363,10 @@ public class ChessMatch {
     /**
      * Checks if the king in check has any legal move on the board.
      * If the player can move no piece, then end the game with a checkmate.
+     * @param playerHasLegalMoves a boolean value representing whether
+     * the player has any moves left in the game.
      * @return true if the king is in check and the player has no legal moves.
+     * @throws KingNotFoundException if {@code King}'s instance is not found.
      */
     public boolean isCheckmate(boolean playerHasLegalMoves) throws KingNotFoundException {
         Optional<Position> optionalKingPosition = Optional.ofNullable(
@@ -408,6 +412,7 @@ public class ChessMatch {
      *
      * @return true if the player does not have enough material
      * to execute a checkmate.
+     * @throws KingNotFoundException if {@code King}'s instance is not found.
      */
     public boolean isStalemate(boolean playerHasLegalMoves) throws KingNotFoundException {
         Optional<Position> optionalKingPosition = Optional.ofNullable(
@@ -490,7 +495,10 @@ public class ChessMatch {
         board.placePiece(new Position(7, 7), new Rook(board, ChessColor.WHITE));
 
         for (int a = 0; a < Sizes.getBOARD_SIZE(); a++) {
-            board.placePiece(new Position(a, 6), new Pawn(board, ChessColor.WHITE, this));
+            board.placePiece(
+                    new Position(a, 6),
+                    new Pawn(board, ChessColor.WHITE, this)
+            );
         }
 
         board.placePiece(new Position(0, 0), new Rook(board, ChessColor.BLACK));
@@ -503,7 +511,10 @@ public class ChessMatch {
         board.placePiece(new Position(7, 0), new Rook(board, ChessColor.BLACK));
 
         for (int a = 0; a < Sizes.getBOARD_SIZE(); a++) {
-            board.placePiece(new Position(a, 1), new Pawn(board, ChessColor.BLACK, this));
+            board.placePiece(
+                    new Position(a, 1),
+                    new Pawn(board, ChessColor.BLACK, this)
+            );
         }
     }
 }

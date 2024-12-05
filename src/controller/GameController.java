@@ -113,7 +113,7 @@ public class GameController {
      * This method validates if a move can be performed in the game.
      * @return true if a move can be performed, else false.
      */
-    protected boolean verifyGameMove() {
+    protected boolean verifyPlayerMove() {
         Optional<Position> optionalSource = Optional.of(new Position(aX, aY));
         Optional<Position> optionalTarget = Optional.of(new Position(bX, bY));
 
@@ -141,21 +141,18 @@ public class GameController {
      * Both logical and visual moves.
      * Performs logical and visual moves, as well as handling all exceptions
      * thrown during moves.
-     * @throws KingNotFoundException if any method tries to check the king's
-     * position and can't find the king instance.
+     * @throws KingNotFoundException if {@code King}'s instance is not found.
      */
     protected void controllerActions() throws KingNotFoundException {
         try {
-            if (verifyGameMove())
+            if (verifyPlayerMove())
                 performChessMove();
 
             Optional<Integer> optionalAX = Optional.of(aX);
             Optional<Integer> optionalAY = Optional.of(aY);
-            Optional<Integer> optionalBX = Optional.of(bY);
+            Optional<Integer> optionalBX = Optional.of(bX);
             Optional<Integer> optionalBY = Optional.of(bY);
             Optional<Position> optionalTarget = Optional.of(new Position(bX, bY));
-
-            System.out.println("Optional: " + optionalAX + ", " + optionalAY + ", " + optionalBX + ", " + optionalBY);
 
             /* Get the rook's position before the move and calculate the rook's position
             after the move. */

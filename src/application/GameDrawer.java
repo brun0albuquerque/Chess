@@ -33,6 +33,8 @@ public class GameDrawer extends JPanel {
             throw new IllegalArgumentException("Coordinates cannot be null.");
         }
 
+        System.out.println("Icons: " + aX + ", " + aY + ", " + bX + ", " + bY);
+
         ImageIcon icon = getPiecesIcons()[aX][aY];
 
         if (Util.isObjectNull(icon))
