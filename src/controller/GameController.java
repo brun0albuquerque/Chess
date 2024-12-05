@@ -19,19 +19,48 @@ public class GameController {
     private final ChessMatch match;
     private final GameDrawer drawer;
 
-    protected static Integer aX = null;
-    protected static Integer aY = null;
-    protected static Integer bX = null;
-    protected static Integer bY = null;
-
-    protected static Position source = null;
-    protected static Position target = null;
+    private Integer aX = null;
+    private Integer aY = null;
+    private Integer bX = null;
+    private Integer bY = null;
 
     public boolean playerHasLegalMoves;
 
     public GameController(ChessMatch match, GameDrawer drawer) {
         this.match = match;
         this.drawer = drawer;
+    }
+
+    public Integer getaX() {
+        return aX;
+    }
+
+    public void setaX(Integer aX) {
+        this.aX = aX;
+    }
+
+    public Integer getaY() {
+        return aY;
+    }
+
+    public void setaY(Integer aY) {
+        this.aY = aY;
+    }
+
+    public Integer getbX() {
+        return bX;
+    }
+
+    public void setbX(Integer bX) {
+        this.bX = bX;
+    }
+
+    public Integer getbY() {
+        return bY;
+    }
+
+    public void setbY(Integer bY) {
+        this.bY = bY;
     }
 
     /**
@@ -41,26 +70,23 @@ public class GameController {
      */
     protected void handleScreenSelection(int x, int y) {
         Position position = new Position(x, y);
-        ChessPiece selectedPiece = (ChessPiece) match.getBoard().getPiece(position);
+        ChessPiece piece = (ChessPiece) match.getBoard().getPiece(position);
 
-        if (isAllCoordinatesNull() && Util.isObjectNonNull(selectedPiece)
+        if (isAllCoordinatesNull() && Util.isObjectNonNull(piece)
                 && match.validatePieceColor(position)) {
 
             if (aX != null && aY != null && match.validateCastlingPieces(
                     new Position(aX, aY), position)) {
-                bX = x;
-                bY = y;
-                target = new Position(bX, bY);
+                setbX(x);
+                setbY(y);
                 return;
             }
-            aX = x;
-            aY = y;
-            source = new Position(aX, aY);
+            setaX(x);
+            setaY(y);
 
         } else if (aX != null && aY != null) {
-            bX = x;
-            bY = y;
-            target = new Position(bX, bY);
+            setbX(x);
+            setbY(y);
         }
     }
 
@@ -70,20 +96,17 @@ public class GameController {
      */
     protected boolean isAllCoordinatesNull() {
         return Util.isObjectNull(aX) || Util.isObjectNull(aY)
-                || Util.isObjectNull(bX) || Util.isObjectNull(bY)
-                || Util.isObjectNull(source) || Util.isObjectNull(target);
+                || Util.isObjectNull(bX) || Util.isObjectNull(bY);
     }
 
     /**
      * Sets all coordinates null.
      */
     protected void cleanAllCoordinates() {
-        source = null;
-        target = null;
-        aX = null;
-        aY = null;
-        bX = null;
-        bY = null;
+        setaX(null);
+        setaY(null);
+        setbX(null);
+        setbY(null);
     }
 
     /**
@@ -91,17 +114,22 @@ public class GameController {
      * @return true if a move can be performed, else false.
      */
     protected boolean verifyGameMove() {
+        Optional<Position> optionalSource = Optional.of(new Position(aX, aY));
+        Optional<Position> optionalTarget = Optional.of(new Position(bX, bY));
+
         if (match.kingCheck) {
             cleanAllCoordinates();
             return false;
         }
 
-        if (!match.validateSourcePosition(source) && !match.validateTargetPosition(target))
+        if (!match.validateSourcePosition(optionalSource.get())
+                && !match.validateTargetPosition(optionalTarget.get())) {
             return false;
+        }
 
         /* Validate if the move can be done checking the target position on the board.
          * If the piece is the king, it only allows the move to safe squares. */
-        if (!match.validateMoveExecution(source, target)) {
+        if (!match.validateMoveExecution(optionalSource.get(), optionalTarget.get())) {
             cleanAllCoordinates();
             return false;
         }
@@ -121,29 +149,43 @@ public class GameController {
             if (verifyGameMove())
                 performChessMove();
 
+            Optional<Integer> optionalAX = Optional.of(aX);
+            Optional<Integer> optionalAY = Optional.of(aY);
+            Optional<Integer> optionalBX = Optional.of(bY);
+            Optional<Integer> optionalBY = Optional.of(bY);
+            Optional<Position> optionalTarget = Optional.of(new Position(bX, bY));
+
+            System.out.println("Optional: " + optionalAX + ", " + optionalAY + ", " + optionalBX + ", " + optionalBY);
+
             /* Get the rook's position before the move and calculate the rook's position
             after the move. */
-            Optional<Integer> optionalKingRow = Optional.of(
-                    (aX > bX) ? aX - 2 : aX + 2
-            );
-
-            Optional<Integer> optionalRookRow = Optional.of(
-                    (aX > bX) ? bX + 2 : bX - 3
-            );
+            int kingRow = (optionalAX.get() > optionalBX.get()) ? optionalAX.get() - 2 : optionalAX.get() + 2;
+            int rookRow = (optionalAX.get() > optionalBX.get()) ? optionalBX.get() + 2 : optionalBX.get() - 3;
 
             Optional<Position> optionalKingRowPosition = Optional.of(
-                    new Position(optionalKingRow.get(), aY));
+                    new Position(kingRow, optionalAY.get()));
 
             Optional<Position> optionalRookRowPosition = Optional.of(
-                    new Position(optionalRookRow.get(), bY));
+                    new Position(rookRow, optionalBY.get()));
 
             if (match.validateCastlingMove(optionalKingRowPosition.get(),
                     optionalRookRowPosition.get())
                     && match.validateCastlingPieces(optionalKingRowPosition.get(),
                     optionalRookRowPosition.get())) {
 
-                drawer.executeIconMove(aX, aY, optionalKingRow.get(), aY);
-                drawer.executeIconMove(bX, bY, optionalRookRow.get(), bY);
+                drawer.executeIconMove(
+                        optionalAX.get(),
+                        optionalAY.get(),
+                        kingRow,
+                        optionalAY.get()
+                );
+
+                drawer.executeIconMove(
+                        optionalBX.get(),
+                        optionalBY.get(),
+                        rookRow,
+                        optionalBY.get()
+                );
 
                 /*
                  * Add the movement counter for both pieces only after the move,
@@ -157,22 +199,27 @@ public class GameController {
                         .ofNullable(match.getBoard().getKingPosition(playerColor));
 
                 if (optionalKingPosition.isEmpty())
-                    throw new KingNotFoundException("King position is null");
+                    throw new KingNotFoundException("King piece not found.");
 
                 King king = (King) match.getBoard().getPiece(optionalKingPosition.get());
                 Rook rook = (Rook) match.getBoard().getPiece(optionalRookRowPosition.get());
                 king.addMoveCount();
                 rook.addMoveCount();
             } else {
-                drawer.executeIconMove(aX, aY, bX, bY);
+                drawer.executeIconMove(
+                        optionalAX.get(),
+                        optionalAY.get(),
+                        optionalBX.get(),
+                        optionalBY.get()
+                );
             }
 
-            ChessPiece piece = (ChessPiece) match.getBoard().getPiece(target);
+            ChessPiece piece = (ChessPiece) match.getBoard().getPiece(optionalTarget.get());
 
             /* Checks for pawn promotion. */
             if (match.validatePawnPromotion(piece)) {
-                match.performPawnPromotion(target, piece);
-                drawer.graphicPawnPromotion(bX, bY, piece.getColor());
+                match.performPawnPromotion(optionalTarget.get(), piece);
+                drawer.graphicPawnPromotion(optionalBX.get(), optionalBY.get(), piece.getColor());
             }
         } catch (NullPointerException exception) {
             System.out.println(Arrays.toString(exception.getStackTrace()));
@@ -195,15 +242,19 @@ public class GameController {
      * or en passant.
      */
     protected void performChessMove() {
+        Optional<Position> optionalSource = Optional.of(new Position(aX, aY));
+        Optional<Position> optionalTarget = Optional.of(new Position(bX, bY));
+
         /* Validate the castling move before perform the move. */
-        if (match.validateCastlingPieces(source, target)
-                && match.validateCastlingMove(source, target)) {
-            performCastlingMove(source, target);
+        if (match.validateCastlingPieces(optionalSource.get(), optionalTarget.get())
+                && match.validateCastlingMove(optionalSource.get(), optionalTarget.get())) {
+
+            performCastlingMove(optionalSource.get(), optionalTarget.get());
             return;
         }
 
         /* If the movement isn't an especial move, perform a normal move. */
-        match.performPieceMove(source, target);
+        match.performPieceMove(optionalSource.get(), optionalTarget.get());
     }
 
     /**

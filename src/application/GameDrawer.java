@@ -6,7 +6,6 @@ import util.Util;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
-import java.util.Optional;
 
 public class GameDrawer extends JPanel {
 
@@ -30,22 +29,17 @@ public class GameDrawer extends JPanel {
 
     /* Perform the moves of the piece icons on the board. */
     public void executeIconMove(Integer aX, Integer aY, Integer bX, Integer bY) {
-        Optional<Integer> optionalAX = Optional.ofNullable(aX);
-        Optional<Integer> optionalAY = Optional.ofNullable(aY);
-        Optional<Integer> optionalBX = Optional.ofNullable(bX);
-        Optional<Integer> optionalBY = Optional.ofNullable(bY);
+        if (aX == null || aY == null || bX == null || bY == null) {
+            throw new IllegalArgumentException("Coordinates cannot be null.");
+        }
 
-        if (optionalAX.isEmpty() || optionalAY.isEmpty()
-                || optionalBX.isEmpty() || optionalBY.isEmpty())
-            throw new IllegalArgumentException("The icon is null.");
-
-        ImageIcon icon = getPiecesIcons()[optionalAX.get()][optionalAY.get()];
+        ImageIcon icon = getPiecesIcons()[aX][aY];
 
         if (Util.isObjectNull(icon))
             return;
 
-        removePieceIcon(optionalAX.get(), optionalAY.get());
-        placePieceIcon(optionalBX.get(), optionalBY.get(), icon);
+        removePieceIcon(aX, aY);
+        placePieceIcon(bX, bY, icon);
     }
 
     /* Do the change of a pawn icon to a queen icon when the pawn is promoted. */

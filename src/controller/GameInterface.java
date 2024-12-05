@@ -14,19 +14,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import static controller.GameController.source;
-import static controller.GameController.target;
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class GameInterface extends JPanel {
 
     private final ChessMatch match;
     private final GameDrawer gameDrawer;
+    private final GameController gameController;
 
     public GameInterface(ChessMatch match, GameDrawer gameDrawer, GameController gameController) {
         super();
         this.match = match;
         this.gameDrawer = gameDrawer;
+        this.gameController = gameController;
 
         /* Set the game window size. */
         setPreferredSize(new Dimension(Sizes.getDimension(), Sizes.getDimension()));
@@ -55,18 +57,30 @@ public class GameInterface extends JPanel {
 
                 /* When the player clicks on the board, repaint the board
                 to highlight the moves. */
-                if (GameController.aX != null && GameController.aY != null)
+                if (Util.isObjectNonNull(gameController.getaX())
+                        && Util.isObjectNonNull(gameController.getaY())) {
                     repaint();
+                }
 
                 if (gameController.isAllCoordinatesNull())
                     return;
 
                 try {
+                    Optional<Position> optionalSource = Optional.of(
+                            new Position(gameController.getaX(), gameController.getaY())
+                    );
+
+                    Optional<Position> optionalTarget = Optional.of(
+                            new Position(gameController.getbX(), gameController.getbY())
+                    );
+
                     gameController.controllerActions();
-                    match.isKingInCheck(source, target);
+                    match.isKingInCheck(optionalSource.get(), optionalTarget.get());
                     match.checkmate = match.isCheckmate(gameController.playerHasLegalMoves);
                     match.stalemate = match.isStalemate(gameController.playerHasLegalMoves);
                 } catch (KingNotFoundException exception) {
+                    System.out.println(Arrays.toString(exception.getStackTrace()));
+
                     /*
                      * If the king is not on the board, the game can't continue,
                      * since the king is necessary for the game.
@@ -136,26 +150,29 @@ public class GameInterface extends JPanel {
         }
 
         /* Get the position of the selected piece. */
-        Integer selectedRow = GameController.aX;
-        Integer selectedCol = GameController.aY;
+        Optional<Integer> optionalRow = Optional.ofNullable(gameController.getaX());
+        Optional<Integer> optionalCol = Optional.ofNullable(gameController.getaY());
 
-        /* If there is a piece on the position, then it will highlight the piece
-        possible movements. */
-        if (selectedRow != null && selectedCol != null) {
-            Position position = new Position(selectedRow, selectedCol);
-            Piece piece = match.getBoard().getPiece(position);
+        if (optionalRow.isPresent() && optionalCol.isPresent()) {
             boolean[][] possibilities;
 
-            /* If the selected piece is the king, then check the safe possible moves.
-            If not, then only get the possible moves for the piece. */
             try {
+                /* If there is a piece on the position, then it will highlight the piece
+                possible movements. */
+                Position position = new Position(optionalRow.get(), optionalCol.get());
+                Piece piece = match.getBoard().getPiece(position);
+
+                /* If the selected piece is the king, then check the safe possible moves.
+                If not, then only get the possible moves for the piece. */
+
                 if (piece instanceof King)
                     possibilities = ((King) piece).possibleMoves();
                 else
                     possibilities = piece.possibleMoves(true);
-            } catch (NullPointerException e) {
+            } catch (NoSuchElementException e) {
                 possibilities = new boolean[8][8];
             }
+
 
             /*
              * Since the chess board has a different system of coordinates from a

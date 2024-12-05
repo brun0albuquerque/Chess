@@ -1,6 +1,7 @@
 package boardgame;
 
 import chess.ChessColor;
+import chess.KingNotFoundException;
 import pieces.King;
 import util.Util;
 
@@ -123,12 +124,10 @@ public class Board {
      * @param color the player's color.
      * @return the king's position.
      */
-    public Position getKingPosition(ChessColor color) {
+    public Position getKingPosition(ChessColor color) throws KingNotFoundException {
         Optional<Piece> optionalKing = (activePieces.stream()
-                .filter(piece -> piece instanceof King
-                        && ((King) piece).getColor().equals(color))
-                .findFirst());
-        return optionalKing.orElseThrow(() ->
-                new NullPointerException("King position is null.")).getPosition();
+                .filter(piece -> piece instanceof King &&
+                        ((King) piece).getColor().equals(color)).findFirst());
+        return optionalKing.orElseThrow(KingNotFoundException::new).getPosition();
     }
 }

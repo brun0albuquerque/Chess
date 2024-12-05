@@ -322,7 +322,7 @@ public class ChessMatch {
         );
 
         if (optionalKingPosition.isEmpty())
-            throw new KingNotFoundException("King position is null");
+            throw new KingNotFoundException("King piece not found.");
 
         /* Check if the king is threatened before the move. */
         if (validatePossibleCheck(optionalKingPosition.get()))
@@ -370,7 +370,7 @@ public class ChessMatch {
         );
 
         if (optionalKingPosition.isEmpty())
-            throw new KingNotFoundException("King position is null");
+            throw new KingNotFoundException("King piece not found.");
 
         King king = (King) board.getPiece(optionalKingPosition.get());
 
@@ -399,13 +399,15 @@ public class ChessMatch {
      * <p> {@code King} and {@code Bishop} or {@code Knight} versus {@code King};
      * <p> {@code King} and {@code Bishop} versus {@code King} and
      * {@code Bishop} with the bishops on the same color square.
-     * <p> Since it is not possible to capture anything in the first and
-     * second moves, at least 28 more turns
+     * <p> Since it is not possible to capture any piece in the first and
+     * second moves, at least twenty-eight more turns
      * are needed, where captures will be made so that only
      * four pieces remain on the board.
+     * After thirty moves, it will check what pieces are
+     * on the board.
      *
-     * @return true if the game can't finish because of not enough material
-     * to perform a checkmate.
+     * @return true if the player does not have enough material
+     * to execute a checkmate.
      */
     public boolean isStalemate(boolean playerHasLegalMoves) throws KingNotFoundException {
         Optional<Position> optionalKingPosition = Optional.ofNullable(
@@ -413,13 +415,13 @@ public class ChessMatch {
         );
 
         if (optionalKingPosition.isEmpty())
-            throw new KingNotFoundException("King position is null");
+            throw new KingNotFoundException("King piece not found.");
 
         King king = (King) board.getPiece(optionalKingPosition.get());
 
         /* Returns true if the king can't move and the player has no legal moves,
         but the king is not in check. */
-        if (!kingCheck && !king.hasAnyLegalMove() && playerHasLegalMoves)
+        if (!kingCheck && !king.hasAnyLegalMove() && !playerHasLegalMoves)
             return true;
 
         if (turn < 29)
