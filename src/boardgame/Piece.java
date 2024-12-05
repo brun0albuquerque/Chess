@@ -30,12 +30,16 @@ public abstract class Piece {
     }
 
     /**
-     * This method must return all possibilities of movements for a piece on the board. There are two uses for
-     * this method: all movements checking the empty squares and the capture of an enemy piece or the empty squares
-     * and all pieces positions on the board, doesn't matter weather is its color.
+     * This method must return all possibilities of movements for
+     * a piece on the board.
+     * There are two uses for this method:
+     * all movements checking the empty squares and the capture
+     * of an enemy piece or the empty squares and all pieces
+     * positions on the board, doesn't matter weather is its color.
      * The second one will be used to check if the king is in check.
-     * @param captureAllowed  is a boolean value to define whether the possible moves need to consider the possibility
-     *                        to capture an opponent's piece.
+     * @param captureAllowed  is a boolean value to define whether
+     * the possible moves need to consider the possibility
+     * to capture an opponent's piece.
      * @return a matrix with all the movement possibilities of a piece.
      */
     public abstract boolean[][] possibleMoves(boolean captureAllowed);
@@ -61,8 +65,10 @@ public abstract class Piece {
      * @return the color of the square.
      */
     public ChessColor squareColor() {
-        if (Util.isEven(getPosition().getColumn()) && Util.isEven(getPosition().getRow())
-                || !Util.isEven(getPosition().getColumn()) && !Util.isEven(getPosition().getRow())) {
+        if (Util.isEven(getPosition().getColumn())
+                && Util.isEven(getPosition().getRow())
+                || !Util.isEven(getPosition().getColumn())
+                && !Util.isEven(getPosition().getRow())) {
             return ChessColor.WHITE;
         }
         return ChessColor.BLACK;

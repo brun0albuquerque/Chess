@@ -17,10 +17,15 @@ public class Board {
     private final ArrayList<Piece> capturedPieces;
 
     public Board(int rows, int columns) {
+
         /* Checks if rows and columns are positive. */
         if (rows != 8 || columns != 8) {
-            JOptionPane.showMessageDialog(null, "Error board creation. The game can't start.",
-                    "Board error", JOptionPane.ERROR_MESSAGE, null);
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error board creation. The game can't start.",
+                    "Board error",
+                    JOptionPane.ERROR_MESSAGE,
+                    null);
             System.exit(1);
         }
         this.rows = rows;
@@ -61,8 +66,8 @@ public class Board {
     }
 
     /**
-     * Check if there is a piece on the position and if not, place a piece in the matrix position and set the
-     * piece position.
+     * Check if there is a piece on the position and if not, place a piece
+     * in the matrix position and set the piece position.
      * @param position the position to place the piece.
      * @param piece the piece to be placed on the board.
      */
@@ -76,8 +81,8 @@ public class Board {
     }
 
     /**
-     * If there is a piece on the board position, remove the piece from the board position and set the piece position
-     * null.
+     * If there is a piece on the board position, remove the piece from
+     * the board position and set the piece position null.
      * @param position the position of the piece to be removed.
      */
     public void removePiece(Position position) {
@@ -120,8 +125,10 @@ public class Board {
      */
     public Position getKingPosition(ChessColor color) {
         Optional<Piece> optionalKing = (activePieces.stream()
-                .filter(piece -> piece instanceof King && ((King) piece).getColor().equals(color))
+                .filter(piece -> piece instanceof King
+                        && ((King) piece).getColor().equals(color))
                 .findFirst());
-        return optionalKing.orElseThrow(() -> new NullPointerException("King position is null.")).getPosition();
+        return optionalKing.orElseThrow(() ->
+                new NullPointerException("King position is null.")).getPosition();
     }
 }

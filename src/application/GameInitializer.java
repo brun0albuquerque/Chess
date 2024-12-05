@@ -18,7 +18,8 @@ public class GameInitializer extends JFrame {
         ChessMatch chessMatch = new ChessMatch();
 
         /* Media source (board logo): https://www.flaticon.com/free-icon/chess-board_107617 */
-        ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/chess_logo.png")));
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(
+                getClass().getResource("/resources/chess_logo.png")));
         setIconImage(icon.getImage());
 
         /* Load the pieces images files. */
@@ -34,7 +35,9 @@ public class GameInitializer extends JFrame {
     }
 
     private GameInterface createGameController(ChessMatch chessMatch) {
-        PiecesLoader piecesLoader = new PiecesLoader(new ImageIcon[Sizes.getBOARD_SIZE()][Sizes.getBOARD_SIZE()]);
+        PiecesLoader piecesLoader = new PiecesLoader(
+                new ImageIcon[Sizes.getBOARD_SIZE()][Sizes.getBOARD_SIZE()]
+        );
 
         /* Pass the pieces images to the drawer. */
         GameDrawer gameDrawer = new GameDrawer(piecesLoader.getPiecesIcons());

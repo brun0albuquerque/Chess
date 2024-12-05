@@ -40,15 +40,22 @@ public class Queen extends ChessPiece {
     private void checkQueenDirection(Position queen, boolean[][] possibilities, int[] arr) {
         Position position = new Position(queen.getRow() + arr[0], queen.getColumn() + arr[1]);
 
-        while (getBoard().positionExists(position) && getBoard().isPositionEmpty(position) || validatePieceCapture(position)) {
+        while (getBoard().positionExists(position)
+                && getBoard().isPositionEmpty(position)
+                || validatePieceCapture(position)) {
+
             /* If the piece can be captured, breaks the loop. */
             possibilities[position.getRow()][position.getColumn()] = true;
 
-            /* Increment the value of the row and column until reach a piece or to the end of the board. */
+            /* Increment the value of the row and column until reach a piece
+            or to the end of the board. */
             if (validatePieceCapture(position))
                 break;
 
-            position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
+            position.setPosition(
+                    position.getRow() + arr[0],
+                    position.getColumn() + arr[1]
+            );
         }
     }
 
@@ -63,7 +70,10 @@ public class Queen extends ChessPiece {
             if (!getBoard().isPositionEmpty(position))
                 break;
 
-            position.setPosition(position.getRow() + arr[0], position.getColumn() + arr[1]);
+            position.setPosition(
+                    position.getRow() + arr[0],
+                    position.getColumn() + arr[1]
+            );
         }
     }
 }

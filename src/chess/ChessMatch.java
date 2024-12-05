@@ -54,82 +54,102 @@ public class ChessMatch {
      * @param chessColor the player's color.
      */
     private ChessColor invertColor(ChessColor chessColor) {
-        return chessColor.equals(ChessColor.WHITE) ? ChessColor.BLACK : ChessColor.WHITE;
+        return chessColor.equals(ChessColor.WHITE)
+                ? ChessColor.BLACK
+                : ChessColor.WHITE;
     }
 
-    /* Validation methods. Each method of validation will authenticate a condition from the game. */
+    /* Validation methods. Each method will authenticate
+    a condition from the game. */
 
     /**
-     * Validate if there is a piece at the position and if it's the same color as the player.
+     * Validate if there is a piece at the position and if it's the
+     * same color as the player.
      * @param position the position of the piece to be validated.
      * @return true if the position is not empty, else true.
      */
     public boolean validateSourcePosition(Position position) {
-        return !board.isPositionEmpty(position) && validatePieceColor(position);
+        return !board.isPositionEmpty(position)
+                && validatePieceColor(position);
     }
 
     /**
-     * Return true if there is an opponent piece at the position, excluding any other case.
+     * Return true if there is an opponent piece at the position,
+     * excluding any other case.
      * @param position the position of the piece to be validated.
-     * @return true if the position is empty or the position has an opponent piece, else false.
+     * @return true if the position is empty or the position has an
+     * opponent piece, else false.
      */
     public boolean validateTargetPosition(Position position) {
-        if (!board.isPositionEmpty(position) && validatePieceColor(position))
+        if (!board.isPositionEmpty(position) &&
+                validatePieceColor(position)) {
             return false;
+        }
 
-        return board.isPositionEmpty(position) || !board.isPositionEmpty(position) && !validatePieceColor(position);
+        return board.isPositionEmpty(position) ||
+                !board.isPositionEmpty(position) &&
+                        !validatePieceColor(position);
     }
 
     /**
      * It seems to be the same as validate target position, but it isn't.
      * Excludes any empty position and ally piece.
-     * This method only returns true if there is a piece in a given position, and it is opponent's.
+     * This method only returns true if there is a piece in a given position,
+     * and it is opponent's.
      * @param position the position of the piece to be validated.
      * @return true only if it has an opponent piece on the position.
      */
     public boolean validateOpponentPiecePosition(Position position) {
-        if (board.isPositionEmpty(position) || validateSourcePosition(position))
+        if (board.isPositionEmpty(position)
+                || validateSourcePosition(position)) {
             return false;
-
-        return !board.isPositionEmpty(position) && !validatePieceColor(position);
+        }
+        return !board.isPositionEmpty(position)
+                && !validatePieceColor(position);
     }
 
     /**
      * To validate the castle move, you need to be sure about the pieces.
-     * This method makes sure the first piece is an instance of king and the second is an instance of rook and
-     * if they haven't moved yet.
+     * This method makes sure the first piece is an instance of king and the
+     * second is an instance of rook and if they haven't moved yet.
      * @param source the king's position.
      * @param target the rook's position.
-     * @return true if the positions are occupied by an instance of the King and Rook classes and if
-     * they have not yet moved.
+     * @return true if the positions are occupied by an instance of the King
+     * and Rook classes and if they have not yet moved.
      */
     public boolean validateCastlingPieces(Position source, Position target) {
-        if (Util.isObjectNotNull(source) && Util.isObjectNotNull(target))
+        if (Util.isObjectNonNull(source) && Util.isObjectNonNull(target))
             return false;
 
         if (!board.isPositionEmpty(source) && !board.isPositionEmpty(target))
             return false;
 
-        if (board.getPiece(source) instanceof King && board.getPiece(target) instanceof Rook)
+        if (board.getPiece(source) instanceof King
+                && board.getPiece(target) instanceof Rook)
             return false;
 
-        return (!((ChessPiece) board.getPiece(source)).pieceMoved() && !((ChessPiece) board.getPiece(target)).pieceMoved());
+        return (!((ChessPiece) board.getPiece(source)).pieceMoved()
+                && !((ChessPiece) board.getPiece(target)).pieceMoved());
     }
 
     /**
-     * Since the pawns don't start at the first row on their side of the board, when a pawn reaches the last
-     * row, they can be promoted.
+     * Since the pawns don't start at the first row on their side
+     * of the board, when a pawn reaches the last row,
+     * they can be promoted.
      * Only need to check if they are in the last row.
      * @param piece is the pawn which will be promoted.
-     * @return true if the piece is an instance of Pawn class and if they have reached the las row of the board.
+     * @return true if the piece is an instance of Pawn class and if
+     * they have reached the las row of the board.
      */
     public boolean validatePawnPromotion(ChessPiece piece) {
         if (Util.isObjectNull(piece)) {
             throw new NullPointerException("Piece is null.");
         }
 
-        return piece instanceof Pawn && piece.getPosition().getColumn() == 0
-                || piece instanceof Pawn && piece.getPosition().getColumn() == 7;
+        return piece instanceof Pawn
+                && piece.getPosition().getColumn() == 0
+                || piece instanceof Pawn
+                && piece.getPosition().getColumn() == 7;
     }
 
     /**
@@ -142,18 +162,20 @@ public class ChessMatch {
     }
 
     /**
-     * Checks if castling is possible. Checks if there are pieces between the king and the rook
-     * and if the pieces have moved.
+     * Checks if castling is possible. Checks if there are pieces
+     * between the king and the rook and if the pieces have moved.
      * @param kingPosition the king's position.
      * @param rookPosition the rook's position.
      * @return true if the player can perform the castling move.
      * */
     public boolean validateCastlingMove(Position kingPosition, Position rookPosition) {
-        /* Validate if one of king or rook positions is null to prevent null pointer exception. */
+        /* Validate if one of king or rook positions is null to
+        prevent a null pointer exception. */
         if (Util.isObjectNull(kingPosition) || Util.isObjectNull(rookPosition))
             return false;
 
-        /* If king position has an instance of King, and if the rook position has an instance of Rook.
+        /* If king position has an instance of King, and if the
+        rook position has an instance of Rook.
         It prevents a class cast exception. */
         if (!validateCastlingPieces(kingPosition, rookPosition))
             return false;
@@ -161,17 +183,24 @@ public class ChessMatch {
         King king = (King) board.getPiece(kingPosition);
         Rook rook = (Rook) board.getPiece(rookPosition);
 
-        if (Util.isObjectNull(king) || Util.isObjectNull(rook) || king.pieceMoved() || rook.pieceMoved()
+        if (Util.isObjectNull(king) || Util.isObjectNull(rook)
+                || king.pieceMoved() || rook.pieceMoved()
                 && validatePieceColor(rook.getPosition())) {
             return false;
         }
 
-        /* Get the rook position based on the king position to get the castling side. */
+        /* Get the rook position based on the king position
+        to get the castling side. */
         int step = (rookPosition.getRow() > kingPosition.getRow()) ? 1 : -1;
 
-        /* Check if there is another piece between the king and the rook. */
-        for (int row = kingPosition.getRow() + step; row != rookPosition.getRow(); row += step) {
-            Optional<Position> optionalPosition = Optional.of(new Position(row, kingPosition.getColumn()));
+        /* Check if there is another piece between the king
+        and the rook. */
+        for (int row = kingPosition.getRow() + step;
+             row != rookPosition.getRow(); row += step) {
+
+            Optional<Position> optionalPosition = Optional.of(
+                    new Position(row, kingPosition.getColumn())
+            );
 
             if (Util.isObjectNull(board.getPiece(optionalPosition.get())))
                 return false;
@@ -180,7 +209,8 @@ public class ChessMatch {
     }
 
     /**
-     * Validate each opponent's pieces until it find any possible move that threatens the king's position.
+     * Validate each opponent's pieces until it find any possible move
+     * that threatens the king's position.
      * Return false no piece is threatening the king's position.
      * @param position the king's position.
      * @return true if the king is in check, else false.
@@ -193,14 +223,18 @@ public class ChessMatch {
         for (Piece[] boardRow : boardPieces) {
             for (Piece piece : boardRow) {
 
-                if (Util.isObjectNotNull(piece)) {
+                if (Util.isObjectNonNull(piece)) {
                     opponentPosition = piece.getPosition();
 
-                    /* If it's an opponent's piece, possibilities receive their possible moves. */
+                    /* If it's an opponent's piece, possibilities receive
+                    their possible moves. */
                     if (validateOpponentPiecePosition(opponentPosition)) {
-                        possibilities = board.getPiece(opponentPosition).possibleMoves(false);
+                        possibilities = board
+                                .getPiece(opponentPosition)
+                                .possibleMoves(false);
 
-                        /* If any piece movement matches the king's position, it returns true. */
+                        /* If any piece movement matches the king's position,
+                        it returns true. */
                         if (possibilities[position.getRow()][position.getColumn()])
                             return true;
                     }
@@ -211,9 +245,11 @@ public class ChessMatch {
     }
 
     /**
-     * Validates weather the selected position matches any true position of possibilities.
+     * Validates weather the selected position matches any true position
+     * of possibilities.
      * It will calculate all possibilities for each piece on the board.
-     * If the piece it's the king, then only permit safe moves by calling a method from class King.
+     * If the piece it's the king, then only permit safe moves by calling
+     * a method from class King.
      * Returns true only if the selected square has a true value in the matrix.
      * Any move can only be executed if this returns true.
      */
@@ -255,7 +291,8 @@ public class ChessMatch {
 
     /**
      * This method promotes a pawn to a queen.
-     * Pawns will always be promoted to a new queen because it's the most valuable and powerful piece in the game.
+     * Pawns will always be promoted to a new queen because it's the
+     * most valuable and powerful piece in the game.
      * @param position the pawn position.
      * @param piece the reference of the pawn.
      * */
@@ -269,8 +306,10 @@ public class ChessMatch {
     }
 
     /**
-     * This method will search and get the king's position on the board and verify if the king is in check.
-     * If the king is in check and has any valid move, he will only allow the move that takes him out of check.
+     * This method will search and get the king's position on the board and
+     * verify if the king is in check.
+     * If the king is in check and has any valid move, he will only allow
+     * the move that takes him out of check.
      * @param source the position of the first piece selected by the player.
      * @param target the position of the second piece selected by the player.
      */
@@ -278,7 +317,9 @@ public class ChessMatch {
         Piece sourcePiece = board.getPiece(source);
         Piece targetPiece = board.getPiece(target);
 
-        Optional<Position> optionalKingPosition = Optional.ofNullable(board.getKingPosition(getPlayerColor()));
+        Optional<Position> optionalKingPosition = Optional.ofNullable(
+                board.getKingPosition(getPlayerColor())
+        );
 
         if (optionalKingPosition.isEmpty())
             throw new KingNotFoundException("King position is null");
@@ -295,13 +336,18 @@ public class ChessMatch {
         board.placePiece(target, sourcePiece);
 
         /* If the moved piece is the king, it's necessary to update the king position. */
-        optionalKingPosition = Optional.of(sourcePiece instanceof King ? target : optionalKingPosition.get());
+        optionalKingPosition = Optional.of(
+                sourcePiece instanceof King ? target : optionalKingPosition.get()
+        );
 
         if (kingCheck && !validatePossibleCheck(optionalKingPosition.get())) {
             kingCheck = false;
         } else {
-            JOptionPane.showMessageDialog(null, "King is in check.",
-                    "Chess", JOptionPane.INFORMATION_MESSAGE, null);
+            JOptionPane.showMessageDialog(
+                    null,
+                    "King is in check.",
+                    "Chess", JOptionPane.INFORMATION_MESSAGE,
+                    null);
             kingCheck = true;
         }
 
@@ -309,57 +355,71 @@ public class ChessMatch {
         board.removePiece(target);
         board.placePiece(source, sourcePiece);
 
-        if (Util.isObjectNotNull(target))
+        if (Util.isObjectNonNull(target))
             board.placePiece(target, targetPiece);
     }
 
     /**
-     * Checks if the king in check has any legal move on the board, If the player can move no piece
-     * then end the game with a checkmate.
+     * Checks if the king in check has any legal move on the board.
+     * If the player can move no piece, then end the game with a checkmate.
      * @return true if the king is in check and the player has no legal moves.
      */
-    public boolean isCheckmate() throws KingNotFoundException {
-        Optional<Position> optionalKingPosition = Optional.ofNullable(board.getKingPosition(getPlayerColor()));
+    public boolean isCheckmate(boolean playerHasLegalMoves) throws KingNotFoundException {
+        Optional<Position> optionalKingPosition = Optional.ofNullable(
+                board.getKingPosition(getPlayerColor())
+        );
 
         if (optionalKingPosition.isEmpty())
             throw new KingNotFoundException("King position is null");
 
         King king = (King) board.getPiece(optionalKingPosition.get());
 
-        if (kingCheck && !king.hasAnyLegalMove() && !GameController.playerHasLegalMoves) {
-            JOptionPane.showMessageDialog(null, "Checkmate. Game over.",
-                    "Chess", JOptionPane.INFORMATION_MESSAGE, null);
+        if (kingCheck && !king.hasAnyLegalMove() && playerHasLegalMoves) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Checkmate. Game over.",
+                    "Chess",
+                    JOptionPane.INFORMATION_MESSAGE,
+                    null);
             return true;
         }
         return false;
     }
 
     /**
-     * This method analyzes the pieces on the board to check if it is possible for each player to perform a checkmate.
-     * If the player in turn has no legal move, and the king isn't in check but has no legal move too,
-     * end the game with a stalemate, and the game automatically is a draw.
-     * @return true if the game can't finish because of not enough material to perform a checkmate.
+     * This method analyzes the pieces on the board to check if it is possible
+     * for each player to perform a checkmate.
+     * If the player in turn has no legal move, and the king isn't in check
+     * but has no legal move too, end the game with a stalemate,
+     * and the game automatically is a draw.
+     *
+     * <p> All these conditions lead to a game with impossible checkmate,
+     * leading to a draw:
+     * <p> {@code King} versus {@code King};
+     * <p> {@code King} and {@code Bishop} or {@code Knight} versus {@code King};
+     * <p> {@code King} and {@code Bishop} versus {@code King} and
+     * {@code Bishop} with the bishops on the same color square.
+     * <p> Since it is not possible to capture anything in the first and
+     * second moves, at least 28 more turns
+     * are needed, where captures will be made so that only
+     * four pieces remain on the board.
+     *
+     * @return true if the game can't finish because of not enough material
+     * to perform a checkmate.
      */
-    public boolean isStalemate() throws KingNotFoundException {
-        /*
-         * All these conditions lead to a game with impossible checkmate, leading to a draw:
-         * King versus king;
-         * King and bishop versus king;
-         * King and knight versus king;
-         * King and bishop versus king and bishop with the bishops on the same color square.
-         * Since it is not possible to capture anything in the first and second moves, at least 28 more turns
-         * are needed, where captures will be made so that only 4 pieces remain on the board.
-         */
-
-        Optional<Position> optionalKingPosition = Optional.ofNullable(board.getKingPosition(getPlayerColor()));
+    public boolean isStalemate(boolean playerHasLegalMoves) throws KingNotFoundException {
+        Optional<Position> optionalKingPosition = Optional.ofNullable(
+                board.getKingPosition(getPlayerColor())
+        );
 
         if (optionalKingPosition.isEmpty())
             throw new KingNotFoundException("King position is null");
 
         King king = (King) board.getPiece(optionalKingPosition.get());
 
-        /* Returns true if the king can't move and the player has no legal moves, but the king is not in check. */
-        if (!kingCheck && !king.hasAnyLegalMove() && !GameController.playerHasLegalMoves)
+        /* Returns true if the king can't move and the player has no legal moves,
+        but the king is not in check. */
+        if (!kingCheck && !king.hasAnyLegalMove() && playerHasLegalMoves)
             return true;
 
         if (turn < 29)
@@ -381,21 +441,28 @@ public class ChessMatch {
 
             /* King and bishop or knight versus king. */
             case 3:
-                if (activePieces.stream().anyMatch(p -> p instanceof King) &&
-                        activePieces.stream().anyMatch(p -> p instanceof Bishop || p instanceof Knight)) {
+                if (activePieces.stream().anyMatch(p -> p instanceof King)
+                        && activePieces.stream().anyMatch(p -> p instanceof Bishop
+                        || p instanceof Knight)) {
                     return true;
                 }
                 break;
 
             /* King and bishop versus king and bishop with the same color square. */
             case 4:
-                long bishopCount = activePieces.stream().filter(piece -> piece instanceof Bishop).count();
+                long bishopCount = activePieces
+                        .stream()
+                        .filter(piece -> piece instanceof Bishop)
+                        .count();
 
                 if (bishopCount == 2) {
-                    Bishop[] bishops = activePieces.stream().filter(piece -> piece instanceof Bishop).toArray(Bishop[]::new);
+                    Bishop[] bishops = activePieces
+                            .stream()
+                            .filter(piece -> piece instanceof Bishop)
+                            .toArray(Bishop[]::new);
 
-                    if (!bishops[0].getColor().equals(bishops[1].getColor())
-                            && !bishops[0].squareColor().equals(bishops[1].squareColor())) {
+                    if (!bishops[0].getColor().equals(bishops[1].getColor()) &&
+                            !bishops[0].squareColor().equals(bishops[1].squareColor())) {
                         return true;
                     }
                 }

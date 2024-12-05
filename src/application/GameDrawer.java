@@ -20,10 +20,6 @@ public class GameDrawer extends JPanel {
         return piecesIcons;
     }
 
-    public ImageIcon getPieceIcon(int x, int y) {
-        return piecesIcons[x][y];
-    }
-
     public void placePieceIcon(int x, int y, ImageIcon image) {
         piecesIcons[x][y] = image;
     }
@@ -39,7 +35,8 @@ public class GameDrawer extends JPanel {
         Optional<Integer> optionalBX = Optional.ofNullable(bX);
         Optional<Integer> optionalBY = Optional.ofNullable(bY);
 
-        if (optionalAX.isEmpty() || optionalAY.isEmpty() || optionalBX.isEmpty() || optionalBY.isEmpty())
+        if (optionalAX.isEmpty() || optionalAY.isEmpty()
+                || optionalBX.isEmpty() || optionalBY.isEmpty())
             throw new IllegalArgumentException("The icon is null.");
 
         ImageIcon icon = getPiecesIcons()[optionalAX.get()][optionalAY.get()];
@@ -51,24 +48,20 @@ public class GameDrawer extends JPanel {
         placePieceIcon(optionalBX.get(), optionalBY.get(), icon);
     }
 
-    public void executeCastlingGraphicMove(int aX, int aY, int bX, int bY, int kingRow, int rookRow) {
-        if (kingRow < 0 || rookRow < 0)
-            throw new IndexOutOfBoundsException("Invalid int value for graphic move.");
-
-        executeIconMove(aX, aY, kingRow, aY);
-        executeIconMove(bX, bY, rookRow, bY);
-    }
-
     /* Do the change of a pawn icon to a queen icon when the pawn is promoted. */
     public void graphicPawnPromotion(int aX, int aY, ChessColor color) {
 
         /* Checks the color of the piece because the icon files are different. */
         if (color == ChessColor.WHITE) {
-            ImageIcon whiteQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/white_queen.png")));
+            ImageIcon whiteQueen = new ImageIcon(Objects.requireNonNull(
+                    getClass().getResource("/resources/white_queen.png"))
+            );
             removePieceIcon(aX, aY);
             placePieceIcon(aX, aY, whiteQueen);
         } else {
-            ImageIcon blackQueen = new ImageIcon(Objects.requireNonNull(getClass().getResource("/resources/black_queen.png")));
+            ImageIcon blackQueen = new ImageIcon(Objects.requireNonNull(
+                    getClass().getResource("/resources/black_queen.png"))
+            );
             removePieceIcon(aX, aY);
             placePieceIcon(aX, aY, blackQueen);
         }
@@ -77,22 +70,33 @@ public class GameDrawer extends JPanel {
     /* Load all pieces icons to the board. */
     public void placePiecesOnBoard(Graphics g) {
 
-        /* If there is any problem with the piece icons, then the game cannot be initiated, so it will close. */
+        /* If there is any problem with the piece icons, then the game cannot
+        be initiated, so it will close. */
         if (Util.isObjectNull(piecesIcons)) {
-            JOptionPane.showMessageDialog(null, "Game files could not be loaded.",
-                    "Error", JOptionPane.ERROR_MESSAGE, null);
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Game resources could not be loaded.",
+                    "Error", JOptionPane.ERROR_MESSAGE,
+                    null);
             System.exit(1);
         }
 
         /* Resizes every icon to the size of the tile. */
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
-                if (Util.isObjectNotNull(piecesIcons[row][col])) {
+
+                if (Util.isObjectNonNull(piecesIcons[row][col])) {
                     Image image = piecesIcons[row][col].getImage();
-                    Image resizedImage = image.getScaledInstance(Sizes.getPieceSize() - 1,
-                            Sizes.getPieceSize() - 1, Image.SCALE_SMOOTH);
+
+                    Image resizedImage = image.getScaledInstance(
+                            Sizes.getPieceSize() - 1,
+                            Sizes.getPieceSize() - 1,
+                            Image.SCALE_SMOOTH);
+
                     ImageIcon newImage = new ImageIcon(resizedImage);
-                    newImage.paintIcon(this, g, row * Sizes.getTileSize(), col * Sizes.getTileSize());
+                    newImage.paintIcon(this, g,
+                            row * Sizes.getTileSize(),
+                            col * Sizes.getTileSize());
                 }
             }
         }
