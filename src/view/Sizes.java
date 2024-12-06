@@ -1,4 +1,4 @@
-package application;
+package view;
 
 public enum Sizes {
     SIZE(66, 66);

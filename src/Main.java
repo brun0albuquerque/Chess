@@ -1,4 +1,4 @@
-import application.GameInitializer;
+import view.GameInitializer;
 
 import javax.swing.*;
 import java.awt.*;

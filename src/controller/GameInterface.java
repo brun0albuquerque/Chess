@@ -1,12 +1,11 @@
 package controller;
 
-import application.GameColors;
-import application.GameDrawer;
-import application.Sizes;
+import view.GameColors;
+import view.GameDrawer;
+import view.Sizes;
 import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessMatch;
-import chess.KingNotFoundException;
 import pieces.King;
 import util.Util;
 
@@ -14,8 +13,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 

@@ -1,6 +1,6 @@
 package controller;
 
-import application.GameDrawer;
+import view.GameDrawer;
 import boardgame.Position;
 import chess.ChessMatch;
 import chess.ChessPiece;

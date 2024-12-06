@@ -1,6 +1,6 @@
 package util;
 
-import application.Sizes;
+import view.Sizes;
 import chess.ChessMatch;
 
 public class Util {

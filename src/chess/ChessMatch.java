@@ -1,6 +1,6 @@
 package chess;
 
-import application.Sizes;
+import view.Sizes;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
@@ -299,11 +299,10 @@ public class ChessMatch {
         if (optionalKingPosition.isEmpty())
             throw new KingNotFoundException("King piece not found.");
 
-        /* Check if the king is threatened before the move. */
-        if (!verifyPossibleCheck(optionalKingPosition.get()))
-            return false;
+        isCheck = verifyPossibleCheck(optionalKingPosition.get());
 
-        isCheck = true;
+        if (!isCheck)
+            return false;
 
         /* Move the piece to target position. */
         board.removePiece(source);
@@ -315,8 +314,7 @@ public class ChessMatch {
                 sourcePiece instanceof King ? target : optionalKingPosition.get()
         );
 
-        if (kingCheck && !verifyPossibleCheck(optionalKingPosition.get()))
-            isCheck = false;
+        isCheck = verifyPossibleCheck(optionalKingPosition.get());
 
         /* Undo the selected piece move. */
         board.removePiece(target);
@@ -463,16 +461,13 @@ public class ChessMatch {
                         if (possibilities[row][col]) {
                             Position target = new Position(row, col);
 
-                            if (!isKingInCheck(piece.getPosition(), target)) {
-                                System.out.println("Player can move.");
+                            if (!isKingInCheck(piece.getPosition(), target))
                                 return true;
-                            }
                         }
                     }
                 }
             }
         }
-        System.out.println("Player cannot move.");
         return false;
     }
 

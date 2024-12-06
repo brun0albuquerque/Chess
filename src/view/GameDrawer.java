@@ -1,4 +1,4 @@
-package application;
+package view;
 
 import boardgame.Position;
 import chess.ChessColor;
