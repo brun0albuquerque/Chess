@@ -5,7 +5,6 @@ import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
 import pieces.*;
-import util.Util;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -201,28 +200,24 @@ public class ChessMatch {
      * @return true if the king is in check.
      */
     public boolean verifyPossibleCheck(Position position) {
-        Piece[][] boardPieces = board.getBoardPieces();
-        Position opponentPosition;
+        ArrayList<Piece> pieces = new ArrayList<>(board.getActivePieces());
         boolean[][] possibilities;
 
-        for (Piece[] boardRow : boardPieces) {
-            for (Piece piece : boardRow) {
-
-                if (Objects.nonNull(piece)) {
-                    opponentPosition = piece.getPosition();
+        for (Piece piece : pieces) {
+            if (Objects.nonNull(piece)) {
+                Position opponentPosition = piece.getPosition();
 
                     /* If it's an opponent's piece, possibilities receive
                     their possible moves. */
-                    if (validateOpponentPiece(opponentPosition)) {
-                        possibilities = board
-                                .getPiece(opponentPosition)
-                                .possibleMoves(false);
+                if (validateOpponentPiece(opponentPosition)) {
+                    possibilities = board
+                            .getPiece(opponentPosition)
+                            .possibleMoves(false);
 
                         /* If any piece movement matches the king's position,
                         it returns true. */
-                        if (possibilities[position.getRow()][position.getColumn()])
-                            return true;
-                    }
+                    if (possibilities[position.getRow()][position.getColumn()])
+                        return true;
                 }
             }
         }
@@ -267,7 +262,6 @@ public class ChessMatch {
         }
 
         board.placePiece(target, sourcePiece);
-        board.getActivePieces().add(sourcePiece);
         ((ChessPiece) sourcePiece).addMoveCount();
     }
 
@@ -278,7 +272,8 @@ public class ChessMatch {
      */
     public void performPawnPromotion(Position position, ChessPiece piece) {
         board.removePiece(position);
-        board.placePiece(position, new Queen(board, piece.getColor()));
+        board.getActivePieces().remove(piece);
+        board.placeNewPiece(position, new Queen(board, piece.getColor()));
     }
 
     public void enPassant() {
@@ -401,12 +396,12 @@ public class ChessMatch {
         if (turn < 29)
             return false;
 
-        int numberOfPiecesOnBoard = Util.getNumberOfPieces(board);
+        int numberOfPiecesOnBoard = board.getActivePieces().size();
 
         if (numberOfPiecesOnBoard > 4)
             return false;
 
-        List<Piece> activePieces = Util.getPiecesList(board);
+        List<Piece> activePieces = new ArrayList<>(board.getActivePieces());
 
         switch (activePieces.size()) {
             /* King versus king. */
@@ -456,9 +451,9 @@ public class ChessMatch {
      * @throws KingNotFoundException if {@code King}'s instance is not found.
      */
     public boolean playerHasAnyLegalMove() throws KingNotFoundException {
-        ArrayList<Piece> activePieces = new ArrayList<>(board.getActivePieces());
+        ArrayList<Piece> pieces = new ArrayList<>(board.getActivePieces());
 
-        for (Piece piece : activePieces) {
+        for (Piece piece : pieces) {
             if (((ChessPiece) piece).getColor().equals(getPlayerColor())) {
                 boolean[][] possibilities = piece.possibleMoves(true);
 
@@ -467,6 +462,8 @@ public class ChessMatch {
 
                         if (possibilities[row][col]) {
                             Position target = new Position(row, col);
+
+                            System.out.println("Row: " + row + ", Col: " + col + ", " + possibilities[row][col]);
 
                             if (!isKingInCheck(piece.getPosition(), target))
                                 return true;
@@ -482,33 +479,33 @@ public class ChessMatch {
      * Instantiate the pieces on the board.
      * */
     private void loadInitialPieces() {
-        board.placePiece(new Position(0, 7), new Rook(board, ChessColor.WHITE));
-        board.placePiece(new Position(1, 7), new Knight(board, ChessColor.WHITE));
-        board.placePiece(new Position(2, 7), new Bishop(board, ChessColor.WHITE));
-        board.placePiece(new Position(3, 7), new King(board, ChessColor.WHITE, this));
-        board.placePiece(new Position(4, 7), new Queen(board, ChessColor.WHITE));
-        board.placePiece(new Position(5, 7), new Bishop(board, ChessColor.WHITE));
-        board.placePiece(new Position(6, 7), new Knight(board, ChessColor.WHITE));
-        board.placePiece(new Position(7, 7), new Rook(board, ChessColor.WHITE));
+        board.placeNewPiece(new Position(0, 7), new Rook(board, ChessColor.WHITE));
+        board.placeNewPiece(new Position(1, 7), new Knight(board, ChessColor.WHITE));
+        board.placeNewPiece(new Position(2, 7), new Bishop(board, ChessColor.WHITE));
+        board.placeNewPiece(new Position(3, 7), new King(board, ChessColor.WHITE, this));
+        board.placeNewPiece(new Position(4, 7), new Queen(board, ChessColor.WHITE));
+        board.placeNewPiece(new Position(5, 7), new Bishop(board, ChessColor.WHITE));
+        board.placeNewPiece(new Position(6, 7), new Knight(board, ChessColor.WHITE));
+        board.placeNewPiece(new Position(7, 7), new Rook(board, ChessColor.WHITE));
 
         for (int a = 0; a < Sizes.getBOARD_SIZE(); a++) {
-            board.placePiece(
+            board.placeNewPiece(
                     new Position(a, 6),
                     new Pawn(board, ChessColor.WHITE, this)
             );
         }
 
-        board.placePiece(new Position(0, 0), new Rook(board, ChessColor.BLACK));
-        board.placePiece(new Position(1, 0), new Knight(board, ChessColor.BLACK));
-        board.placePiece(new Position(2, 0), new Bishop(board, ChessColor.BLACK));
-        board.placePiece(new Position(3, 0), new King(board, ChessColor.BLACK, this));
-        board.placePiece(new Position(4, 0), new Queen(board, ChessColor.BLACK));
-        board.placePiece(new Position(5, 0), new Bishop(board, ChessColor.BLACK));
-        board.placePiece(new Position(6, 0), new Knight(board, ChessColor.BLACK));
-        board.placePiece(new Position(7, 0), new Rook(board, ChessColor.BLACK));
+        board.placeNewPiece(new Position(0, 0), new Rook(board, ChessColor.BLACK));
+        board.placeNewPiece(new Position(1, 0), new Knight(board, ChessColor.BLACK));
+        board.placeNewPiece(new Position(2, 0), new Bishop(board, ChessColor.BLACK));
+        board.placeNewPiece(new Position(3, 0), new King(board, ChessColor.BLACK, this));
+        board.placeNewPiece(new Position(4, 0), new Queen(board, ChessColor.BLACK));
+        board.placeNewPiece(new Position(5, 0), new Bishop(board, ChessColor.BLACK));
+        board.placeNewPiece(new Position(6, 0), new Knight(board, ChessColor.BLACK));
+        board.placeNewPiece(new Position(7, 0), new Rook(board, ChessColor.BLACK));
 
         for (int a = 0; a < Sizes.getBOARD_SIZE(); a++) {
-            board.placePiece(
+            board.placeNewPiece(
                     new Position(a, 1),
                     new Pawn(board, ChessColor.BLACK, this)
             );

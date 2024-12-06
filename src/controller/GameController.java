@@ -159,10 +159,12 @@ public class GameController {
      */
     protected void controllerActions() {
         try {
+            checkGameStatus(new Position(aX, aY), new Position(bX, bY));
+
             if (!verifyPlayerMove())
                 return;
 
-            chessPlayerMove();
+                chessPlayerMove();
             match.nextTurn();
         } catch (NullPointerException | NoSuchElementException e) {
             System.out.println("Controller: " + e.getClass() + "; "
@@ -177,6 +179,7 @@ public class GameController {
             JOptionPane.showMessageDialog(null,
                     "An error occurred: the king was not found " +
                             "on the board. The game will be closed.");
+            System.out.println(Arrays.toString(e.getStackTrace()));
             System.exit(1);
         } finally {
             cleanAllCoordinates();
@@ -192,9 +195,9 @@ public class GameController {
      */
     private void checkGameStatus(Position source, Position target) throws KingNotFoundException {
         playerHasLegalMoves = match.playerHasAnyLegalMove();
-        match.kingCheck = match.isKingInCheck(source, target);
-        match.checkmate = match.isCheckmate(playerHasLegalMoves);
-        match.stalemate = match.isStalemate(playerHasLegalMoves);
+//        match.kingCheck = match.isKingInCheck(source, target);
+//        match.checkmate = match.isCheckmate(playerHasLegalMoves);
+//        match.stalemate = match.isStalemate(playerHasLegalMoves);
     }
 
     /**

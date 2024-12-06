@@ -1,11 +1,7 @@
 package util;
 
 import application.Sizes;
-import boardgame.Board;
-import boardgame.Piece;
 import chess.ChessMatch;
-
-import java.util.ArrayList;
 
 public class Util {
 
@@ -46,43 +42,6 @@ public class Util {
             }
         }
         return result;
-    }
-
-    /**
-     * Counts how many pieces are on the board.
-     * @param board contains all the game pieces.
-     * @return the number of pieces on the board.
-     */
-    public static int getNumberOfPieces(Board board) {
-        Piece[][] pieces = board.getBoardPieces();
-        int counter = 0;
-
-        for (Piece[] arr : pieces) {
-            for (Piece piece : arr) {
-                if (piece != null)
-                    counter++;
-            }
-        }
-        return counter;
-    }
-
-    /**
-     * Get all pieces on the board.
-     * @param board contains all the game pieces.
-     * @return a list of all the pieces on the board.
-     */
-    public static ArrayList<Piece> getPiecesList(Board board) {
-        ArrayList<Piece> piecesList = new ArrayList<>();
-        Piece[][] pieces = board.getBoardPieces();
-
-        for (Piece[] row : pieces) {
-            for (Piece piece : row) {
-                if (piece != null) {
-                    piecesList.add(piece);
-                }
-            }
-        }
-        return piecesList;
     }
 
     /**

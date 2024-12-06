@@ -44,10 +44,6 @@ public class Board {
         return columns;
     }
 
-    public Piece[][] getBoardPieces() {
-        return boardPieces;
-    }
-
     public ArrayList<Piece> getActivePieces() {
         return activePieces;
     }
@@ -67,17 +63,31 @@ public class Board {
     }
 
     /**
-     * Check if there is a piece on the position and if not, place a piece
-     * in the matrix position and set the piece position.
+     * Place a piece in a new position on the board.
      * @param position the position to place the piece.
      * @param piece the piece to be placed on the board.
      */
     public void placePiece(Position position, Piece piece) {
         if (!isPositionEmpty(position))
-            return;
+            throw new IllegalStateException();
 
         boardPieces[position.getRow()][position.getColumn()] = piece;
         piece.setPosition(position);
+    }
+
+    /**
+     * Place a piece in a new position on the board and
+     * add to the piece's list.
+     * @param position the position to place the piece.
+     * @param piece the piece to be placed on the board.
+     */
+    public void placeNewPiece(Position position, Piece piece) {
+        if (!isPositionEmpty(position))
+            throw new IllegalStateException();
+
+        boardPieces[position.getRow()][position.getColumn()] = piece;
+        piece.setPosition(position);
+        activePieces.add(piece);
     }
 
     /**
