@@ -1,9 +1,7 @@
 package controller;
 
 import application.GameDrawer;
-import boardgame.Piece;
 import boardgame.Position;
-import chess.ChessColor;
 import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.KingNotFoundException;
@@ -11,7 +9,9 @@ import pieces.King;
 import pieces.Rook;
 import util.Util;
 
+import javax.swing.*;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class GameController {
@@ -72,21 +72,36 @@ public class GameController {
         Position position = new Position(x, y);
         ChessPiece piece = (ChessPiece) match.getBoard().getPiece(position);
 
-        if (isAllCoordinatesNull() && Util.isObjectNonNull(piece)
-                && match.validatePieceColor(position)) {
-
-            if (aX != null && aY != null && match.validateCastlingPieces(
-                    new Position(aX, aY), position)) {
-                setbX(x);
-                setbY(y);
-                return;
-            }
-            setaX(x);
-            setaY(y);
-
-        } else if (aX != null && aY != null) {
+        if (shouldSelectSource(piece)) {
+            selectSource(x, y, position);
+        } else if (shouldSelectTarget()) {
             setbX(x);
             setbY(y);
+        }
+    }
+
+    private boolean shouldSelectSource(ChessPiece piece) {
+        return isAllCoordinatesNull() && Util.isObjectNonNull(piece)
+                && match.validatePieceColor(piece.getPosition());
+    }
+
+    private boolean shouldSelectTarget() {
+        return Util.isObjectNonNull(aX) && Util.isObjectNonNull(aY);
+    }
+
+    /**
+     * Check the coordinates to select the normal move or a special move.
+     * @param x the row of a coordinate.
+     * @param y the column of a coordinate.
+     * @param position the position of the selected piece.
+     * */
+    private void selectSource(int x, int y, Position position) {
+        if (shouldSelectTarget() && match.validateCastlingPieces(new Position(aX, aY), position)) {
+            setbX(x);
+            setbY(y);
+        } else {
+            setaX(x);
+            setaY(y);
         }
     }
 
@@ -141,104 +156,76 @@ public class GameController {
      * Both logical and visual moves.
      * Performs logical and visual moves, as well as handling all exceptions
      * thrown during moves.
-     * @throws KingNotFoundException if {@code King}'s instance is not found.
      */
-    protected void controllerActions() throws KingNotFoundException {
+    protected void controllerActions() {
         try {
-            if (verifyPlayerMove())
-                performChessMove();
+            if (verifyPlayerMove()) {
+                chessPlayerMove();
+            } else {
+                return;
+            }
 
-            Optional<Integer> optionalAX = Optional.of(aX);
-            Optional<Integer> optionalAY = Optional.of(aY);
-            Optional<Integer> optionalBX = Optional.of(bX);
-            Optional<Integer> optionalBY = Optional.of(bY);
-            Optional<Position> optionalTarget = Optional.of(new Position(bX, bY));
+            Position sourcePosition = new Position(aX, aY);
+            Position targetPosition = new Position(bX, bY);
+
+            checkGameStatus(sourcePosition, targetPosition);
 
             /* Get the rook's position before the move and calculate the rook's position
             after the move. */
-            int kingRow = (optionalAX.get() > optionalBX.get()) ? optionalAX.get() - 2 : optionalAX.get() + 2;
-            int rookRow = (optionalAX.get() > optionalBX.get()) ? optionalBX.get() + 2 : optionalBX.get() - 3;
+            int kingRow = (aX > bX) ? aX - 2 : aX + 2;
+            int rookRow = (aX > bX) ? bX + 2 : bX - 3;
 
-            Optional<Position> optionalKingRowPosition = Optional.of(
-                    new Position(kingRow, optionalAY.get()));
+            Optional<Position> optionalKingRow = Optional.of(new Position(kingRow, aY));
+            Optional<Position> optionalRookRow = Optional.of(new Position(rookRow, bY));
 
-            Optional<Position> optionalRookRowPosition = Optional.of(
-                    new Position(rookRow, optionalBY.get()));
+            drawer.graphicPieceMove(aX, aY, bX, bY, optionalKingRow.get(), optionalRookRow.get());
 
-            if (match.validateCastlingMove(optionalKingRowPosition.get(),
-                    optionalRookRowPosition.get())
-                    && match.validateCastlingPieces(optionalKingRowPosition.get(),
-                    optionalRookRowPosition.get())) {
-
-                drawer.executeIconMove(
-                        optionalAX.get(),
-                        optionalAY.get(),
-                        kingRow,
-                        optionalAY.get()
-                );
-
-                drawer.executeIconMove(
-                        optionalBX.get(),
-                        optionalBY.get(),
-                        rookRow,
-                        optionalBY.get()
-                );
-
-                /*
-                 * Add the movement counter for both pieces only after the move,
-                 * because the validate method can only perform the castle move
-                 * with the movement counter equal to zero.
-                 * So add the movement counter after the graphical move to
-                 * make sure the piece icon also moves.
-                 */
-                ChessColor playerColor = match.getPlayerColor();
-                Optional<Position> optionalKingPosition = Optional
-                        .ofNullable(match.getBoard().getKingPosition(playerColor));
-
-                if (optionalKingPosition.isEmpty())
-                    throw new KingNotFoundException("King piece not found.");
-
-                King king = (King) match.getBoard().getPiece(optionalKingPosition.get());
-                Rook rook = (Rook) match.getBoard().getPiece(optionalRookRowPosition.get());
-                king.addMoveCount();
-                rook.addMoveCount();
-            } else {
-                drawer.executeIconMove(
-                        optionalAX.get(),
-                        optionalAY.get(),
-                        optionalBX.get(),
-                        optionalBY.get()
-                );
-            }
-
-            ChessPiece piece = (ChessPiece) match.getBoard().getPiece(optionalTarget.get());
+            ChessPiece piece = (ChessPiece) match.getBoard().getPiece(targetPosition);
 
             /* Checks for pawn promotion. */
             if (match.validatePawnPromotion(piece)) {
-                match.performPawnPromotion(optionalTarget.get(), piece);
-                drawer.graphicPawnPromotion(optionalBX.get(), optionalBY.get(), piece.getColor());
+                match.performPawnPromotion(targetPosition, piece);
+                drawer.graphicPawnPromotion(bX, bY, piece.getColor()
+                );
             }
-        } catch (NullPointerException exception) {
-            System.out.println(Arrays.toString(exception.getStackTrace()));
+            match.nextTurn();
+        } catch (NullPointerException | NoSuchElementException e) {
+            System.out.println("Controller: " + e.getClass() + "; " + Arrays.toString(e.getStackTrace()));
+        } catch (KingNotFoundException e) {
 
             /*
-             * A null pointer exception can sometimes happen when the player
-             * clicks on empty squares multiple times and then clicks on a piece.
-             * When it happens, the coordinates will be cleaned, making them
-             * null again, preventing the game crash.
-             */
-            cleanAllCoordinates();
+             * If the king is not on the board, the game can't continue,
+             * since the king is necessary for the game.
+             * If the king piece is not found, the game has to end immediately.
+             * */
+            JOptionPane.showMessageDialog(null,
+                    "An error occurred: the king was not found " +
+                            "on the board. The game will be closed.");
+            System.exit(1);
         } finally {
-            playerHasLegalMoves = playerHasAnyLegalMove();
             cleanAllCoordinates();
         }
+    }
+
+    /**
+     * Check the stalemate, checkmate status and if the King or the
+     * player can perform some play.
+     * @param source the position of the first piece.
+     * @param target the position of the second piece.
+     * @throws KingNotFoundException if {@code King}'s instance is not found.
+     */
+    private void checkGameStatus(Position source, Position target) throws KingNotFoundException {
+        playerHasLegalMoves = match.playerHasAnyLegalMove();
+        match.kingCheck = match.isKingInCheck(source, target);
+        match.checkmate = match.isCheckmate(playerHasLegalMoves);
+        match.stalemate = match.isStalemate(playerHasLegalMoves);
     }
 
     /**
      * Perform one of the three possible moves: a normal move, a castling move
      * or en passant.
      */
-    protected void performChessMove() {
+    protected void chessPlayerMove() {
         Optional<Position> optionalSource = Optional.of(new Position(aX, aY));
         Optional<Position> optionalTarget = Optional.of(new Position(bX, bY));
 
@@ -247,15 +234,16 @@ public class GameController {
                 && match.validateCastlingMove(optionalSource.get(), optionalTarget.get())) {
 
             performCastlingMove(optionalSource.get(), optionalTarget.get());
-            return;
+        } else {
+            /* If the movement isn't an especial move, perform a normal move. */
+            match.performPieceMove(optionalSource.get(), optionalTarget.get());
         }
-
-        /* If the movement isn't an especial move, perform a normal move. */
-        match.performPieceMove(optionalSource.get(), optionalTarget.get());
     }
 
     /**
      * Perform the castling move.
+     * @param kingPosition {@code King}'s position.
+     * @param rookPosition {@code Rook}'s position;
      */
     private void performCastlingMove(Position kingPosition, Position rookPosition) {
         King king = (King) match.getBoard().getPiece(kingPosition);
@@ -277,29 +265,5 @@ public class GameController {
 
         match.getBoard().placePiece(kingAfterCastling, king);
         match.getBoard().placePiece(rookAfterCastling, rook);
-        match.nextTurn();
-    }
-
-    /**
-     * Check if the player has any legal move to do in the game.
-     * @return true if the player has any valid move to perform, else false.
-     */
-    public boolean playerHasAnyLegalMove() {
-        Piece[][] boardPieces = match.getBoard().getBoardPieces();
-
-        for (Piece[] boardRow : boardPieces) {
-            for (Piece piece : boardRow) {
-
-                if (Util.isObjectNonNull(piece)
-                        && ((ChessPiece) piece)
-                        .getColor()
-                        .equals(match.getPlayerColor())) {
-
-                    if (piece.hasAnyLegalMove())
-                        return true;
-                }
-            }
-        }
-        return false;
     }
 }

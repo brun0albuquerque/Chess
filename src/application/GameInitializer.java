@@ -40,7 +40,7 @@ public class GameInitializer extends JFrame {
         );
 
         /* Pass the pieces images to the drawer. */
-        GameDrawer gameDrawer = new GameDrawer(piecesLoader.getPiecesIcons());
+        GameDrawer gameDrawer = new GameDrawer(piecesLoader.getPiecesIcons(), chessMatch);
 
         GameController gameController = new GameController(chessMatch, gameDrawer);
 

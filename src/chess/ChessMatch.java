@@ -4,19 +4,18 @@ import application.Sizes;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
-import controller.GameController;
 import pieces.*;
 import util.Util;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class ChessMatch {
-    private int turn;
     private final Board board;
     private ChessColor playerColor;
-    private GameController controller;
+    private int turn;
 
     public boolean kingCheck;
     public boolean stalemate;
@@ -252,6 +251,9 @@ public class ChessMatch {
      * a method from class King.
      * Returns true only if the selected square has a true value in the matrix.
      * Any move can only be executed if this returns true.
+     * @param source the position of the piece to be moved.
+     * @param target the position which the piece will be moved.
+     * @return true if the position is valid to perform the move.
      */
     public boolean validateMoveExecution(Position source, Position target) {
         boolean[][] possibilities;
@@ -284,9 +286,6 @@ public class ChessMatch {
 
         /* Add the move counter by one. */
         piece.addMoveCount();
-
-        /* Change to the next turn. */
-        nextTurn();
     }
 
     /**
@@ -306,30 +305,34 @@ public class ChessMatch {
     }
 
     /**
-     * This method will search and get the king's position on the board and
-     * verify if the king is in check.
-     * If the king is in check and has any valid move, he will only allow
-     * the move that takes him out of check.
+     * This method will check whether a move puts the {@code King} in check or not.
+     * It will perform the move selected by the player,
+     * get the position of the king on the board and check if it is in check.
+     * If the king is in check, it will undo the move made,
+     * but if it is threatened by an opposing piece,
+     * it will only allow the move that takes the {@code King} out of check.
      * @param source the position of the first piece selected by the player.
      * @param target the position of the second piece selected by the player.
+     * @return true if the {@code King} is in check.
      * @throws KingNotFoundException if {@code King}'s instance is not found.
      */
-    public void isKingInCheck(Position source, Position target) throws KingNotFoundException {
+    public boolean isKingInCheck(Position source, Position target) throws KingNotFoundException {
+        boolean check;
+
         Piece sourcePiece = board.getPiece(source);
         Piece targetPiece = board.getPiece(target);
 
         Optional<Position> optionalKingPosition = Optional.ofNullable(
-                board.getKingPosition(getPlayerColor())
-        );
+                board.getKingPosition(getPlayerColor()));
 
         if (optionalKingPosition.isEmpty())
             throw new KingNotFoundException("King piece not found.");
 
         /* Check if the king is threatened before the move. */
         if (validatePossibleCheck(optionalKingPosition.get()))
-            kingCheck = true;
+            check = true;
         else
-            return;
+            return false;
 
         /* Move the piece to target position. */
         board.removePiece(source);
@@ -342,22 +345,22 @@ public class ChessMatch {
         );
 
         if (kingCheck && !validatePossibleCheck(optionalKingPosition.get())) {
-            kingCheck = false;
+            check = false;
         } else {
             JOptionPane.showMessageDialog(
                     null,
                     "King is in check.",
                     "Chess", JOptionPane.INFORMATION_MESSAGE,
                     null);
-            kingCheck = true;
         }
 
         /* Undo the selected piece move. */
         board.removePiece(target);
         board.placePiece(source, sourcePiece);
-
-        if (Util.isObjectNonNull(target))
+        if (targetPiece != null) {
             board.placePiece(target, targetPiece);
+        }
+        return check;
     }
 
     /**
@@ -477,6 +480,34 @@ public class ChessMatch {
 
             default:
                 return false;
+        }
+        return false;
+    }
+
+    /**
+     * Check if the player has any legal move to do in the game.
+     * @return true if the player has any valid move to perform, else false.
+     * @throws KingNotFoundException if {@code King}'s instance is not found.
+     */
+    public boolean playerHasAnyLegalMove() throws KingNotFoundException {
+        ArrayList<Piece> activePieces = new ArrayList<>(board.getActivePieces());
+
+        for (Piece piece : activePieces) {
+            if (((ChessPiece) piece).getColor().equals(getPlayerColor())) {
+                boolean[][] possibilities = piece.possibleMoves(true);
+
+                for (int row = 0; row < possibilities.length; row++) {
+                    for (int col = 0; col < possibilities[row].length; col++) {
+
+                        if (possibilities[row][col]) {
+                            Position target = new Position(row, col);
+
+                            if (!isKingInCheck(piece.getPosition(), target))
+                                return true;
+                        }
+                    }
+                }
+            }
         }
         return false;
     }

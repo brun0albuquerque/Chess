@@ -6,7 +6,6 @@ import application.Sizes;
 import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessMatch;
-import chess.KingNotFoundException;
 import pieces.King;
 import util.Util;
 
@@ -65,32 +64,7 @@ public class GameInterface extends JPanel {
                 if (gameController.isAllCoordinatesNull())
                     return;
 
-                try {
-                    Optional<Position> optionalSource = Optional.of(
-                            new Position(gameController.getaX(), gameController.getaY())
-                    );
-
-                    Optional<Position> optionalTarget = Optional.of(
-                            new Position(gameController.getbX(), gameController.getbY())
-                    );
-
-                    gameController.controllerActions();
-                    match.isKingInCheck(optionalSource.get(), optionalTarget.get());
-                    match.checkmate = match.isCheckmate(gameController.playerHasLegalMoves);
-                    match.stalemate = match.isStalemate(gameController.playerHasLegalMoves);
-                } catch (KingNotFoundException exception) {
-                    System.out.println(Arrays.toString(exception.getStackTrace()));
-
-                    /*
-                     * If the king is not on the board, the game can't continue,
-                     * since the king is necessary for the game.
-                     * If the king piece is not found, the game has to end immediately.
-                     * */
-                    JOptionPane.showMessageDialog(null,
-                            "An error occurred: the king was not found " +
-                                    "on the board. The game will be closed.");
-                    System.exit(1);
-                }
+                gameController.controllerActions();
 
                 /* Always repaint the interface and clean the coordinates after
                 a move to remove the selected piece highlights from the board
@@ -160,16 +134,18 @@ public class GameInterface extends JPanel {
                 /* If there is a piece on the position, then it will highlight the piece
                 possible movements. */
                 Position position = new Position(optionalRow.get(), optionalCol.get());
-                Piece piece = match.getBoard().getPiece(position);
+                Optional<Piece> piece = Optional.ofNullable(match.getBoard().getPiece(position));
 
                 /* If the selected piece is the king, then check the safe possible moves.
                 If not, then only get the possible moves for the piece. */
 
-                if (piece instanceof King)
-                    possibilities = ((King) piece).possibleMoves();
+                if (piece.orElseThrow(() -> new NoSuchElementException("Piece is null.")) instanceof King)
+                    possibilities = ((King) piece.get()).possibleMoves();
                 else
-                    possibilities = piece.possibleMoves(true);
-            } catch (NoSuchElementException e) {
+                    possibilities = piece.get().possibleMoves(true);
+            } catch (NoSuchElementException | NullPointerException e) {
+                System.out.println("Paint: " + e.getClass() + "; "
+                        + Arrays.toString(e.getStackTrace()));
                 possibilities = new boolean[8][8];
             }
 
