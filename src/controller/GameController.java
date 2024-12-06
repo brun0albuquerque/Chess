@@ -164,7 +164,7 @@ public class GameController {
             if (!verifyPlayerMove())
                 return;
 
-                chessPlayerMove();
+            chessPlayerMove();
             match.nextTurn();
         } catch (NullPointerException | NoSuchElementException e) {
             System.out.println("Controller: " + e.getClass() + "; "

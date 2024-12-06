@@ -108,18 +108,18 @@ public class ChessMatch {
      * @return true if the king and rook are in their starting positions and haven't moved.
      */
     public boolean validateCastlingPieces(Position source, Position target) {
-        if (Objects.nonNull(source) && Objects.nonNull(target))
+        if (Objects.isNull(board.getPiece(source)) || Objects.isNull(board.getPiece(target)))
             return false;
 
-        if (!board.isPositionEmpty(source) && !board.isPositionEmpty(target))
+        if (board.isPositionEmpty(source) || board.isPositionEmpty(target))
             return false;
 
-        if (board.getPiece(source) instanceof King
-                && board.getPiece(target) instanceof Rook)
+        if (!(board.getPiece(source) instanceof King)
+                && !(board.getPiece(target) instanceof Rook))
             return false;
 
-        return (!((ChessPiece) board.getPiece(source)).pieceMoved()
-                && !((ChessPiece) board.getPiece(target)).pieceMoved());
+        return (!((ChessPiece) board.getPiece(source)).hasMoved()
+                || !((ChessPiece) board.getPiece(target)).hasMoved());
     }
 
     /**
@@ -170,8 +170,8 @@ public class ChessMatch {
         Rook rook = (Rook) board.getPiece(rookPosition);
 
         if (Objects.isNull(king) || Objects.isNull(rook)
-                || king.pieceMoved() || rook.pieceMoved()
-                && validatePieceColor(rook.getPosition())) {
+                || king.hasMoved() || (rook.hasMoved()
+                && validatePieceColor(rook.getPosition()))) {
             return false;
         }
 
@@ -188,7 +188,7 @@ public class ChessMatch {
                     new Position(row, kingPosition.getColumn())
             );
 
-            if (Objects.isNull(board.getPiece(optionalPosition.get())))
+            if (!board.isPositionEmpty(optionalPosition.get()))
                 return false;
         }
         return true;
@@ -463,15 +463,16 @@ public class ChessMatch {
                         if (possibilities[row][col]) {
                             Position target = new Position(row, col);
 
-                            System.out.println("Row: " + row + ", Col: " + col + ", " + possibilities[row][col]);
-
-                            if (!isKingInCheck(piece.getPosition(), target))
+                            if (!isKingInCheck(piece.getPosition(), target)) {
+                                System.out.println("Player can move.");
                                 return true;
+                            }
                         }
                     }
                 }
             }
         }
+        System.out.println("Player cannot move.");
         return false;
     }
 

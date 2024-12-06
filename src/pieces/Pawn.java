@@ -63,7 +63,7 @@ public class Pawn extends ChessPiece {
                         && getBoard().isPositionEmpty(oneStepWhite)
                         && getBoard().positionExists(twoStepsWhite)
                         && getBoard().isPositionEmpty(twoStepsWhite)
-                        && !pieceMoved()) {
+                        && !hasMoved()) {
                     possibilities[twoStepsWhite.getRow()][twoStepsWhite.getColumn()] = true;
                 }
 
@@ -94,7 +94,7 @@ public class Pawn extends ChessPiece {
                         && getBoard().isPositionEmpty(oneStepBlack)
                         && getBoard().positionExists(twoStepsBlack)
                         && getBoard().isPositionEmpty(twoStepsBlack)
-                        && !pieceMoved()) {
+                        && !hasMoved()) {
                     possibilities[twoStepsBlack.getRow()][twoStepsBlack.getColumn()] = true;
                 }
 

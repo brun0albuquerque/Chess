@@ -29,7 +29,7 @@ public abstract class ChessPiece extends Piece {
         this.moveCounter = moveCounter + 1;
     }
 
-    public boolean pieceMoved() {
+    public boolean hasMoved() {
         return getMoveCounter() > 0;
     }
 
