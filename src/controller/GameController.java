@@ -7,11 +7,11 @@ import chess.ChessPiece;
 import chess.KingNotFoundException;
 import pieces.King;
 import pieces.Rook;
-import util.Util;
 
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 public class GameController {
@@ -81,12 +81,12 @@ public class GameController {
     }
 
     private boolean shouldSelectSource(ChessPiece piece) {
-        return isAllCoordinatesNull() && Util.isObjectNonNull(piece)
+        return isAllCoordinatesNull() && Objects.nonNull(piece)
                 && match.validatePieceColor(piece.getPosition());
     }
 
     private boolean shouldSelectTarget() {
-        return Util.isObjectNonNull(aX) && Util.isObjectNonNull(aY);
+        return Objects.nonNull(aX) && Objects.nonNull(aY);
     }
 
     /**
@@ -110,8 +110,8 @@ public class GameController {
      * @return true if all coordinates are null.
      */
     protected boolean isAllCoordinatesNull() {
-        return Util.isObjectNull(aX) || Util.isObjectNull(aY)
-                || Util.isObjectNull(bX) || Util.isObjectNull(bY);
+        return Objects.isNull(aX) || Objects.isNull(aY)
+                || Objects.isNull(bX) || Objects.isNull(bY);
     }
 
     /**
@@ -159,38 +159,14 @@ public class GameController {
      */
     protected void controllerActions() {
         try {
-            if (verifyPlayerMove()) {
-                chessPlayerMove();
-            } else {
+            if (!verifyPlayerMove())
                 return;
-            }
 
-            Position sourcePosition = new Position(aX, aY);
-            Position targetPosition = new Position(bX, bY);
-
-            checkGameStatus(sourcePosition, targetPosition);
-
-            /* Get the rook's position before the move and calculate the rook's position
-            after the move. */
-            int kingRow = (aX > bX) ? aX - 2 : aX + 2;
-            int rookRow = (aX > bX) ? bX + 2 : bX - 3;
-
-            Optional<Position> optionalKingRow = Optional.of(new Position(kingRow, aY));
-            Optional<Position> optionalRookRow = Optional.of(new Position(rookRow, bY));
-
-            drawer.graphicPieceMove(aX, aY, bX, bY, optionalKingRow.get(), optionalRookRow.get());
-
-            ChessPiece piece = (ChessPiece) match.getBoard().getPiece(targetPosition);
-
-            /* Checks for pawn promotion. */
-            if (match.validatePawnPromotion(piece)) {
-                match.performPawnPromotion(targetPosition, piece);
-                drawer.graphicPawnPromotion(bX, bY, piece.getColor()
-                );
-            }
+            chessPlayerMove();
             match.nextTurn();
         } catch (NullPointerException | NoSuchElementException e) {
-            System.out.println("Controller: " + e.getClass() + "; " + Arrays.toString(e.getStackTrace()));
+            System.out.println("Controller: " + e.getClass() + "; "
+                    + Arrays.toString(e.getStackTrace()));
         } catch (KingNotFoundException e) {
 
             /*
@@ -225,9 +201,10 @@ public class GameController {
      * Perform one of the three possible moves: a normal move, a castling move
      * or en passant.
      */
-    protected void chessPlayerMove() {
+    protected void chessPlayerMove() throws KingNotFoundException {
         Optional<Position> optionalSource = Optional.of(new Position(aX, aY));
         Optional<Position> optionalTarget = Optional.of(new Position(bX, bY));
+        ChessPiece piece = (ChessPiece) match.getBoard().getPiece(optionalTarget.get());
 
         /* Validate the castling move before perform the move. */
         if (match.validateCastlingPieces(optionalSource.get(), optionalTarget.get())
@@ -237,6 +214,15 @@ public class GameController {
         } else {
             /* If the movement isn't an especial move, perform a normal move. */
             match.performPieceMove(optionalSource.get(), optionalTarget.get());
+        }
+
+        drawer.graphicPieceMove(aX, aY, bX, bY);
+
+        /* Checks for pawn promotion. */
+        if (match.validatePawnPromotion(piece)) {
+            match.performPawnPromotion(optionalTarget.get(), piece);
+            drawer.graphicPawnPromotion(bX, bY, piece.getColor()
+            );
         }
     }
 

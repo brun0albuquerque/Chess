@@ -3,10 +3,10 @@ package boardgame;
 import chess.ChessColor;
 import chess.KingNotFoundException;
 import pieces.King;
-import util.Util;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 
 public class Board {
@@ -78,7 +78,6 @@ public class Board {
 
         boardPieces[position.getRow()][position.getColumn()] = piece;
         piece.setPosition(position);
-        activePieces.add(piece);
     }
 
     /**
@@ -87,14 +86,12 @@ public class Board {
      * @param position the position of the piece to be removed.
      */
     public void removePiece(Position position) {
-        if (Util.isObjectNull(getPiece(position)))
+        if (isPositionEmpty(position))
             return;
 
         Piece piece = getPiece(position);
         piece.setPosition(null);
         boardPieces[position.getRow()][position.getColumn()] = null;
-        activePieces.remove(piece);
-        capturedPieces.add(piece);
     }
 
     /**
@@ -114,9 +111,9 @@ public class Board {
      */
     public boolean isPositionEmpty(Position position) {
         if (!positionExists(position))
-            throw new IndexOutOfBoundsException("Position is not on the board.");
+            return false;
 
-        return Util.isObjectNull(getPiece(position));
+        return Objects.isNull(getPiece(position));
     }
 
     /**
@@ -128,6 +125,7 @@ public class Board {
         Optional<Piece> optionalKing = (activePieces.stream()
                 .filter(piece -> piece instanceof King &&
                         ((King) piece).getColor().equals(color)).findFirst());
+
         return optionalKing.orElseThrow(KingNotFoundException::new).getPosition();
     }
 }

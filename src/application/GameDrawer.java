@@ -6,7 +6,6 @@ import chess.ChessMatch;
 import chess.KingNotFoundException;
 import pieces.King;
 import pieces.Rook;
-import util.Util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,7 +42,7 @@ public class GameDrawer extends JPanel {
 
         ImageIcon icon = getPiecesIcons()[aX][aY];
 
-        if (Util.isObjectNull(icon))
+        if (Objects.isNull(icon))
             return;
 
         removePieceIcon(aX, aY);
@@ -71,24 +70,30 @@ public class GameDrawer extends JPanel {
 
     /**
      * Perform the icon's move on the panel.
-     * @param aX {@code x} coordinate from first interaction.
-     * @param aY {@code y} coordinate from first interaction.
-     * @param bX {@code x} coordinate from second interaction.
-     * @param bY {@code y} coordinate from second interaction
-     * @param kingPosition {@code King}'s position on the board.
-     * @param rookPosition {@code Rook}'s position on the board.
+     * @param aX {@code x} coordinate from the first piece.
+     * @param aY {@code y} coordinate from the first piece.
+     * @param bX {@code x} coordinate from the second piece.
+     * @param bY {@code y} coordinate from the second piece.
      * @throws KingNotFoundException if {@code King}'s instance is not found.
      */
     public void graphicPieceMove(Integer aX, Integer aY, Integer
-            bX, Integer bY, Position kingPosition, Position rookPosition) throws KingNotFoundException {
+            bX, Integer bY) throws KingNotFoundException {
 
-        if (match.validateCastlingMove(kingPosition,
-                rookPosition)
-                && match.validateCastlingPieces(kingPosition,
-                rookPosition)) {
+        /* Get the rook's position before the move and calculate the rook's position
+        after the move. */
+        int kingRow = (aX > bX) ? aX - 2 : aX + 2;
+        int rookRow = (aX > bX) ? bX + 2 : bX - 3;
 
-            iconMove(aX, aY, kingPosition.getRow(), aY);
-            iconMove(bX, bY, rookPosition.getRow(), bY);
+        Optional<Position> optionalKingRow = Optional.of(new Position(kingRow, aY));
+        Optional<Position> optionalRookRow = Optional.of(new Position(rookRow, bY));
+
+        if (match.validateCastlingMove(optionalKingRow.get(),
+                optionalRookRow.get())
+                && match.validateCastlingPieces(optionalKingRow.get(),
+                optionalRookRow.get())) {
+
+            iconMove(aX, aY, optionalKingRow.get().getRow(), aY);
+            iconMove(bX, bY, optionalRookRow.get().getRow(), bY);
 
             /*
              * Add the movement counter for both pieces only after the move,
@@ -105,7 +110,7 @@ public class GameDrawer extends JPanel {
                 throw new KingNotFoundException("King piece not found.");
 
             King king = (King) match.getBoard().getPiece(optionalKingPosition.get());
-            Rook rook = (Rook) match.getBoard().getPiece(rookPosition);
+            Rook rook = (Rook) match.getBoard().getPiece(optionalRookRow.get());
             king.addMoveCount();
             rook.addMoveCount();
         } else {
@@ -118,7 +123,7 @@ public class GameDrawer extends JPanel {
 
         /* If there is any problem with the piece icons, then the game cannot
         be initiated, so it will close. */
-        if (Util.isObjectNull(piecesIcons)) {
+        if (Objects.isNull(piecesIcons)) {
             JOptionPane.showMessageDialog(
                     null,
                     "Game resources could not be loaded.",
@@ -131,7 +136,7 @@ public class GameDrawer extends JPanel {
         for (int row = 0; row < Sizes.getBOARD_SIZE(); row++) {
             for (int col = 0; col < Sizes.getBOARD_SIZE(); col++) {
 
-                if (Util.isObjectNonNull(piecesIcons[row][col])) {
+                if (Objects.nonNull(piecesIcons[row][col])) {
                     Image image = piecesIcons[row][col].getImage();
 
                     Image resizedImage = image.getScaledInstance(

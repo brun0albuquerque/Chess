@@ -117,7 +117,7 @@ public class King extends ChessPiece {
 
                 /* Do the merge of the source and auxiliary matrices if
                 the position has an opponent piece. */
-                if (match.validateOpponentPiecePosition(position)) {
+                if (match.validateOpponentPiece(position)) {
 
                     /* The auxiliary matrix receives the piece possible movements.
                      * If the piece is a pawn, only consider the capture

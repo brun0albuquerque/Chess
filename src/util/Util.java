@@ -93,22 +93,4 @@ public class Util {
     public static boolean isEven(int x) {
         return x % 2 == 0;
     }
-
-    /**
-     * Checks if the object provided is null.
-     * @param object the object to be checked.
-     * @return true if the object is null.
-     */
-    public static boolean isObjectNull(Object object) {
-        return object == null;
-    }
-
-    /**
-     * Checks if the object provided is null.
-     * @param object the object to be checked.
-     * @return true if the object is not null.
-     */
-    public static boolean isObjectNonNull(Object object) {
-        return object != null;
-    }
 }

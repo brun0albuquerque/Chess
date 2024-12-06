@@ -6,6 +6,7 @@ import application.Sizes;
 import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessMatch;
+import chess.KingNotFoundException;
 import pieces.King;
 import util.Util;
 
@@ -15,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 public class GameInterface extends JPanel {
@@ -56,8 +58,8 @@ public class GameInterface extends JPanel {
 
                 /* When the player clicks on the board, repaint the board
                 to highlight the moves. */
-                if (Util.isObjectNonNull(gameController.getaX())
-                        && Util.isObjectNonNull(gameController.getaY())) {
+                if (Objects.nonNull(gameController.getaX())
+                        && Objects.nonNull(gameController.getaY())) {
                     repaint();
                 }
 
@@ -130,25 +132,21 @@ public class GameInterface extends JPanel {
         if (optionalRow.isPresent() && optionalCol.isPresent()) {
             boolean[][] possibilities;
 
-            try {
-                /* If there is a piece on the position, then it will highlight the piece
-                possible movements. */
-                Position position = new Position(optionalRow.get(), optionalCol.get());
-                Optional<Piece> piece = Optional.ofNullable(match.getBoard().getPiece(position));
+            /* If there is a piece on the position, then it will highlight the
+            piece possible movements. */
+            Position position = new Position(optionalRow.get(), optionalCol.get());
+            Optional<Piece> piece = Optional.ofNullable(match.getBoard().getPiece(position));
 
-                /* If the selected piece is the king, then check the safe possible moves.
-                If not, then only get the possible moves for the piece. */
-
-                if (piece.orElseThrow(() -> new NoSuchElementException("Piece is null.")) instanceof King)
+            /* If the selected piece is the king, then check the safe possible moves.
+            If not, then only get the possible moves for the piece. */
+            if (piece.isPresent()) {
+                if (piece.get() instanceof King)
                     possibilities = ((King) piece.get()).possibleMoves();
                 else
                     possibilities = piece.get().possibleMoves(true);
-            } catch (NoSuchElementException | NullPointerException e) {
-                System.out.println("Paint: " + e.getClass() + "; "
-                        + Arrays.toString(e.getStackTrace()));
+            } else {
                 possibilities = new boolean[8][8];
             }
-
 
             /*
              * Since the chess board has a different system of coordinates from a
